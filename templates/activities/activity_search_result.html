@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Search for events{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
+    <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<form method="get" novalidate>    
+    <div class="form-group">
+        <label class="col-form-label"><label for="id_location">Location:</label></label>
+        <input type="text" name="location" placeholder="Enter suburb" maxlength="150" class="form-control " id="id_location" />
+    </div>
+	
+    <button type="submit" class="btn btn-success">Search</button>
+</form>
+
+<br />
+
+{% if activities %}
+
+<div class="row">
+{% for activity in activities %}
+<div class="col-sm-6">
+  <div class="card">
+  {% if activity.activity_img %}
+  <img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Card image cap">
+  {% endif %}
+  <div class="card-body">
+    <h3 class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
+    <p class="card-text">{{ activity.activity_type }}</p>
+    <p class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
+    <p class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
+  </div>
+  </div>
+  <br />
+</div>
+{% endfor %}
+</div>
+
+{% include 'includes/pagination_2.html' %}
+
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+<script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
+
+<script>
+var options = {
+    data: ["Sunshine", "St. Albans", "Deer Park", "Keilor", "Keilor Downs", ]
+};
+    
+$('#id_location').easyAutocomplete(options);
+
+</script>
+
+{% endblock %} 

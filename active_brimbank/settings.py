@@ -171,23 +171,25 @@ TIME_ZONE = 'Australia/Melbourne'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
+
+TIME_INPUT_FORMATS = ('%I:%M %p',)
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 # ----- Uncomment this for production -----------
-STATIC_ROOT = os.path.join(BASE_DIR, 'www','static')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'www','static')
 
 STATIC_URL = '/static/'
 
-# ----- Don't use for production, only for development -----------
-#STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, 'www', 'static'),
-#]
+# ----- Comment this for production -----------
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'www', 'static'),
+]
 
 # For social login library
 LOGIN_URL = 'login'
@@ -200,4 +202,17 @@ SOCIAL_AUTH_FACEBOOK_SECRET = config('SOCIAL_AUTH_FACEBOOK_SECRET') # App Secret
 
 # Media storage
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'www', 'media')
+
+# Boto3 AWS config http://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_S3_REGION_NAME = 'ap-southeast-2'
+AWS_QUERYSTRING_AUTH = 'False'
+S3_USE_SIGV4 = True
+AWS_S3_SIGNATURE_VERSION = 's3v4'

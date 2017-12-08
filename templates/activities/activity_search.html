@@ -1,8 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}Activity List{% endblock title %}
+{% block title %}Search for events{% endblock %}
 
 {% block content %}
+
+{% include 'event_form.html' %}
+
+{% if activities %}
+
 <div class="row">
 {% for activity in activities %}
 <div class="col-sm-6">
@@ -15,7 +20,6 @@
     <p class="card-text">{{ activity.activity_type }}</p>
     <p class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
     <p class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
-    <a href="{% url 'edit_activity' activity.pk %}" class="btn btn-outline-primary">Edit</a>
   </div>
   </div>
   <br />
@@ -23,6 +27,8 @@
 {% endfor %}
 </div>
 
-{% include 'includes/temp_pagination.html' %}
+{% include 'includes/pagination_2.html' %}
+
+{% endif %}
 
 {% endblock %}

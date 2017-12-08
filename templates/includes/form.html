@@ -9,10 +9,9 @@
 {% endif %}
 
 {% for field in form %}
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label">{{ field.label_tag }}</label>
+    <div class="form-group">
+        <label class="col-form-label">{{ field.label_tag }}</label>
         
-        <div class="col-sm-8">
         {% render_field field class=field|input_class %} <!-- the input_class is coming from form_tags.py-->
         
         {% for error in field.errors %}
@@ -20,8 +19,6 @@
                 {{ error }}
             </div>
         {% endfor %}
-            
-        </div>
         
         {% if field.help_text %}
           <small class="form-text text-muted">

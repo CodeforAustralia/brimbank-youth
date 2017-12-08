@@ -20,7 +20,7 @@ from django.conf import settings
 
 from events import views
 from sendsms import views as SMSViews
-from activities.views import ActivityCreateView, ActivityDetailView, ActivityListView
+from activities.views import ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, search_events
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
@@ -32,8 +32,11 @@ urlpatterns = [
     url(r'^main_search/$', views.search_from_here, name='main_search'),
     url(r'^sms/$', SMSViews.send_sms, name='send_sms'),
     url(r'^create_activity/$', ActivityCreateView.as_view(), name='create_activity'),
-    url(r'^activity/(?P<pk>\d+)/$', ActivityDetailView.as_view(), name='activity_detail'),
-    url(r'^activity_list/$', ActivityListView.as_view(), name='activity_list'),
+    url(r'^activity/$', ActivityListView.as_view(), name='activity_list'),
+    url(r'^activity/detail/(?P<pk>\d+)/$', ActivityDetailView.as_view(), name='activity_detail'),
+    url(r'^activity/search/$', search_events, name='search_activity'),
+    url(r'^activity/edit/(?P<pk>\d+)/$', ActivityUpdateView.as_view(), name='edit_activity'),
+    url(r'^activity_search/$', search_events, name='activity_search'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
