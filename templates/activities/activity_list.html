@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Activity detail{% endblock title %}
+
+{% block content %}
+{% for activity in activity_list %}
+  <div class="card">
+  {% if activity.activity_img %}
+  <img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Card image cap">
+  {% endif %}
+  <div class="card-body">
+      <h4 class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h4>
+    <p class="card-text">{{ activity.activity_type }}</p>
+    <p class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
+    <p class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
+  </div>
+</div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,5 @@
+static/* linguist-vendored
+.py linguist-language=Python
+*.gitattributes text
+.gitignore text
+*.md text

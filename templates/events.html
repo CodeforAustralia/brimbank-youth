@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+	<div class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></div>
+    <div class="breadcrumb-item"><a href="{% url 'main_search' %}">Search Events</a></div>
+	<div class="breadcrumb-item"><a href="{% url 'events' %}">All Events</a></div>
+    <div class="breadcrumb-item"><a href="{% url 'login' %}">Login</a></div>
+{% endblock %}
+
+{% block content %}
+
+    <table class="table table-striped mb-4">
+        <thead class="thead-inverse">
+          <tr>
+            <th>Organizer</th>
+            <th>Description</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Building</th>
+            <th>City</th>
+            <th>Postcode</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+            <tr>
+              <td>{{ event.organizer }} </td>
+              <td>{{ event.description }} </td>
+              <td>{{ event.start_time|date:'M d, Y' }} at {{ event.start_time|time:'H:i' }} </td>
+              <td>{{ event.end_time|date:'M d, Y' }} at {{ event.end_time|time:'H:i' }} </td>
+              <td>{{ event.building }} </td>
+              <td>{{ event.city }} </td>
+              <td>{{ event.postcode }} </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+{% include 'includes/pagination.html' %}
+
+{% endblock %}

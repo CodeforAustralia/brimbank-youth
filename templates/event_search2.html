@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Search for events{% endblock %}
+
+{% block content %}
+
+{% include 'event_form.html' %}
+
+
+{% if events %}
+    <table class="table table-striped mb-4">
+        <thead class="thead-inverse">
+          <tr>
+            <th>Building</th>
+            <th>City</th>
+            <th>Postcode</th>
+          </tr>
+         </thead>
+        <tbody>
+          {% for event in events %}
+            <tr>
+              <td>{{ event.building }} </td>
+              <td>{{ event.city }} </td>
+              <td>{{ event.postcode }} </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+{% include 'includes/pagination.html' %}
+
+{% endif %}
+
+{% endblock %}

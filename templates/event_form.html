@@ -1,0 +1,11 @@
+{% load widget_tweaks %}
+
+{% block content %}
+  <form method="post" novalidate>
+    {% csrf_token %}
+    
+    {% include 'includes/form.html' %}
+	
+    <button type="submit" class="btn btn-success">Search</button>
+  </form>
+{% endblock %}
