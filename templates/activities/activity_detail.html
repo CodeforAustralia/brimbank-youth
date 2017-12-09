@@ -10,10 +10,12 @@
     <p class="card-text">{{ activity.activity_type }}</p>
     <p class="card-text">{{ activity.start_date|date:'d M Y' }} - {{ activity.start_time|time:'H:i' }}</p>
     <p class="card-text">{{ activity.end_date|date:'d M Y' }} - {{ activity.end_time|time:'H:i' }}</p>
-    <p class="col-sm-2 col-sm-4">
+    <a href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary">Send SMS</a>
+    <a class="col-sm-2 col-sm-4">
         <a href="{% url 'edit_activity' activity.pk %}" class="btn btn-outline-primary">Edit</a>
-        <a href="{% url 'create_activity' %}" class="btn btn-primary"> Create another activity </a>
-    </p>
+        <a href="{% url 'create_activity' %}" class="btn btn-primary"> Create another </a>
+        <a class="btn btn-danger" data-method="delete" href="{% url 'delete_activity' activity.id %}">Delete</a>
+    </a>
   </div>
 </div>
 {% endblock %}

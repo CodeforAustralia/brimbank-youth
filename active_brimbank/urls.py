@@ -19,23 +19,31 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from events import views
-from sendsms import views as SMSViews
-from activities.views import ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, search_events
+from sendsms.views import send_sms, SMSCreateView
+from activities.views import ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDeleteView, search_events
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
-    url(r'^events/$', views.events, name='events'),
+    url(r'^admin/', admin.site.urls),
     url(r'^login/$', views.login, name='login'),
     url(r'^oauth/', include('social_django.urls', namespace='social')),  # social_django
-    url(r'^admin/', admin.site.urls),
+    
+    # Events
+    url(r'^events/$', views.events, name='events'),
     url(r'^error/$', views.error, name='error'),
     url(r'^main_search/$', views.search_from_here, name='main_search'),
-    url(r'^sms/$', SMSViews.send_sms, name='send_sms'),
+    
+    # Send SMS
+    url(r'^sms/$', send_sms, name='send_sms'),
+    url(r'^sms_create/(?P<pk>\w+)/$', SMSCreateView.as_view(), name='sms_create'),
+    
+    # Activities
     url(r'^create_activity/$', ActivityCreateView.as_view(), name='create_activity'),
     url(r'^activity/$', ActivityListView.as_view(), name='activity_list'),
     url(r'^activity/detail/(?P<pk>\d+)/$', ActivityDetailView.as_view(), name='activity_detail'),
     url(r'^activity/search/$', search_events, name='search_activity'),
     url(r'^activity/edit/(?P<pk>\d+)/$', ActivityUpdateView.as_view(), name='edit_activity'),
+    url(r'^activity/delete/(?P<pk>\d+)/$', ActivityDeleteView.as_view(), name='delete_activity'),
     url(r'^activity_search/$', search_events, name='activity_search'),
 ]
 

@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView, UpdateView, ListView, DetailView, DeleteView
 from django.urls import reverse
+from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 
 from .models import Activity
 from .forms import ActivityForm, ActivitySearchForm
+from sendsms.forms import SendSMSForm
 
 activities = []
 
@@ -34,6 +36,10 @@ class ActivityUpdateView(UpdateView):
     def get_success_url(self):
         return reverse('activity_detail',args=(self.object.id,))
     
+class ActivityDeleteView(DeleteView):
+    model = Activity
+    success_url = reverse_lazy('activity_search')
+    
 def search_logic(request, keywords):
     activities = Activity.objects.filter(
     Q(location__istartswith=keywords) | Q(location__iendswith=keywords) | Q(location__icontains=keywords)
@@ -41,13 +47,25 @@ def search_logic(request, keywords):
     return activities
 
 def search_events(request):
-    keywords = request.GET.get('location') # 'location' is the name of the input field
-    if keywords:
-        activities = search_logic(request, keywords)
-    else:
-        activities = search_logic(request, '')
-    activities = show_page_numbers(request, activities)
-    return render(request, 'activities/activity_search_result.html', {'activities': activities,})
+    activities = search_logic(request, '')
+    if request.method == 'GET':
+        keywords = request.GET.get('location') # 'location' is the name of the input field
+        list_of_input_ids=request.GET.getlist('checkboxes')
+        str1 = '_'.join(list_of_input_ids)
+        search = request.GET.get('search')
+        print(list_of_input_ids)
+        print(request.GET)
+        if search == 'search':
+            if keywords:
+                activities = search_logic(request, keywords)
+        if search == 'share':
+            form = SendSMSForm()
+#            return render(request, 'sendsms/sendsms_form.html', {'pk': list_of_input_ids, 'form': form})
+            kwargs = {'pk': str1}
+            return redirect('sms_create', **kwargs)
+        activities = show_page_numbers(request, activities)
+        return render(request, 'activities/activity_search_result.html', {'activities': activities,})
+#        return render(request, 'activities/activity_search_result.html', {'activities': activities,})
 
 def show_page_numbers(request, result):
     page = request.GET.get('page', 1)

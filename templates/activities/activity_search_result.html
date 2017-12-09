@@ -16,36 +16,47 @@
         <label class="col-form-label"><label for="id_location">Location:</label></label>
         <input type="text" name="location" placeholder="Enter suburb" maxlength="150" class="form-control " id="id_location" />
     </div>
+    
+    
+    {% if activities %}
+
+    <div class="row">
+    {% for activity in activities %}
+    <div class="col-sm-6">
+      <div class="card">
+      {% if activity.activity_img %}
+      <img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Card image cap">
+      {% endif %}
+      <div class="card-body">
+        <h3 class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
+        <p class="card-text">{{ activity.activity_type }}</p>
+        <p class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
+        <p class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
+    <!--    <input type="checkbox" name="sent" checked />-->
+        <input type="checkbox" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
+      </div>
+      </div>
+      <br />
+    </div>
+    {% endfor %}
+    </div>
+
+    {% include 'includes/pagination_2.html' %}
+
+    {% endif %}
 	
-    <button type="submit" class="btn btn-success">Search</button>
+    <button type="submit" class="btn btn-success" name="search" value="search">Search</button>
+    <button type="submit" class="btn btn-outline-success" name="search" value="share">Share</button>
 </form>
 
 <br />
 
-{% if activities %}
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary"> Share </button>
+</form>
 
-<div class="row">
-{% for activity in activities %}
-<div class="col-sm-6">
-  <div class="card">
-  {% if activity.activity_img %}
-  <img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Card image cap">
-  {% endif %}
-  <div class="card-body">
-    <h3 class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
-    <p class="card-text">{{ activity.activity_type }}</p>
-    <p class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
-    <p class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
-  </div>
-  </div>
-  <br />
-</div>
-{% endfor %}
-</div>
-
-{% include 'includes/pagination_2.html' %}
-
-{% endif %}
+<br />
 
 {% endblock %}
 

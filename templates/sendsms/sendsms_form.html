@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Send SMS {% endblock title %}
+
+{% block stylesheet %}
+<style>
+    .invalid-feedback {display: inline;}
+</style>
+{% endblock %}
+
+{% block content %}
+        <form method="post" novalidate>
+        {% csrf_token %}
+        
+        {% include 'includes/form.html' %}
+            
+        {{ pk }}
+            
+        <div class="form-group row">
+          <div class="col-sm-offset-2 col-sm-10">
+            <a href="{% url 'home' %}" class="btn btn-outline-primary">Cancel</a>
+            <button type="submit" class="btn btn-primary"> Send </button>
+          </div>
+        </div>
+      </form>
+
+{% endblock %}
