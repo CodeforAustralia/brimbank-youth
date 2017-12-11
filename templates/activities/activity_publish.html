@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Review activity{% endblock title %}
+
+{% block content %}
+  <div class="card">
+<!--  <img class="card-img-top" src="" alt="Card image cap">-->
+  <div class="card-body">
+    <h4 class="card-title">{{ activitydraft.name }}</h4>
+    <p class="card-text">{{ activitydraft.activity_type }}</p>
+    <p class="card-text">{{ activitydraft.start_date|date:'d M Y' }} - {{ activitydraft.start_time|time:'H:i' }}</p>
+    <p class="card-text">{{ activitydraft.end_date|date:'d M Y' }} - {{ activitydraft.end_time|time:'H:i' }}</p>
+    <a href="{% url 'edit_draft_activity' activitydraft.pk %}" class="btn btn-outline-primary">Edit</a>
+    <a href="{% url 'submit_activity' activitydraft.pk %}" class="btn btn-outline-primary">Publish</a>
+  </div>
+</div>
+{% endblock %}

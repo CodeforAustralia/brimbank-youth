@@ -51,4 +51,16 @@ class Activity(models.Model):
 #        appointment_time = arrow.get(self.time, self.time_zone.zone)
 #        if appointment_time < arrow.utcnow():
 #            raise ValidationError('You cannot schedule an appointment for the past. Please check your time and time_zone')
+
+class ActivityDraft(models.Model):
+    name = models.CharField(max_length=150)
+    activity_type = models.ForeignKey(ActivityType, related_name='activity_drafts', null=True)
+    location = models.CharField(max_length=150, blank=True)
+    contact_number = models.CharField(max_length=15, blank=True)
+    description = models.CharField(max_length=150, blank=True)
+    start_date = models.DateField(blank=True)
+    end_date = models.DateField(blank=True)
+    start_time = models.TimeField(default=datetime.now, blank=True)
+    end_time = models.TimeField(default=datetime.now, blank=True)
+    activity_img = models.ImageField(upload_to=image_directory_path, blank=True)
     

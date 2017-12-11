@@ -5,21 +5,59 @@ from django.core.urlresolvers import reverse_lazy
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from django.contrib import messages
+from django.contrib.messages import constants as messages_const
 
-from .models import Activity
-from .forms import ActivityForm, ActivitySearchForm
-from sendsms.forms import SendSMSForm
+from .models import Activity, ActivityDraft
+from .forms import ActivityForm, ActivitySearchForm, ActivityDraftForm
+from sendsms.forms import SendSMSForm, SendEmailForm
 
 activities = []
 
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
+
 # Create your views here.
 class ActivityCreateView(CreateView):
-    model = Activity
-    form_class = ActivityForm
+    model = ActivityDraft
+    form_class = ActivityDraftForm
 
     def get_success_url(self):
-        return reverse('activity_detail',args=(self.object.id,))
+        messages.info(self.request, 'Please review the activity before you submit.')
+        return reverse('activity_publish',args=(self.object.id,))
         # self.object.id = pk that is used in ActivityDetailView
+        
+class ActivityDraftUpdateView(UpdateView):
+    model = ActivityDraft
+    form_class = ActivityDraftForm
+    
+    def get_success_url(self):
+        return reverse('activity_publish',args=(self.object.id,))
+
+class ActivityDraftDetailView(DetailView):
+    model = ActivityDraft
+    
+def submit_activity(request, pk):
+    draft = ActivityDraft.objects.get(pk=pk)
+    activity = Activity(pk=None, 
+                        name=draft.name,
+                        end_date=draft.end_date,
+                        start_date=draft.start_date,
+                        activity_type = draft.activity_type,
+                        location = draft.location,
+                        contact_number = draft.contact_number,
+                        description = draft.description,
+                        start_time = draft.start_time,
+                        end_time = draft.end_time,
+                        activity_img = draft.activity_img,
+                       )
+    activity.save()
+    draft.delete()
+    return render(request, 'activities/activity_detail.html', {
+        'pk': activity.pk,
+        'activity': activity
+    })
     
 class ActivityDetailView(DetailView):
     model = Activity
@@ -58,14 +96,18 @@ def search_events(request):
         if search == 'search':
             if keywords:
                 activities = search_logic(request, keywords)
-        if search == 'share':
-            form = SendSMSForm()
-#            return render(request, 'sendsms/sendsms_form.html', {'pk': list_of_input_ids, 'form': form})
+        if str1 != '':
             kwargs = {'pk': str1}
-            return redirect('sms_create', **kwargs)
+            if search == 'share':
+                form = SendSMSForm()
+                return redirect('sms_create', **kwargs)
+            if search == 'email':
+                form = SendEmailForm()
+                return redirect('email_create', **kwargs)
+        if (str1 == '' and search == 'share') or (str1 == '' and search == 'email'):
+            messages.add_message(request, messages.ERROR, 'Please select at least one activity.', extra_tags='danger')
         activities = show_page_numbers(request, activities)
         return render(request, 'activities/activity_search_result.html', {'activities': activities,})
-#        return render(request, 'activities/activity_search_result.html', {'activities': activities,})
 
 def show_page_numbers(request, result):
     page = request.GET.get('page', 1)

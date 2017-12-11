@@ -3,14 +3,14 @@
 {% block title %}Activity detail{% endblock title %}
 
 {% block content %}
-  <div class="card">
-<!--  <img class="card-img-top" src="" alt="Card image cap">-->
+<div class="card">
   <div class="card-body">
     <h4 class="card-title">{{ activity.name }}</h4>
     <p class="card-text">{{ activity.activity_type }}</p>
     <p class="card-text">{{ activity.start_date|date:'d M Y' }} - {{ activity.start_time|time:'H:i' }}</p>
     <p class="card-text">{{ activity.end_date|date:'d M Y' }} - {{ activity.end_time|time:'H:i' }}</p>
     <a href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary">Send SMS</a>
+    <a href="{% url 'email_create' activity.pk %}" class="btn btn-outline-primary">Send Email</a>
     <a class="col-sm-2 col-sm-4">
         <a href="{% url 'edit_activity' activity.pk %}" class="btn btn-outline-primary">Edit</a>
         <a href="{% url 'create_activity' %}" class="btn btn-primary"> Create another </a>

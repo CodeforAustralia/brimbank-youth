@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<form method="get" novalidate>    
+<form method="get" novalidate>
     <div class="form-group">
         <label class="col-form-label"><label for="id_location">Location:</label></label>
         <input type="text" name="location" placeholder="Enter suburb" maxlength="150" class="form-control " id="id_location" />
@@ -46,14 +46,8 @@
     {% endif %}
 	
     <button type="submit" class="btn btn-success" name="search" value="search">Search</button>
-    <button type="submit" class="btn btn-outline-success" name="search" value="share">Share</button>
-</form>
-
-<br />
-
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-primary"> Share </button>
+    <button type="submit" class="btn btn-outline-success" name="search" value="share">Share via text</button>
+    <button type="submit" class="btn btn-outline-success" name="search" value="email">Share via email</button>
 </form>
 
 <br />

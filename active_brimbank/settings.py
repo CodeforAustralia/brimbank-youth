@@ -216,3 +216,10 @@ AWS_S3_REGION_NAME = 'ap-southeast-2'
 AWS_QUERYSTRING_AUTH = 'False'
 S3_USE_SIGV4 = True
 AWS_S3_SIGNATURE_VERSION = 's3v4'
+
+# Mailgun email configuration
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
