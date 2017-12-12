@@ -12,4 +12,4 @@ class SendSMSForm(forms.ModelForm):
 class SendEmailForm(forms.ModelForm):
     class Meta:
         model = SendEmail
-        fields = ['email', 'message']
+        fields = ['sender', 'recipients', 'subject', 'message']

@@ -61,3 +61,6 @@ class ActivityDraftForm(forms.ModelForm):
                 'invalid': _("The entered date is invalid"),
             },
         }
+#        help_texts = {
+#             'name': _('Some useful help text.'),
+#         }

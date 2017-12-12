@@ -3,6 +3,9 @@ from django.conf import settings
 from django.urls import reverse
 from django.views.generic import CreateView
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.contrib import messages
+from django.contrib.messages import constants as messages_const
 
 from .models import SendSMS, SendEmail
 from activities.models import Activity
@@ -16,7 +19,8 @@ class SMSCreateView(CreateView):
     
     def get_success_url(self):
         send_sms(self.object.message, self.object.recipient_no)
-        return reverse('home')
+        messages.add_message(self.request, messages.SUCCESS, 'Your text has been sent')
+        return reverse('search_activity')
     
     def get_initial(self):
         """
@@ -42,12 +46,21 @@ class EmailCreateView(CreateView):
     template_name = 'sendsms/sendemail_form.html'
     
     def get_success_url(self):
-        subject = 'Activities you may be interested in'
-        email_content = self.get_initial()
-        print ('email_content: ', email_content)
-        print ('email_content type: ', type(email_content))
-        send_email(self.request, subject, self.object.message)
-        return reverse('home')
+        subject = 'Hello Winta!'
+        pk_list = self.kwargs['pk']
+        pk_list = pk_list.split('_')
+        activities = Activity.objects.filter(pk__in=pk_list)
+        msg_html = render_to_string('sendsms/email.html',
+                   {'activities': activities}
+                                   )
+        send_email(self.request, 
+                   self.object.subject, 
+                   self.object.message, 
+                   self.object.sender,
+                   self.object.recipients.split(','),
+                   msg_html)
+        messages.add_message(self.request, messages.SUCCESS, 'Your email has been sent')
+        return reverse('search_activity')
     
     def get_initial(self):
         initial = super(CreateView, self).get_initial()
@@ -62,6 +75,7 @@ class EmailCreateView(CreateView):
             activity_url = str(activity_url + '\n' + activity_url_temp)
 #        print(activity_url)
         initial['message'] = activity_url
+        initial['subject'] = 'Activities of the month!!'
         return initial
     
 def convert_number(number):
@@ -84,8 +98,9 @@ def send_sms(body, number):
     )
     print ('SMS sent')
     
-def send_email(request, subject, email_content):
-    send_mail(subject, email_content, 'noreply@bottlenose.co', ['devy@codeforaustralia.org'])
+def send_email(request, subject, email_content, sender, recipients, msg_html):
+#    send_mail(subject, email_content, 'noreply@bottlenose.co', ['devy@codeforaustralia.org'])
+    send_mail(subject, email_content, sender, recipients, html_message=msg_html)
     return render(request, 'home.html')
 
 #def send_sms_old(request):

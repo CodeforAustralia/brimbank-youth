@@ -17,16 +17,23 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.auth import views as auth_views
 
 from events import views
 from sendsms.views import send_sms, SMSCreateView, EmailCreateView
 from activities.views import ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDraftDetailView, ActivityDeleteView, ActivityDraftUpdateView, search_events, submit_activity
+from accounts import views as accounts_views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^login/$', views.login, name='login'),
     url(r'^oauth/', include('social_django.urls', namespace='social')),  # social_django
+    
+    # Accounts
+    url(r'^signup/$', accounts_views.signup, name='signup'),
+    url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+	url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
     
     # Events
     url(r'^events/$', views.events, name='events'),

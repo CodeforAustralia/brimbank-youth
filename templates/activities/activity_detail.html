@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}Activity detail{% endblock title %}
+{% load social_share %}
+
+{% block title %}{{ activity.name }}{% endblock title %}
 
 {% block content %}
 <div class="card">
@@ -18,4 +20,21 @@
     </a>
   </div>
 </div>
+
+<br />
+
+<div class="sharethis-inline-share-buttons"></div>
+
+<br />
+
+{% post_to_facebook '' %}
+    
+{% send_email activity.name "New activity: {{activity.name}}. Check it out!" "" %}
+
+
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
 {% endblock %}
