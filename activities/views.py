@@ -7,6 +7,8 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.messages import constants as messages_const
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 from .models import Activity, ActivityDraft
 from .forms import ActivityForm, ActivitySearchForm, ActivityDraftForm
@@ -19,6 +21,7 @@ MESSAGE_TAGS = {
 }
 
 # Create your views here.
+@method_decorator(login_required, name='dispatch')
 class ActivityCreateView(CreateView):
     model = ActivityDraft
     form_class = ActivityDraftForm
@@ -27,7 +30,8 @@ class ActivityCreateView(CreateView):
         messages.info(self.request, 'Please review the activity before you submit.')
         return reverse('activity_publish',args=(self.object.id,))
         # self.object.id = pk that is used in ActivityDetailView
-        
+
+@method_decorator(login_required, name='dispatch')
 class ActivityDraftUpdateView(UpdateView):
     model = ActivityDraft
     form_class = ActivityDraftForm
@@ -35,9 +39,11 @@ class ActivityDraftUpdateView(UpdateView):
     def get_success_url(self):
         return reverse('activity_publish',args=(self.object.id,))
 
+@method_decorator(login_required, name='dispatch')
 class ActivityDraftDetailView(DetailView):
     model = ActivityDraft
-    
+
+@method_decorator(login_required, name='dispatch')
 def submit_activity(request, pk):
     draft = ActivityDraft.objects.get(pk=pk)
     activity = Activity(pk=None, 
@@ -66,18 +72,20 @@ class ActivityListView(ListView):
     model = Activity
     paginate_by = 6
     context_object_name = 'activities'
-    
+
+@method_decorator(login_required, name='dispatch')
 class ActivityUpdateView(UpdateView):
     model = Activity
     form_class = ActivityForm
     
     def get_success_url(self):
         return reverse('activity_detail',args=(self.object.id,))
-    
+
+@method_decorator(login_required, name='dispatch')
 class ActivityDeleteView(DeleteView):
     model = Activity
     success_url = reverse_lazy('activity_search')
-    
+
 def search_logic(request, keywords):
     activities = Activity.objects.filter(
     Q(location__istartswith=keywords) | Q(location__iendswith=keywords) | Q(location__icontains=keywords)

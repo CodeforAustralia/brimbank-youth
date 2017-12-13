@@ -5,19 +5,17 @@ from django.utils.translation import ugettext_lazy as _
 
 from .models import Profile, GENDER
 
-class SignUpForm(UserCreationForm):    
+class SignUpForm(UserCreationForm):
+    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+
     class Meta:	
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2')
         
-		
 class ProfileForm(forms.ModelForm):
-    gender = forms.ChoiceField(choices=GENDER, required=False )
-    birth_date = forms.DateField(input_formats=['%d %b %Y'])
-
     class Meta:
         model = Profile
-        fields = ('mobile', 'gender', 'birth_date', 'bio', )
+        fields = ('phone', 'organisation_name', 'description')
         labels = {
             'mobile': _('Mobile phone'),
         }

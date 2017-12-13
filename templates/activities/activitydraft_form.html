@@ -13,11 +13,8 @@
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/gijgo.css' %}">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
-<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.css" rel="stylesheet" type="text/css" />-->
 <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
-<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css">-->
 <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
-<!--<link rel="stylesheet" href="{% static 'css/datepicker.css' %}">-->
 <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
 <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
 <style>
@@ -26,50 +23,47 @@
 {% endblock %}
 
 {% block content %}
-        <form method="post" enctype="multipart/form-data" novalidate>
-        {% csrf_token %}
-        
-        {% include 'includes/form.html' %}
-            
-        <div class="form-group row">
-          <div class="col-sm-offset-2 col-sm-10">
-            <a href="{% url 'home' %}" class="btn btn-outline-primary">Cancel</a>
-            <button type="submit" class="btn btn-primary"> Publish </button>
-          </div>
-        </div>
-      </form>
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+
+    {% include 'includes/base_activity_form.html' %}
+    
+    <br />
+
+    <div class="form-group row">
+      <div class="col-sm-3 col-sm-3 col-sm-3 col-sm-3">
+<!--        <a href="{% url 'home' %}" class="btn btn-primary" style="display: none" id="id_cancel">Cancel</a>-->
+        <a id="id_prev" class="btn btn-outline-primary" style="display: none" href="#general_info">Previous</a>
+        <a id="id_next" class="btn btn-outline-primary" href="#schedule_info" >Next</a>
+        <button type="submit" class="btn btn-primary" id="id_publish" style="display: none"> Publish </button>
+      </div>
+    </div>
+  </form>
 
 {% endblock %}
 
 {% block javascript %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.js" type="text/javascript"></script>
 <script src="http://www.datejs.com/build/date.js" type="text/javascript"></script>
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.js" type="text/javascript"></script>-->
 <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
-<!--<script src="{% static 'js/datepicker.js' %}"></script>-->
 <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.js"></script>-->
 
 
 <!-- To provide autocomplete in fields (http://easyautocomplete.com/) -->
 <script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
 
 <script>
-//    today = Date.today().toString("dd MMM yyyy");
-//    tomorrow = Date.today().add({ days: 1 }).toString("dd MMM yyyy");    
-//    $('#id_start_date').datepicker({
-//        format: 'dd mmm yyyy'
-//    });  
-//    $('#id_end_date').datepicker({
-//        format: 'dd mmm yyyy'
-//    });
     
-//    $('#id_start_date').DatePicker();
+$( document ).ready(function() {
+//    var form_elems = document.getElementsByTagName("LABEL");
+//    for (var i = 0; i < form_elems.length; i++) {
+//        $(form_elems[i]).hide();
+//    }
+    
+});
     
 var options = {
-
   data: ["Sunshine", "St. Albans", "Deer Park", "Keilor", "Keilor Downs", ]
-    
 };
     
 $('#id_location').easyAutocomplete(options);
@@ -77,25 +71,51 @@ $('#id_location').easyAutocomplete(options);
     $('#id_start_date').datepicker({
         format: 'dd M yyyy'
     });
-    
     $('#id_end_date').datepicker({
         format: 'dd M yyyy'
     });
-    
     $('#id_start_time').timepicker({ 
         'scrollDefault': 'now', 'timeFormat': 'h:i A', 'step': 15
     });
-    
     $('#id_end_time').timepicker({ 
         'scrollDefault': 'now', 'timeFormat': 'h:i A', 'step': 15
     });
+
+$( "#id_next" ).click(function() {
+    $( "#id_cancel" ).show();
+    $( "#id_prev" ).show();
+    var form_elems = document.getElementsByName("section_2");
+    for (var i = 0; i < form_elems.length; i++) {
+        $(form_elems[i]).show();
+    }
     
-//    var start_dt_val = document.getElementById(id_start_date).value;
-//    var end_dt_val = document.getElementById(id_end_date).value;
-//        
-//    if (start_dt_val.isAfter(end_dt_val)) {
-//        alert("Good day");
+//    var form_elems = document.getElementsByName("section_1");
+//    for (var i = 0; i < form_elems.length; i++) {
+//        $(form_elems[i]).hide();
 //    }
+    
+    $( "#id_next" ).hide();
+    $( "#id_publish" ).show();
+
+});
+
+$( "#id_prev" ).click(function() {
+    var form_elems = document.getElementsByName("section_1");
+    for (var i = 0; i < form_elems.length; i++) {
+        $(form_elems[i]).show();
+    }    
+    
+    var form_elems = document.getElementsByName("section_2");
+    for (var i = 0; i < form_elems.length; i++) {
+        $(form_elems[i]).hide();
+    }
+    
+    $( "#id_prev" ).hide();
+    $( "#id_next" ).show();
+    $( "#id_publish" ).hide();
+    
+});
+
     
 </script>
 

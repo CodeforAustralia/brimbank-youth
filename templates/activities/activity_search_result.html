@@ -44,15 +44,20 @@
     {% include 'includes/pagination_2.html' %}
 
     {% endif %}
-	
+    
     <button type="submit" class="btn btn-success" name="search" value="search">Search</button>
+    
+    {% if user.is_authenticated %}
     <button type="submit" class="btn btn-outline-success" name="search" value="share">Share via text</button>
     <button type="submit" class="btn btn-outline-success" name="search" value="email">Share via email</button>
+    {% endif %}
 </form>
 
 <br />
 
+{% if not user.is_authenticated %}
 <div class="sharethis-inline-share-buttons"></div>
+{% endif %}
 
 {% endblock %}
 
