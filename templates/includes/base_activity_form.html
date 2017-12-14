@@ -10,14 +10,14 @@
 
 {% for field in form %}
 
-    {% if field.label == "Name" or field.label == "Type" or field.label == "Location" %}
+    {% if field.label == "What is the name of the activity ?" or field.label == "What type of activity are you creating ?" or field.label == "Where is the location ?" %}
 
-    {% if field.label == "Name" %}
-        <h2 id="general_info">General info </h2>
+    {% if field.label == "What type of activity are you creating ?" %}
+        <p class="card-title" id="general_info">STEP 1 OF 3</p>
     {% endif %}
 
     <div class="form-group" name="section_1" >
-        <label class="col-form-label">{{ field.label_tag }}</label>
+        <label class="col-form-label"><h3>{{ field.label_tag }}</h3></label>
         
         {% render_field field class=field|input_class %} <!-- the input_class is coming from form_tags.py-->
         
@@ -30,29 +30,6 @@
         {% if field.help_text %}
           <small class="form-text text-muted">
             {{ field.help_text|safe }} <!-- The "safe" is so that the help text is not displayed in raw html, read https://simpleisbetterthancomplex.com/series/2017/09/25/a-complete-beginners-guide-to-django-part-4.html-->
-          </small>
-        {% endif %}
-    </div>
-    
-    {% else %}
-
-    <div class="form-group" name="section_2" style="display:none">
-        
-    {% if field.label == "Start date" %}
-        <h2 id="schedule_info">Schedule </h2>
-    {% endif %}
-        <label class="col-form-label">{{ field.label_tag }}</label>
-        
-        {% render_field field class=field|input_class %}
-        {% for error in field.errors %}
-            <div class="invalid-feedback">
-                {{ error }}
-            </div>
-        {% endfor %}
-        
-        {% if field.help_text %}
-          <small class="form-text text-muted">
-            {{ field.help_text|safe }}
           </small>
         {% endif %}
     </div>

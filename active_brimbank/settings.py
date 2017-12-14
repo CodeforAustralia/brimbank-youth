@@ -177,7 +177,7 @@ USE_L10N = False
 
 USE_TZ = True
 
-TIME_INPUT_FORMATS = ('%I:%M %p',)
+TIME_INPUT_FORMATS = ('%I:%M %p',)  
 
 
 # Static files (CSS, JavaScript, Images)

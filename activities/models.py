@@ -5,15 +5,30 @@ from datetime import datetime
 
 import arrow
 
-#ACTIVITY_TYPE = (
-#    ('Soccer', 'Soccer'),
-#    ('Dance', 'Dance'),
-#    ('Swimming', 'Swimming'),
-#)
+TERMS = (
+    ('Once', 'Only once'),
+    ('Daily', 'Daily'),
+    ('Weekly', 'Weekly'),
+    ('Fortnightly', 'Fortnightly'),
+    ('Monthly', 'Monthly'),
+)
+
+DAYS_CHOICE = (
+    ('Monday', 'Monday'),
+    ('Tuesday', 'Tuesday'),
+    ('Wednesday', 'Wednesday'),
+    ('Thursday', 'Thursday'),
+    ('Friday', 'Friday'),
+    ('Saturday', 'Saturday'),
+    ('Sunday', 'Sunday'),
+)
 
 def image_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return '{0}/image/{1}'.format(instance.name, filename)
+
+def file_directory_path(instance, filename):
+    return '{0}/flyer/{1}'.format(instance.name, filename)
 
 # Create your models here.
 class ActivityType(models.Model):
@@ -24,16 +39,20 @@ class ActivityType(models.Model):
     
 class Activity(models.Model):
     name = models.CharField(max_length=150)
-#    activity_type = models.CharField(max_length=50, blank=True)
     activity_type = models.ForeignKey(ActivityType, related_name='activities', null=True)
-    location = models.CharField(max_length=150, blank=True)
-    contact_number = models.CharField(max_length=15, blank=True)
-    description = models.CharField(max_length=150, blank=True)
-    start_date = models.DateField(blank=True)
-    end_date = models.DateField(blank=True)
-    start_time = models.TimeField(default=datetime.now, blank=True)
-    end_time = models.TimeField(default=datetime.now, blank=True)
-    activity_img = models.ImageField(upload_to=image_directory_path, blank=True)
+    term = models.CharField(max_length=50, choices=TERMS, blank=True, default='Once')
+    location = models.CharField(max_length=150, blank=True, null=True)
+    organiser = models.CharField(max_length=150, blank=True, null=True)
+    contact_number = models.CharField(max_length=15, blank=True, null=True)
+    description = models.TextField(max_length=150, blank=True, null=True)
+    activity_date = models.DateField(blank=True, null=True) # for one-time activity
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    activity_day = models.CharField(max_length=50, choices=DAYS_CHOICE, blank=True, default='Monday')
+    start_time = models.TimeField(default=datetime.now, blank=True, null=True)
+    end_time = models.TimeField(default=datetime.now, blank=True, null=True)
+    activity_img = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
+    flyer = models.FileField(upload_to=file_directory_path, blank=True, null=True)
 #    time_zone = TimeZoneField(default='Australia/Melbourne')
 
     # Additional fields not visible to users
@@ -55,12 +74,20 @@ class Activity(models.Model):
 class ActivityDraft(models.Model):
     name = models.CharField(max_length=150)
     activity_type = models.ForeignKey(ActivityType, related_name='activity_drafts', null=True)
-    location = models.CharField(max_length=150, blank=True)
-    contact_number = models.CharField(max_length=15, blank=True)
-    description = models.CharField(max_length=150, blank=True)
-    start_date = models.DateField(blank=True)
-    end_date = models.DateField(blank=True)
-    start_time = models.TimeField(default=datetime.now, blank=True)
-    end_time = models.TimeField(default=datetime.now, blank=True)
-    activity_img = models.ImageField(upload_to=image_directory_path, blank=True)
+    term = models.CharField(max_length=50, choices=TERMS, blank=True, default='Once')
+    location = models.CharField(max_length=150, blank=True, null=True)
+    organiser = models.CharField(max_length=150, blank=True, null=True)
+    contact_number = models.CharField(max_length=15, blank=True, null=True)
+    description = models.TextField(max_length=150, blank=True, null=True)
+    activity_date = models.DateField(blank=True, null=True) # for one-time activity
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    activity_day = models.CharField(max_length=50, choices=DAYS_CHOICE, blank=True, default='Monday')
+    start_time = models.TimeField(default=datetime.now, blank=True, null=True)
+    end_time = models.TimeField(default=datetime.now, blank=True, null=True)
+    activity_img = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
+    flyer = models.FileField(upload_to=file_directory_path, blank=True, null=True)
+    
+    def __str__(self):
+        return self.name
     

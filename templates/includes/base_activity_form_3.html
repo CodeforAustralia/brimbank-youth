@@ -1,0 +1,49 @@
+{% load form_tags widget_tweaks %}
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+      <p>{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p> <!-- for the last error, put mb/margin-bottom = 0 so that the error message doesn't look weird. By default, p has mb which doesn't equal to 0-->
+    {% endfor %}
+  </div>
+{% endif %}
+
+{% for field in form %}
+
+{% if field.label == "Describe the event" or field.label == "Add an event image" or field.label == "Upload an event flyer" or field.label == "Organiser details" %}
+
+    <div class="form-group">
+    {% if field.label == "Describe the event" %}
+        <p class = "card-title">STEP 3 OF 3</p>
+    {% endif %}
+        
+        {% if field.label == "OCCURS FROM" %}
+        <label class="col-form-label" id="label_start_date"><h3>{{ field.label_tag }}</h3></label>
+        {% elif field.label == "OCCURS UNTIL" %}
+        <label class="col-form-label" id="label_end_date"><h3>{{ field.label_tag }}</h3></label>
+        {% elif field.label == "Activity day" %}
+        <label class="col-form-label" id="label_activity_day"><h3>{{ field.label_tag }}</h3></label>
+        {% elif field.label == "Activity date" %}
+        <label class="col-form-label" id="label_activity_date"><h3>{{ field.label_tag }}</h3></label>
+        {% else %}
+        <label class="col-form-label" ><h3>{{ field.label_tag }}</h3></label>
+        {% endif %}
+        
+        
+        {% render_field field class=field|input_class %}
+        {% for error in field.errors %}
+            <div class="invalid-feedback">
+                {{ error }}
+            </div>
+        {% endfor %}
+        
+        {% if field.help_text %}
+          <small class="form-text text-muted">
+            {{ field.help_text|safe }}
+          </small>
+        {% endif %}
+    </div>
+
+    {% endif %}
+
+{% endfor %}

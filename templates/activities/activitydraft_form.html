@@ -24,21 +24,63 @@
 
 {% block content %}
 <form method="post" enctype="multipart/form-data" novalidate>
-    {% csrf_token %}
-
-    {% include 'includes/base_activity_form.html' %}
-    
-    <br />
-
-    <div class="form-group row">
-      <div class="col-sm-3 col-sm-3 col-sm-3 col-sm-3">
-<!--        <a href="{% url 'home' %}" class="btn btn-primary" style="display: none" id="id_cancel">Cancel</a>-->
-        <a id="id_prev" class="btn btn-outline-primary" style="display: none" href="#general_info">Previous</a>
-        <a id="id_next" class="btn btn-outline-primary" href="#schedule_info" >Next</a>
-        <button type="submit" class="btn btn-primary" id="id_publish" style="display: none"> Publish </button>
-      </div>
+{% csrf_token %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+      <div class="card bg-light mb-3">
+        <div class="card-body">
+                {% include 'includes/base_activity_form.html' %}
+                <br />
+                <div class="form-group row">
+                  <div class="col-sm-12">
+                    <a id="id_next" class="btn btn-primary btn-lg float-right" href="#schedule_info" >Next</a>
+                  </div>
+                </div>
+          </div>
+        </div>
     </div>
-  </form>
+</div>
+
+<br />
+<br />
+
+<div class="row justify-content-center" id="schedule_info" style="display:none">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+      <div class="card bg-light mb-3" >
+        <div class="card-body">
+                {% include 'includes/base_activity_form_2.html' %}
+                <br />
+                <div class="form-group row">
+                   <div class="col-sm-2 offset-sm-8 col-sm-9">
+                    <a id="id_prev" class="btn btn-primary btn-lg" style="display: none" href="#general_info">Previous  </a>
+                       <a id="id_next2" class="btn btn-primary btn-lg" href="#other_info"> &nbsp; Next &nbsp; </a>
+                  </div> 
+                </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+
+<div class="row justify-content-center" id="other_info" style="display:none">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+      <div class="card bg-light mb-3">
+        <div class="card-body">
+                {% include 'includes/base_activity_form_3.html' %}
+                <br />
+                <div class="form-group row">
+                  <div class="col-sm-2 offset-sm-8 col-sm-9">
+                    <a id="id_prev2" class="btn btn-primary btn-lg" style="display: none" href="#schedule_info">Previous</a>
+                    <button type="submit" class="btn btn-primary btn-lg" id="id_publish" style="display: none"> Preview </button>
+                  </div>
+                </div>
+          </div>
+        </div>
+    </div>
+</div>
+</form>
 
 {% endblock %}
 
@@ -55,10 +97,40 @@
 <script>
     
 $( document ).ready(function() {
-//    var form_elems = document.getElementsByTagName("LABEL");
-//    for (var i = 0; i < form_elems.length; i++) {
-//        $(form_elems[i]).hide();
-//    }
+var e = document.getElementById("id_term");
+    var term = e.options[e.selectedIndex].value;
+    if (term == "Daily"){
+        $( "#id_start_date" ).show();
+        $( "#id_end_date" ).show();
+        $( "#label_start_date" ).show();
+        $( "#label_end_date" ).show();
+        $( "#id_activity_date" ).hide();
+        $( "#label_activity_date" ).hide();
+        $( "#id_activity_day" ).hide();
+        $( "#label_activity_day" ).hide();
+    }   
+    
+    if (term == "Once"){
+        $( "#id_start_date" ).hide();
+        $( "#id_end_date" ).hide();
+        $( "#label_start_date" ).hide();
+        $( "#label_end_date" ).hide();
+        $( "#id_activity_date" ).show();
+        $( "#label_activity_date" ).show();
+        $( "#id_activity_day" ).hide();
+        $( "#label_activity_day" ).hide();
+    }
+    
+    if (term == "Weekly" || term == "Fortnightly" || term == "Monthly"){
+        $( "#id_start_date" ).show();
+        $( "#id_end_date" ).show();
+        $( "#label_start_date" ).show();
+        $( "#label_end_date" ).show();
+        $( "#id_activity_day" ).show();
+        $( "#label_activity_day" ).show();
+        $( "#id_activity_date" ).hide();
+        $( "#label_activity_date" ).hide();
+    }
     
 });
     
@@ -74,6 +146,9 @@ $('#id_location').easyAutocomplete(options);
     $('#id_end_date').datepicker({
         format: 'dd M yyyy'
     });
+    $('#id_activity_date').datepicker({
+        format: 'dd M yyyy'
+    });
     $('#id_start_time').timepicker({ 
         'scrollDefault': 'now', 'timeFormat': 'h:i A', 'step': 15
     });
@@ -82,37 +157,93 @@ $('#id_location').easyAutocomplete(options);
     });
 
 $( "#id_next" ).click(function() {
+    $( "#schedule_info" ).show(); 
+    $( "#id_prev" ).show();
+    $( "#id_start_date" ).hide();
+    $( "#id_end_date" ).hide();
+    $( "#id_activity_day" ).hide();
+    $( "#label_start_date" ).hide();
+    $( "#label_end_date" ).hide();
+    $( "#label_activity_day" ).hide();
+});
+    
+$( "#id_next2" ).click(function() {
+    $( "#other_info" ).show();
     $( "#id_cancel" ).show();
     $( "#id_prev" ).show();
-    var form_elems = document.getElementsByName("section_2");
-    for (var i = 0; i < form_elems.length; i++) {
-        $(form_elems[i]).show();
-    }
-    
+    $( "#id_prev2" ).show();
+    $( "#id_publish" ).show();
+});
+
+$( "#id_prev" ).click(function() {
 //    var form_elems = document.getElementsByName("section_1");
+//    for (var i = 0; i < form_elems.length; i++) {
+//        $(form_elems[i]).show();
+//    }    
+//    
+//    var form_elems = document.getElementsByName("section_2");
+//    for (var i = 0; i < form_elems.length; i++) {
+//        $(form_elems[i]).hide();
+//    }
+//    
+//    var form_elems = document.getElementsByName("section_3");
 //    for (var i = 0; i < form_elems.length; i++) {
 //        $(form_elems[i]).hide();
 //    }
     
-    $( "#id_next" ).hide();
-    $( "#id_publish" ).show();
-
 });
-
-$( "#id_prev" ).click(function() {
-    var form_elems = document.getElementsByName("section_1");
-    for (var i = 0; i < form_elems.length; i++) {
-        $(form_elems[i]).show();
-    }    
     
-    var form_elems = document.getElementsByName("section_2");
-    for (var i = 0; i < form_elems.length; i++) {
-        $(form_elems[i]).hide();
+$( "#id_prev2" ).click(function() { 
+//    var form_elems = document.getElementsByName("section_2");
+//    for (var i = 0; i < form_elems.length; i++) {
+//        $(form_elems[i]).show();
+//    }
+//    
+//    var form_elems = document.getElementsByName("section_3");
+//    for (var i = 0; i < form_elems.length; i++) {
+//        $(form_elems[i]).hide();
+//    }
+//    
+//    $( "#id_prev" ).show();
+//    $( "#id_next2" ).show();
+    
+});
+    
+$( "#id_term" ).click(function() {
+    var e = document.getElementById("id_term");
+    var term = e.options[e.selectedIndex].value;
+    if (term == "Daily"){
+        $( "#id_start_date" ).show();
+        $( "#id_end_date" ).show();
+        $( "#label_start_date" ).show();
+        $( "#label_end_date" ).show();
+        $( "#id_activity_date" ).hide();
+        $( "#label_activity_date" ).hide();
+        $( "#id_activity_day" ).hide();
+        $( "#label_activity_day" ).hide();
+    }   
+    
+    if (term == "Once"){
+        $( "#id_start_date" ).hide();
+        $( "#id_end_date" ).hide();
+        $( "#label_start_date" ).hide();
+        $( "#label_end_date" ).hide();
+        $( "#id_activity_date" ).show();
+        $( "#label_activity_date" ).show();
+        $( "#id_activity_day" ).hide();
+        $( "#label_activity_day" ).hide();
     }
     
-    $( "#id_prev" ).hide();
-    $( "#id_next" ).show();
-    $( "#id_publish" ).hide();
+    if (term == "Weekly" || term == "Fortnightly" || term == "Monthly"){
+        $( "#id_start_date" ).show();
+        $( "#id_end_date" ).show();
+        $( "#label_start_date" ).show();
+        $( "#label_end_date" ).show();
+        $( "#id_activity_day" ).show();
+        $( "#label_activity_day" ).show();
+        $( "#id_activity_date" ).hide();
+        $( "#label_activity_date" ).hide();
+    }
     
 });
 

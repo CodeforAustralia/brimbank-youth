@@ -11,7 +11,7 @@
     <p class="card-text">{{ activitydraft.start_date|date:'d M Y' }} - {{ activitydraft.start_time|time:'H:i' }}</p>
     <p class="card-text">{{ activitydraft.end_date|date:'d M Y' }} - {{ activitydraft.end_time|time:'H:i' }}</p>
     <a href="{% url 'edit_draft_activity' activitydraft.pk %}" class="btn btn-outline-primary">Edit</a>
-    <a href="{% url 'submit_activity' activitydraft.pk %}" class="btn btn-outline-primary">Publish</a>
+    <a href="{% url 'submit_activity' %}" class="btn btn-outline-primary">Publish</a>
   </div>
 </div>
 {% endblock %}

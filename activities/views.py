@@ -27,7 +27,7 @@ class ActivityCreateView(CreateView):
     form_class = ActivityDraftForm
 
     def get_success_url(self):
-        messages.info(self.request, 'Please review the activity before you submit.')
+        messages.info(self.request, 'Please review the activity before you publish.')
         return reverse('activity_publish',args=(self.object.id,))
         # self.object.id = pk that is used in ActivityDetailView
 
@@ -43,26 +43,32 @@ class ActivityDraftUpdateView(UpdateView):
 class ActivityDraftDetailView(DetailView):
     model = ActivityDraft
 
-@method_decorator(login_required, name='dispatch')
+@login_required
 def submit_activity(request, pk):
     draft = ActivityDraft.objects.get(pk=pk)
     activity = Activity(pk=None, 
-                        name=draft.name,
-                        end_date=draft.end_date,
-                        start_date=draft.start_date,
-                        activity_type = draft.activity_type,
-                        location = draft.location,
-                        contact_number = draft.contact_number,
+                        name=draft.name, activity_type=draft.activity_type,
+                        term=draft.term,
+                        location=draft.location,
+                        organiser=draft.organiser,
+                        contact_number=draft.contact_number,
                         description = draft.description,
+                        activity_date = draft.activity_date,
+                        start_date = draft.start_date,
+                        activity_day = draft.activity_day,
                         start_time = draft.start_time,
                         end_time = draft.end_time,
                         activity_img = draft.activity_img,
+                        flyer = draft.flyer,
                        )
     activity.save()
     draft.delete()
+#    return render(request, 'activities/activitydraft_detail.html', {
+#        'pk': pk,
+#    })
     return render(request, 'activities/activity_detail.html', {
-        'pk': activity.pk,
-        'activity': activity
+        'pk': pk,
+        'activity': activity,
     })
     
 class ActivityDetailView(DetailView):
