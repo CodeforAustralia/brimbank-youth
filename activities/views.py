@@ -60,6 +60,14 @@ def submit_activity(request, pk):
                         end_time = draft.end_time,
                         activity_img = draft.activity_img,
                         flyer = draft.flyer,
+                        min_age = draft.min_age,
+                        max_age = draft.max_age,
+                        background = draft.background,
+                        living_duration = draft.living_duration,
+                        gender = draft.gender,
+                        cost = draft.cost,
+                        space = draft.space,
+                        listing_privacy = draft.listing_privacy,
                        )
     activity.save()
     draft.delete()
@@ -76,6 +84,7 @@ class ActivityDetailView(DetailView):
     
 class ActivityListView(ListView):
     model = Activity
+    queryset = Activity.objects.order_by('name')
     paginate_by = 6
     context_object_name = 'activities'
 

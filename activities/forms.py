@@ -2,10 +2,10 @@ from django import forms
 from django.forms import extras
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Activity, ActivityType, ActivityDraft
+from .models import Activity, ActivityType, ActivityDraft, ACTIVITY_TYPES
 		
 class ActivityForm(forms.ModelForm):
-    activity_type = forms.ModelChoiceField(queryset=ActivityType.objects.all(), required=False)
+    activity_type = forms.ChoiceField(choices=ACTIVITY_TYPES, required=False, label='What type of activity are you creating ?')
     start_date = forms.DateField(input_formats=['%d %b %Y'])
     end_date = forms.DateField(input_formats=['%d %b %Y'])
     
@@ -17,7 +17,7 @@ class ActivityForm(forms.ModelForm):
 
     class Meta:
         model = Activity
-        fields = ('name', 'location', 'activity_type', 'start_date', 'start_time', 'end_date', 'end_time', 'description','activity_img', 'flyer')
+        fields = ('activity_type', 'name', 'location', 'activity_type', 'start_date', 'start_time', 'end_date', 'end_time', 'description','activity_img', 'flyer')
         labels = {
             'activity_img': _('Add an event image'),
             'activity_type': _('What type of activity are you creating ?'),
@@ -50,12 +50,12 @@ class ActivitySearchForm(forms.ModelForm):
         fields = ['location']
         
 class ActivityDraftForm(forms.ModelForm):
-    activity_type = forms.ModelChoiceField(queryset=ActivityType.objects.all(), required=False, label='What type of activity are you creating ?')
+    activity_type = forms.ChoiceField(choices=ACTIVITY_TYPES, required=False, label='What type of activity are you creating ?')
     start_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS FROM', required=False)
     end_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS UNTIL', required=False)
     class Meta:
         model = ActivityDraft
-        fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'activity_img', 'flyer')
+        fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'activity_img', 'flyer', 'space', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 'listing_privacy')
         labels = {
             'activity_img': _('Add an event image'),
             'name': _('What is the name of the activity ?'),
@@ -66,6 +66,13 @@ class ActivityDraftForm(forms.ModelForm):
             'organiser': _('Organiser details'),
             'flyer': _('Upload an event flyer'),
             'term': _('HOW OFTEN DOES THIS EVENT OCCUR'),
+            'space': _('Create the number of spaces available'),
+            'cost': _('Is there a cost ?'),
+            'living_duration': _('Living in Australia'),
+            'listing_privacy': _('Listing Privacy'),
+            'min_age': _('From age'),
+            'max_age': _('To age'),
+            'listing_privacy': _('Listing Privacy'),
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Give a short distinct name'}),

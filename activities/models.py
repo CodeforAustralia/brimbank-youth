@@ -23,6 +23,31 @@ DAYS_CHOICE = (
     ('Sunday', 'Sunday'),
 )
 
+LIVING_DURATION = (
+    ('Less', 'Less than 5 years'),
+    ('More', 'More than 5 years'),
+    ('Open', 'Open'),
+)
+
+GENDER = (
+    ('F', 'Only females'),
+    ('M', 'Only males'),
+    ('B', 'Both'),
+)
+
+ACTIVITY_TYPES = (
+    ('Sports', 'Sports'),
+    ('Fun', 'Fun'),
+    ('Learn', 'Learn'),
+    ('Job', 'Get a job'),
+    ('Culture', 'Culture'),
+)
+
+LISTING_PRIVACY = (
+    ('Public', 'Public Page: Accessible by anyone on Youthposter'),
+    ('Private', 'Private Page: Accesible by only people you specify'),
+)
+
 def image_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return '{0}/image/{1}'.format(instance.name, filename)
@@ -39,7 +64,7 @@ class ActivityType(models.Model):
     
 class Activity(models.Model):
     name = models.CharField(max_length=150)
-    activity_type = models.ForeignKey(ActivityType, related_name='activities', null=True)
+    activity_type = models.CharField(max_length=100, choices=ACTIVITY_TYPES, blank=True, default='Sports')
     term = models.CharField(max_length=50, choices=TERMS, blank=True, default='Once')
     location = models.CharField(max_length=150, blank=True, null=True)
     organiser = models.CharField(max_length=150, blank=True, null=True)
@@ -53,6 +78,14 @@ class Activity(models.Model):
     end_time = models.TimeField(default=datetime.now, blank=True, null=True)
     activity_img = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
     flyer = models.FileField(upload_to=file_directory_path, blank=True, null=True)
+    min_age = models.PositiveSmallIntegerField(blank=True, null=True)
+    max_age = models.PositiveSmallIntegerField(blank=True, null=True)
+    background = models.CharField(max_length=150, blank=True, null=True)
+    living_duration = models.CharField(max_length=50, choices=LIVING_DURATION, blank=True, default='Less')
+    gender = models.CharField(max_length=50, choices=GENDER, blank=True, default='F')
+    cost = models.FloatField(blank=True, null=True)
+    space = models.PositiveSmallIntegerField(blank=True, null=True, default=10000)
+    listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, blank=True, default='Public')
 #    time_zone = TimeZoneField(default='Australia/Melbourne')
 
     # Additional fields not visible to users
@@ -73,7 +106,8 @@ class Activity(models.Model):
 
 class ActivityDraft(models.Model):
     name = models.CharField(max_length=150)
-    activity_type = models.ForeignKey(ActivityType, related_name='activity_drafts', null=True)
+#    activity_type = models.ForeignKey(ActivityType, related_name='activity_drafts', null=True)
+    activity_type = models.CharField(max_length=100, choices=ACTIVITY_TYPES, blank=True, default='Sports')
     term = models.CharField(max_length=50, choices=TERMS, blank=True, default='Once')
     location = models.CharField(max_length=150, blank=True, null=True)
     organiser = models.CharField(max_length=150, blank=True, null=True)
@@ -87,6 +121,14 @@ class ActivityDraft(models.Model):
     end_time = models.TimeField(default=datetime.now, blank=True, null=True)
     activity_img = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
     flyer = models.FileField(upload_to=file_directory_path, blank=True, null=True)
+    min_age = models.PositiveSmallIntegerField(blank=True, null=True)
+    max_age = models.PositiveSmallIntegerField(blank=True, null=True)
+    background = models.CharField(max_length=150, blank=True, null=True)
+    living_duration = models.CharField(max_length=50, choices=LIVING_DURATION, blank=True, default='Less')
+    gender = models.CharField(max_length=50, choices=GENDER, blank=True, default='F')
+    cost = models.FloatField(blank=True, null=True)
+    space = models.PositiveSmallIntegerField(blank=True, null=True, default=10000)
+    listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, blank=True, default='Public')
     
     def __str__(self):
         return self.name

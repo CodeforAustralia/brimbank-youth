@@ -41,9 +41,6 @@
     </div>
 </div>
 
-<br />
-<br />
-
 <div class="row justify-content-center" id="schedule_info" style="display:none">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card bg-light mb-3" >
@@ -52,17 +49,14 @@
                 <br />
                 <div class="form-group row">
                    <div class="col-sm-2 offset-sm-8 col-sm-9">
-                    <a id="id_prev" class="btn btn-primary btn-lg" style="display: none" href="#general_info">Previous  </a>
-                       <a id="id_next2" class="btn btn-primary btn-lg" href="#other_info"> &nbsp; Next &nbsp; </a>
+                    <a id="id_prev" class="btn btn-primary btn-lg" style="display: none" href="#general_info">Previous</a>
+                    <a id="id_next2" class="btn btn-primary btn-lg" href="#other_info"> &nbsp; Next &nbsp; </a>
                   </div> 
                 </div>
           </div>
         </div>
     </div>
 </div>
-
-<br />
-<br />
 
 <div class="row justify-content-center" id="other_info" style="display:none">
     <div class="col-lg-8 col-md-10 col-sm-12">
@@ -72,14 +66,33 @@
                 <br />
                 <div class="form-group row">
                   <div class="col-sm-2 offset-sm-8 col-sm-9">
-                    <a id="id_prev2" class="btn btn-primary btn-lg" style="display: none" href="#schedule_info">Previous</a>
-                    <button type="submit" class="btn btn-primary btn-lg" id="id_publish" style="display: none"> Preview </button>
+                    <a id="id_prev2" class="btn btn-primary btn-lg" href="#schedule_info">Previous</a>
+                    <a id="id_next3" class="btn btn-primary btn-lg" href="#eligibility_info"> &nbsp; Next &nbsp; </a>
                   </div>
                 </div>
           </div>
         </div>
     </div>
 </div>
+    
+<div class="row justify-content-center" id="eligibility_info" style="display:none">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+      <div class="card bg-light mb-3">
+        <div class="card-body">
+                {% include 'includes/base_activity_form_4.html' %}
+                <br />
+                <div class="form-group row">
+                  <div class="col-sm-2 offset-sm-8 col-sm-9">
+                    <a id="id_prev3" class="btn btn-primary btn-lg" href="#other_info">Previous</a>
+                    <button type="submit" class="btn btn-primary btn-lg" id="id_publish"> Preview </button>
+                  </div>
+                </div>
+          </div>
+        </div>
+    </div>
+</div>
+    
+    
 </form>
 
 {% endblock %}
@@ -169,10 +182,11 @@ $( "#id_next" ).click(function() {
     
 $( "#id_next2" ).click(function() {
     $( "#other_info" ).show();
-    $( "#id_cancel" ).show();
-    $( "#id_prev" ).show();
-    $( "#id_prev2" ).show();
-    $( "#id_publish" ).show();
+});
+    
+$( "#id_next3" ).click(function() {
+    $( "#eligibility_info" ).show();
+    $( "#id_prev3" ).show();
 });
 
 $( "#id_prev" ).click(function() {
