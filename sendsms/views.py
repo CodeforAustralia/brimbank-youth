@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.messages import constants as messages_const
+from django.contrib.sites.shortcuts import get_current_site
 
 from .models import SendSMS, SendEmail
 from activities.models import Activity
@@ -34,7 +35,10 @@ class SMSCreateView(CreateView):
             activity = Activity.objects.get(pk=pk)
             activity_pk = activity.pk
             name = activity.name
-            activity_url_temp = name + ' http://localhost:8000'+str(reverse('activity_detail', args=[activity_pk]))
+            current_site = get_current_site(self.request)
+            domain = current_site.domain
+#            activity_url_temp = name + ' http://localhost:8000'+str(reverse('activity_detail', args=[activity_pk]))
+            activity_url_temp = name + ' '+ domain +str(reverse('activity_detail', args=[activity_pk]))
             activity_url = str(activity_url + '\n' + activity_url_temp)
         print(activity_url)
         initial['message'] = activity_url
@@ -50,8 +54,11 @@ class EmailCreateView(CreateView):
         pk_list = self.kwargs['pk']
         pk_list = pk_list.split('_')
         activities = Activity.objects.filter(pk__in=pk_list)
+        current_site = get_current_site(self.request)
         msg_html = render_to_string('sendsms/email.html',
-                   {'activities': activities}
+                   {'activities': activities,
+                   'domain':current_site.domain,
+                   }
                                    )
         send_email(self.request, 
                    self.object.subject, 
@@ -71,7 +78,10 @@ class EmailCreateView(CreateView):
             activity = Activity.objects.get(pk=pk)
             activity_pk = activity.pk
             name = activity.name
-            activity_url_temp = name + ' http://localhost:8000'+str(reverse('activity_detail', args=[activity_pk]))
+            current_site = get_current_site(self.request)
+            domain = current_site.domain
+            activity_url_temp = name + ' '+ domain +str(reverse('activity_detail', args=[activity_pk]))
+#            activity_url_temp = name + ' http://localhost:8000'+str(reverse('activity_detail', args=[activity_pk]))
             activity_url = str(activity_url + '\n' + activity_url_temp)
 #        print(activity_url)
         initial['message'] = activity_url

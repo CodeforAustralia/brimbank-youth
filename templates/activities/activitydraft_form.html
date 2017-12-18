@@ -18,13 +18,18 @@
 <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
 <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
 <style>
-    .invalid-feedback {display: inline;}
+    .invalid-feedback {display: inline;}    
+    #id_start_date, #id_end_date, #id_activity_date  {
+      background-color: white;
+      cursor: pointer;
+}
 </style>
 {% endblock %}
 
 {% block content %}
 <form method="post" enctype="multipart/form-data" novalidate>
 {% csrf_token %}
+
 <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card bg-light mb-3">
@@ -91,8 +96,6 @@
         </div>
     </div>
 </div>
-    
-    
 </form>
 
 {% endblock %}
@@ -105,13 +108,15 @@
 
 
 <!-- To provide autocomplete in fields (http://easyautocomplete.com/) -->
-<script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
+<!--<script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>-->
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
 
 <script>
     
 $( document ).ready(function() {
 var e = document.getElementById("id_term");
-    var term = e.options[e.selectedIndex].value;
+var term = e.options[e.selectedIndex].value;
     if (term == "Daily"){
         $( "#id_start_date" ).show();
         $( "#id_end_date" ).show();
@@ -144,30 +149,71 @@ var e = document.getElementById("id_term");
         $( "#id_activity_date" ).hide();
         $( "#label_activity_date" ).hide();
     }
+});
+
     
+$( "#id_space_choice_0" ).click(function() {
+    $( "#id_space" ).show();
+})
+
+$( "#id_space_choice_1" ).click(function() {
+    $( "#id_space" ).hide();
+})
+    
+$( "#id_cost_choice_1" ).click(function() {
+    $( "#id_cost" ).show();
+})
+    
+$( "#id_cost_choice_0" ).click(function() {
+    $( "#id_cost" ).hide();
+})
+    
+//var options = {
+//  data: ["Sunshine", "St. Albans", "Deer Park", "Keilor", "Keilor Downs", ]
+//};
+//    
+//$('#id_location').easyAutocomplete(options);
+    
+var currentTime = new Date();
+    
+$('#id_start_date').datepicker({
+    format: 'dd M yyyy',
+    autoclose: true,
+    assumeNearbyYear: true,
+    clearBtn: true,
+    startDate: currentTime,
+    todayHighlight: true,
+//        todayBtn: true,
+});    
+    
+$('#id_end_date').datepicker({
+    format: 'dd M yyyy',
+    autoclose: true,
+    assumeNearbyYear: true,
+    clearBtn: true,
+    startDate: currentTime,
+    todayHighlight: true,
 });
     
-var options = {
-  data: ["Sunshine", "St. Albans", "Deer Park", "Keilor", "Keilor Downs", ]
-};
+$('#id_activity_date').datepicker({
+    format: 'dd M yyyy',
+    autoclose: true,
+    assumeNearbyYear: true,
+    clearBtn: true,
+    startDate: currentTime,
+    todayHighlight: true,
+});
     
-$('#id_location').easyAutocomplete(options);
+$('#id_start_time').timepicker({ 
+    'scrollDefault': 'now', 'timeFormat': 'h:i A', 'step': 15
+});
+$('#id_end_time').timepicker({ 
+    'scrollDefault': 'now', 'timeFormat': 'h:i A', 'step': 15
+});
     
-    $('#id_start_date').datepicker({
-        format: 'dd M yyyy'
-    });
-    $('#id_end_date').datepicker({
-        format: 'dd M yyyy'
-    });
-    $('#id_activity_date').datepicker({
-        format: 'dd M yyyy'
-    });
-    $('#id_start_time').timepicker({ 
-        'scrollDefault': 'now', 'timeFormat': 'h:i A', 'step': 15
-    });
-    $('#id_end_time').timepicker({ 
-        'scrollDefault': 'now', 'timeFormat': 'h:i A', 'step': 15
-    });
+$('#id_start_date').attr('readonly', true);
+$('#id_end_date').attr('readonly', true);
+$('#id_activity_date').attr('readonly', true);
 
 $( "#id_next" ).click(function() {
     $( "#schedule_info" ).show(); 
@@ -189,25 +235,8 @@ $( "#id_next3" ).click(function() {
     $( "#id_prev3" ).show();
 });
 
-$( "#id_prev" ).click(function() {
-//    var form_elems = document.getElementsByName("section_1");
-//    for (var i = 0; i < form_elems.length; i++) {
-//        $(form_elems[i]).show();
-//    }    
-//    
-//    var form_elems = document.getElementsByName("section_2");
-//    for (var i = 0; i < form_elems.length; i++) {
-//        $(form_elems[i]).hide();
-//    }
-//    
-//    var form_elems = document.getElementsByName("section_3");
-//    for (var i = 0; i < form_elems.length; i++) {
-//        $(form_elems[i]).hide();
-//    }
-    
-});
-    
-$( "#id_prev2" ).click(function() { 
+
+//$( "#id_prev2" ).click(function() {
 //    var form_elems = document.getElementsByName("section_2");
 //    for (var i = 0; i < form_elems.length; i++) {
 //        $(form_elems[i]).show();
@@ -221,7 +250,7 @@ $( "#id_prev2" ).click(function() {
 //    $( "#id_prev" ).show();
 //    $( "#id_next2" ).show();
     
-});
+//});
     
 $( "#id_term" ).click(function() {
     var e = document.getElementById("id_term");
@@ -260,7 +289,13 @@ $( "#id_term" ).click(function() {
     }
     
 });
-
+    
+//Google maps
+function initialize() {
+    var input = document.getElementById('id_location');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+}
+google.maps.event.addDomListener(window, 'load', initialize);
     
 </script>
 

@@ -37,7 +37,8 @@ def signup(request):
             mail_subject = 'Activate your account.'
 #            to_email = form.cleaned_data.get('email')
 #            to_email = to_email.split(',')
-            to_email = ['devy@codeforaustralia.org']
+#            to_email = ['devy@codeforaustralia.org']
+            to_email = ['dsihaloho@student.unimelb.edu.au']
             sender = form.cleaned_data.get('email')
             send_mail(mail_subject, message, sender, to_email, html_message=message)
 			

@@ -30,6 +30,12 @@ class ActivityCreateView(CreateView):
         messages.info(self.request, 'Please review the activity before you publish.')
         return reverse('activity_publish',args=(self.object.id,))
         # self.object.id = pk that is used in ActivityDetailView
+        
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        object.created_by = self.request.user
+        object.save()
+        return super(ActivityCreateView, self).form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
 class ActivityDraftUpdateView(UpdateView):
@@ -67,6 +73,8 @@ def submit_activity(request, pk):
                         gender = draft.gender,
                         cost = draft.cost,
                         space = draft.space,
+                        cost_choice = draft.cost_choice,
+                        space_choice = draft.space_choice,
                         listing_privacy = draft.listing_privacy,
                        )
     activity.save()

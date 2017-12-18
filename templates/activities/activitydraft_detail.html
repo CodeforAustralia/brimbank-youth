@@ -7,8 +7,12 @@
   <div class="card-body">
     <h4 class="card-title">{{ activitydraft.name }}</h4>
     <p class="card-text">{{ activitydraft.activity_type }}</p>
+    <p class="card-text">{{ activitydraft.activity_date|date:'d M Y' }}</p>
+    <p class="card-text">{{ activitydraft.start_time|time:'H:i' }} to {{ activitydraft.end_time|time:'H:i' }}</p>
+    {% if activitydraft.start_date %}
     <p class="card-text">{{ activitydraft.start_date|date:'d M Y' }} - {{ activitydraft.start_time|time:'H:i' }}</p>
     <p class="card-text">{{ activitydraft.end_date|date:'d M Y' }} - {{ activitydraft.end_time|time:'H:i' }}</p>
+    {% endif %}
     <a href="{% url 'edit_draft_activity' activitydraft.pk %}" class="btn btn-outline-primary">Edit</a>
     <a href="{% url 'submit_activity' activitydraft.pk %}" class="btn btn-outline-primary">Publish</a>
   </div>

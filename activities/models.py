@@ -1,5 +1,7 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.urls import reverse
+from django.forms import ValidationError
 
 from datetime import datetime
 
@@ -48,6 +50,16 @@ LISTING_PRIVACY = (
     ('Private', 'Private Page: Accesible by only people you specify'),
 )
 
+SPACE_OPTIONS = (
+    ('Limited', 'Limited'),
+    ('Unlimited', 'Unlimited'),
+)
+
+COST_OPTIONS = (
+    ('N', 'Free'),
+    ('Y', 'Paid'),
+)
+
 def image_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
     return '{0}/image/{1}'.format(instance.name, filename)
@@ -85,6 +97,8 @@ class Activity(models.Model):
     gender = models.CharField(max_length=50, choices=GENDER, blank=True, default='F')
     cost = models.FloatField(blank=True, null=True)
     space = models.PositiveSmallIntegerField(blank=True, null=True, default=10000)
+    cost_choice = models.CharField(max_length=50, choices=COST_OPTIONS, default='N')
+    space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Limited')
     listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, blank=True, default='Public')
 #    time_zone = TimeZoneField(default='Australia/Melbourne')
 
@@ -124,12 +138,22 @@ class ActivityDraft(models.Model):
     min_age = models.PositiveSmallIntegerField(blank=True, null=True)
     max_age = models.PositiveSmallIntegerField(blank=True, null=True)
     background = models.CharField(max_length=150, blank=True, null=True)
-    living_duration = models.CharField(max_length=50, choices=LIVING_DURATION, blank=True, default='Less')
-    gender = models.CharField(max_length=50, choices=GENDER, blank=True, default='F')
+    living_duration = models.CharField(max_length=50, choices=LIVING_DURATION, default='Less')
+    gender = models.CharField(max_length=50, choices=GENDER, default='F')
     cost = models.FloatField(blank=True, null=True)
-    space = models.PositiveSmallIntegerField(blank=True, null=True, default=10000)
-    listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, blank=True, default='Public')
+    cost_choice = models.CharField(max_length=50, choices=COST_OPTIONS, default='N')
+    space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Limited')
+    space = models.PositiveSmallIntegerField(blank=True, null=True, default=0)
+    listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
+    created_by = models.ForeignKey(User, related_name='drafts', null=True)
     
     def __str__(self):
         return self.name
+    
+    def clean(self):
+        if self.term != 'Once':
+            begin_date = arrow.get(self.start_date, 'Australia/Melbourne')
+            finish_date = arrow.get(self.end_date, 'Australia/Melbourne')
+            if finish_date < begin_date:
+                raise ValidationError('End date must be before the start date')
     

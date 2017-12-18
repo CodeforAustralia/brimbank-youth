@@ -14,7 +14,7 @@
 <form method="get" novalidate>
     <div class="form-group">
         <label class="col-form-label"><label for="id_location">Location:</label></label>
-        <input type="text" name="location" placeholder="Enter suburb" maxlength="150" class="form-control " id="id_location" />
+        <input type="text" name="location" placeholder="Search an address" maxlength="150" class="form-control " id="id_location" />
     </div>
     
     
@@ -66,12 +66,20 @@
 
 <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
+
 <script>
-var options = {
-    data: ["Sunshine", "St. Albans", "Deer Park", "Keilor", "Keilor Downs", ]
-};
+//var options = {
+//    data: ["Sunshine", "St. Albans", "Deer Park", "Keilor", "Keilor Downs", ]
+//};
+//$('#id_location').easyAutocomplete(options);
     
-$('#id_location').easyAutocomplete(options);
+//Google maps
+function initialize() {
+    var input = document.getElementById('id_location');
+    var autocomplete = new google.maps.places.Autocomplete(input);
+}
+google.maps.event.addDomListener(window, 'load', initialize);
 
 </script>
 
