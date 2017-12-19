@@ -6,15 +6,55 @@
 <div class="card">
   <div class="card-body">
     <h4 class="card-title">{{ activitydraft.name }}</h4>
+    <p class="card-text">{{ activitydraft.description }}</p>
     <p class="card-text">{{ activitydraft.activity_type }}</p>
-    <p class="card-text">{{ activitydraft.activity_date|date:'d M Y' }}</p>
-    <p class="card-text">{{ activitydraft.start_time|time:'H:i' }} to {{ activitydraft.end_time|time:'H:i' }}</p>
-    {% if activitydraft.start_date %}
-    <p class="card-text">{{ activitydraft.start_date|date:'d M Y' }} - {{ activitydraft.start_time|time:'H:i' }}</p>
-    <p class="card-text">{{ activitydraft.end_date|date:'d M Y' }} - {{ activitydraft.end_time|time:'H:i' }}</p>
+    <p class="card-text">{{ activitydraft.organiser }}</p>
+    <p class="card-text">Where? {{ activitydraft.location }}</p>  
+    
+      
+<!--    Activities that only occur once -->
+    {% if activitydraft.activity_date %}
+        <p class="card-text">{{ activitydraft.activity_date|date:'D, d M Y' }}</p>
+        <p class="card-text">{{ activitydraft.start_time|time:'g:i A' }} to {{ activitydraft.end_time|time:'g:i A' }}</p>
     {% endif %}
+    
+<!--      Daily, weekly, fortnightly, monthly activities-->
+    {% if activitydraft.term != 'Once' %}
+      {% if activitydraft.activity_day %}
+      <p class="card-text">Happening every {{ activitydraft.activity_day }} from {{ activitydraft.start_date|date:'D, d M Y' }} to {{ activitydraft.end_date|date:'D, d M Y' }}</p>
+      {% else %}
+      <p class="card-text">Happening every day from {{ activitydraft.start_date|date:'D, d M Y' }} to {{ activitydraft.end_date|date:'D, d M Y' }}</p>
+      {% endif %}
+      
+<!--      Show the time of the activities-->
+      <p class="card-text">{{ activitydraft.start_time|time:'g:i A' }} to {{ activitydraft.end_time|time:'g:i A' }}</p>
+    {% endif %}
+      
+    <!--      Number of available spaces-->
+      {% if activitydraft.space_choice == 'Limited' %}
+        <p class="card-text">Available space: {{ activitydraft.space }}</p>
+      {% endif %}
+      
+<!--      Activity cost-->
+      {% if activitydraft.cost_choice == 'N' %}
+        <p class="card-text">No cost</p>
+      {% endif %}
+      {% if activitydraft.cost_choice == 'Y' %}
+        <p class="card-text">Cost: ${{ activitydraft.cost }}</p>
+      {% endif %}
+      
+<!--      Eligibility-->
+      {% if activitydraft.living_duration != 'Open' %}
+      <p class="card-text">Living in Australia {{ activitydraft.living_duration|lower }} than 5 years </p>      
+      {% endif %}
+      
+      {% if activitydraft.living_duration == 'Open' %}
+      <p class="card-text">Open to anyone</p>
+      {% endif %}
+      
     <a href="{% url 'edit_draft_activity' activitydraft.pk %}" class="btn btn-outline-primary">Edit</a>
     <a href="{% url 'submit_activity' activitydraft.pk %}" class="btn btn-outline-primary">Publish</a>
+      
   </div>
 </div>
 {% endblock %}

@@ -13,15 +13,16 @@
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'css/gijgo.css' %}">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css" />
-<!--<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.css" rel="stylesheet" type="text/css" />-->
 <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
-<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.10.0/jquery.timepicker.css">-->
 <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
-<!--<link rel="stylesheet" href="{% static 'css/datepicker.css' %}">-->
 <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
 <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
 <style>
     .invalid-feedback {display: inline;}
+    #id_start_date, #id_end_date, #id_activity_date  {
+      background-color: white;
+      cursor: pointer;
+}
 </style>
 {% endblock %}
 
@@ -29,14 +30,33 @@
         <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         
-        {% include 'includes/form.html' %}
+<!--        {% include 'includes/form.html' %}-->
             
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+              <div class="card bg-light mb-3">
+                <div class="card-body">
+                        {% include 'includes/base_activity_form.html' %}
+                        <br />
+                        <div class="form-group row">
+                          <div class="col-sm-12">
+                            <a id="id_next" class="btn btn-primary btn-lg float-right" href="#schedule_info" >Next</a>
+                          </div>
+                        </div>
+                  </div>
+                </div>
+            </div>
+        </div>    
+            
+            
+<!--
         <div class="form-group row">
           <div class="col-sm-offset-2 col-sm-10">
             <a href="{% url 'home' %}" class="btn btn-outline-primary">Cancel</a>
             <button type="submit" class="btn btn-primary"> Save </button>
           </div>
         </div>
+-->
       </form>
 
 {% endblock %}

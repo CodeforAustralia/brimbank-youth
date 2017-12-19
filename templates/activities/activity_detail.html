@@ -8,9 +8,51 @@
 <div class="card">
   <div class="card-body">
     <h4 class="card-title">{{ activity.name }}</h4>
+    <p class="card-text">{{ activity.description }}</p>
     <p class="card-text">{{ activity.activity_type }}</p>
-    <p class="card-text">{{ activity.start_date|date:'d M Y' }} - {{ activity.start_time|time:'H:i' }}</p>
-    <p class="card-text">{{ activity.end_date|date:'d M Y' }} - {{ activity.end_time|time:'H:i' }}</p>
+    <p class="card-text">{{ activity.organiser }}</p>
+    <p class="card-text">Where? {{ activity.location }}</p>  
+    
+      
+<!--    Activities that only occur once -->
+    {% if activity.activity_date %}
+        <p class="card-text">{{ activity.activity_date|date:'D, d M Y' }}</p>
+        <p class="card-text">{{ activity.start_time|time:'g:i A' }} to {{ activity.end_time|time:'g:i A' }}</p>
+    {% endif %}
+    
+<!--      Daily, weekly, fortnightly, monthly activities-->
+    {% if activity.term != 'Once' %}
+      {% if activity.activity_day %}
+      <p class="card-text">Happening every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d M Y' }} to {{ activity.end_date|date:'D, d M Y' }}</p>
+      {% else %}
+      <p class="card-text">Happening every day from {{ activity.start_date|date:'D, d M Y' }} to {{ activity.end_date|date:'D, d M Y' }}</p>
+      {% endif %}
+      
+<!--      Show the time of the activities-->
+      <p class="card-text">{{ activity.start_time|time:'g:i A' }} to {{ activity.end_time|time:'g:i A' }}</p>
+    {% endif %}
+      
+    <!--      Number of available spaces-->
+      {% if activity.space_choice == 'Limited' %}
+        <p class="card-text">Available space: {{ activity.space }}</p>
+      {% endif %}
+      
+<!--      Activity cost-->
+      {% if activity.cost_choice == 'N' %}
+        <p class="card-text">No cost</p>
+      {% endif %}
+      {% if activity.cost_choice == 'Y' %}
+        <p class="card-text">Cost: ${{ activity.cost }}</p>
+      {% endif %}
+      
+<!--      Eligibility-->
+      {% if activity.living_duration != 'Open' %}
+      <p class="card-text">Living in Australia {{ activity.living_duration|lower }} than 5 years </p>      
+      {% endif %}
+      
+      {% if activity.living_duration == 'Open' %}
+      <p class="card-text">Open to anyone</p>
+      {% endif %}
       
     {% if user.is_authenticated %}
     <a href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary">Send SMS</a>

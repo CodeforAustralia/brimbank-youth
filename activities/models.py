@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-from django.forms import ValidationError
 
 from datetime import datetime
 
@@ -99,7 +98,9 @@ class Activity(models.Model):
     space = models.PositiveSmallIntegerField(blank=True, null=True, default=10000)
     cost_choice = models.CharField(max_length=50, choices=COST_OPTIONS, default='N')
     space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Limited')
-    listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, blank=True, default='Public')
+    listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
+    created_by = models.ForeignKey(User, related_name='activities', null=True)
+    published = models.BooleanField(default=True)
 #    time_zone = TimeZoneField(default='Australia/Melbourne')
 
     # Additional fields not visible to users
@@ -146,14 +147,17 @@ class ActivityDraft(models.Model):
     space = models.PositiveSmallIntegerField(blank=True, null=True, default=0)
     listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
     created_by = models.ForeignKey(User, related_name='drafts', null=True)
+    published = models.BooleanField(default=False)
     
     def __str__(self):
         return self.name
     
-    def clean(self):
-        if self.term != 'Once':
-            begin_date = arrow.get(self.start_date, 'Australia/Melbourne')
-            finish_date = arrow.get(self.end_date, 'Australia/Melbourne')
-            if finish_date < begin_date:
-                raise ValidationError('End date must be before the start date')
+#    def clean(self):
+#        if self.term != 'Once':
+#            begin_date = arrow.get(self.start_date, 'Australia/Melbourne')
+#            finish_date = arrow.get(self.end_date, 'Australia/Melbourne')
+#            if finish_date < begin_date:
+#                raise ValidationError('Please correct the errors below.')
+#                raise ValidationError({'start_date': ["End date must be before the start date"],
+#                                       'end_date': ["End date must be before the start date"],})
     

@@ -86,12 +86,21 @@
         <div class="card-body">
                 {% include 'includes/base_activity_form_4.html' %}
                 <br />
+                {% if not object.published %}
                 <div class="form-group row">
                   <div class="col-sm-2 offset-sm-8 col-sm-9">
-                    <a id="id_prev3" class="btn btn-primary btn-lg" href="#other_info">Previous</a>
-                    <button type="submit" class="btn btn-primary btn-lg" id="id_publish"> Preview </button>
+<!--                    <a id="id_prev3" class="btn btn-primary btn-lg" href="#other_info">Previous</a>-->
+                    <button type="submit" class="btn btn-secondary btn-lg" id="id_publish"> Save </button>
+                    <button type="submit" class="btn btn-success btn-lg" id="id_publish"> Preview </button>
                   </div>
                 </div>
+                {% else %}
+                <div class="form-group row">
+                  <div class="col-sm-2 offset-sm-10">
+                    <button type="submit" class="btn btn-success btn-lg" id="id_publish"> Save </button>
+                  </div>
+                </div>
+                {% endif %}
           </div>
         </div>
     </div>

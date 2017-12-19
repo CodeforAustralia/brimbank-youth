@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.contrib.messages import constants as messages_const
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.forms.models import model_to_dict
 
 from .models import Activity, ActivityDraft
 from .forms import ActivityForm, ActivitySearchForm, ActivityDraftForm
@@ -27,23 +28,31 @@ class ActivityCreateView(CreateView):
     form_class = ActivityDraftForm
 
     def get_success_url(self):
-        messages.info(self.request, 'Please review the activity before you publish.')
+        messages.info(self.request, 'The activity has been saved. You can review the activity before it is published.')
         return reverse('activity_publish',args=(self.object.id,))
         # self.object.id = pk that is used in ActivityDetailView
         
     def form_valid(self, form):
         object = form.save(commit=False)
         object.created_by = self.request.user
+        object.published_ready = True
         object.save()
         return super(ActivityCreateView, self).form_valid(form)
-
+    
 @method_decorator(login_required, name='dispatch')
 class ActivityDraftUpdateView(UpdateView):
     model = ActivityDraft
     form_class = ActivityDraftForm
     
     def get_success_url(self):
+        messages.info(self.request, 'The activity has been updated. You can review the activity before it is published.')
         return reverse('activity_publish',args=(self.object.id,))
+    
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        object.published = False
+        object.save()
+        return super(ActivityDraftUpdateView, self).form_valid(form)
 
 @method_decorator(login_required, name='dispatch')
 class ActivityDraftDetailView(DetailView):
@@ -52,41 +61,49 @@ class ActivityDraftDetailView(DetailView):
 @login_required
 def submit_activity(request, pk):
     draft = ActivityDraft.objects.get(pk=pk)
-    activity = Activity(pk=None, 
-                        name=draft.name, activity_type=draft.activity_type,
-                        term=draft.term,
-                        location=draft.location,
-                        organiser=draft.organiser,
+    if draft.organiser == None:
+        messages.add_message(request, messages.ERROR, 'Please enter the organiser information.', extra_tags='danger')
+        form = ActivityDraftForm(initial=model_to_dict(draft))
+        kwargs = {'pk': draft.pk}
+        return redirect('edit_draft_activity', **kwargs)
+    else:
+        activity = Activity(pk=None, 
+                            name=draft.name, activity_type=draft.activity_type,
+                            term=draft.term,
+                            location=draft.location,
+                            organiser=draft.organiser,
                         contact_number=draft.contact_number,
-                        description = draft.description,
-                        activity_date = draft.activity_date,
-                        start_date = draft.start_date,
-                        activity_day = draft.activity_day,
-                        start_time = draft.start_time,
-                        end_time = draft.end_time,
-                        activity_img = draft.activity_img,
-                        flyer = draft.flyer,
-                        min_age = draft.min_age,
-                        max_age = draft.max_age,
-                        background = draft.background,
-                        living_duration = draft.living_duration,
-                        gender = draft.gender,
-                        cost = draft.cost,
-                        space = draft.space,
-                        cost_choice = draft.cost_choice,
-                        space_choice = draft.space_choice,
-                        listing_privacy = draft.listing_privacy,
-                       )
-    activity.save()
-    draft.delete()
-#    return render(request, 'activities/activitydraft_detail.html', {
-#        'pk': pk,
-#    })
-    return render(request, 'activities/activity_detail.html', {
-        'pk': pk,
-        'activity': activity,
-    })
-    
+                            description = draft.description,
+                            activity_date = draft.activity_date,
+                            start_date = draft.start_date,
+                            activity_day = draft.activity_day,
+                            start_time = draft.start_time,
+                            end_time = draft.end_time,
+                            activity_img = draft.activity_img,
+                            flyer = draft.flyer,
+                            min_age = draft.min_age,
+                            max_age = draft.max_age,
+                            background = draft.background,
+                            living_duration = draft.living_duration,
+                            gender = draft.gender,
+                            cost = draft.cost,
+                            space = draft.space,
+                            cost_choice = draft.cost_choice,
+                            space_choice = draft.space_choice,
+                            listing_privacy = draft.listing_privacy,
+                            created_by = draft.created_by,
+                            published = True,
+                           )
+        activity.save()
+        draft.delete()
+    #    return render(request, 'activities/activitydraft_detail.html', {
+    #        'pk': pk,
+    #    })
+        return render(request, 'activities/activity_detail.html', {
+            'pk': pk,
+            'activity': activity,
+        })
+
 class ActivityDetailView(DetailView):
     model = Activity
     
@@ -100,9 +117,12 @@ class ActivityListView(ListView):
 class ActivityUpdateView(UpdateView):
     model = Activity
     form_class = ActivityForm
+    template_name = 'activities/activitydraft_form.html'
     
     def get_success_url(self):
-        return reverse('activity_detail',args=(self.object.id,))
+        published = True
+#        return reverse('activity_detail',args=(self.object.id,))
+        return reverse('activity_detail',kwargs={'pk': self.object.id,})
 
 @method_decorator(login_required, name='dispatch')
 class ActivityDeleteView(DeleteView):
