@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Search for events{% endblock %}
+{% block title %}Youth Poster{% endblock %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
@@ -10,17 +10,25 @@
 {% endblock %}
 
 {% block content %}
-
-<form method="get" novalidate>
-    <div class="form-group">
-        <label class="col-form-label"><label for="id_location">Location:</label></label>
-        <input type="text" name="location" placeholder="Search an address" maxlength="150" class="form-control " id="id_location" />
-    </div>
-    
+<div class="jumbotron mb-6">
+  <div class="container text-center">
+      <h1 class="display-4">Youth Poster</h1>
+    <p class="lead">Search for events and activities in your area</p>
+    <hr class="my-3">
+    <form method="get" class="form-inline justify-content-center" novalidate>
+<!--    <div class="form-group">-->
+        <label class="sr-only" for="id_name">Activity name</label>
+        <input type="text" name="name" placeholder="Swimming, Dance..." maxlength="150" class="form-control mr-sm-2" id="id_name" />
+        <label class="sr-only" for="id_location">Location</label>
+        <input type="text" name="location" placeholder="Sunshine, Deer Park... " maxlength="150" class="form-control mr-sm-2" id="id_location" />
+        <button type="submit" class="btn btn-success mr-sm-2" name="search" value="search">Search</button>
+<!--    </div>    -->
+    </form>  
+  </div>
+</div>
     
     {% if activities %}
-
-    <div class="row">
+    <div class="row justify-content-center">
     {% for activity in activities %}
     <div class="col-sm-6">
       <div class="card">
@@ -45,13 +53,11 @@
 
     {% endif %}
     
-    <button type="submit" class="btn btn-success" name="search" value="search">Search</button>
-    
     {% if user.is_authenticated %}
     <button type="submit" class="btn btn-outline-success" name="search" value="share">Share via text</button>
     <button type="submit" class="btn btn-outline-success" name="search" value="email">Share via email</button>
     {% endif %}
-</form>
+<!--</form>-->
 
 <br />
 
@@ -70,9 +76,9 @@
 
 <script>
 //var options = {
-//    data: ["Sunshine", "St. Albans", "Deer Park", "Keilor", "Keilor Downs", ]
+//    data: ["Swimming", "Dance", "Soccer", "Basketball", "Volleyball", ]
 //};
-//$('#id_location').easyAutocomplete(options);
+//$('#id_name').easyAutocomplete(options);
     
 //Google maps
 function initialize() {

@@ -13,6 +13,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.http import urlsafe_base64_decode
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView
+from django.http import JsonResponse
 
 from .forms import SignUpForm, ProfileForm
 from .tokens import account_activation_token
@@ -44,10 +45,12 @@ def signup(request):
 			
             # Users are logged in
             auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            messages.add_message(request, messages.SUCCESS, 'Please wait for the admin to confirm your registration.')
             return redirect('account_activation_sent')
     else:
         form = SignUpForm()
     return render(request, 'accounts/signup.html', {'form': form})
+#    return render(request, 'base.html', {'form': form})
 
 def activate(request, uidb64, token):
     try:
@@ -85,3 +88,72 @@ class EnterProfileView(UpdateView):
         profile.save()
         messages.add_message(request, messages.SUCCESS, 'Your profile has been updated.')
         return redirect('home')
+    
+def signup_ajax_form(request):
+    data = dict()
+    
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            
+            # Send confirmation email
+            current_site = get_current_site(request)
+            message = render_to_string('accounts/account_activation_email.html', {
+                'user':user, 
+                'domain':current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            })
+            mail_subject = 'Activate your account.'
+            to_email = ['dsihaloho@student.unimelb.edu.au']
+            sender = form.cleaned_data.get('email')
+            send_mail(mail_subject, message, sender, to_email, html_message=message)
+            
+            # Users are logged in
+            auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+#            messages2 = messages.add_message(request, messages.SUCCESS, 'Please wait for the admin to confirm your registration.')
+            
+            # Send data to AJAX form
+            data['form_is_valid'] = True
+        else:
+            data['form_is_valid'] = False
+    else:
+        form = SignUpForm()
+        
+    context = {'form': form}
+    data['html_form'] = render_to_string('includes/partial_signup.html',
+        context,
+        request=request,
+    )
+    return JsonResponse(data)
+    
+def test_signup(request):
+    data = dict()
+    
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            users = User.objects.all()
+            data['html_book_list'] = render_to_string('includes/partial_user.html', {
+                'users': users
+            })
+        else:
+            data['form_is_valid'] = False
+    else:
+        form = SignUpForm()
+        
+    context = {'form': form}
+    data['html_form'] = render_to_string('includes/partial_signup.html',
+        context,
+        request=request,
+    )
+    return JsonResponse(data)
+
+def test_signup_real(request):
+    users = User.objects.all()
+    return render(request, 'test_signup.html', {'users': users})

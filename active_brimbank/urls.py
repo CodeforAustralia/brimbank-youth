@@ -38,6 +38,8 @@ urlpatterns = [
         accounts_views.activate, name='activate'),
     url(r'^admin/', admin.site.urls),
     url(r'^edit_profile/$', accounts_views.EnterProfileView.as_view(), name='enter_profile'),
+    url(r'^signup_ajax_form/$', accounts_views.signup_ajax_form, name='signup_ajax_form'),
+    
     
     # Password management
     url(r'^password_reset/$', auth_views.password_reset, name='password_reset'),
@@ -57,6 +59,10 @@ urlpatterns = [
     
     # Send Email
     url(r'^email_create/(?P<pk>\w+)/$', EmailCreateView.as_view(), name='email_create'),
+    
+    # Testing
+    url(r'^test_signup_real/$', accounts_views.test_signup_real, name='test_signup_real'),
+    url(r'^test_signup/$', accounts_views.test_signup, name='test_signup'),
     
     # Activities
     url(r'^create_activity/$', ActivityCreateView.as_view(), name='create_activity'),

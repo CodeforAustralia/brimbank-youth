@@ -1,0 +1,9 @@
+{% for user in users %}
+  <tr>
+    <td>{{ user.username }}</td>
+  </tr>
+{% empty %}
+  <tr>
+    <td colspan="7" class="text-center bg-warning">No book</td>
+  </tr>
+{% endfor %}

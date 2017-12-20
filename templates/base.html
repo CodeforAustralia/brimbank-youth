@@ -42,7 +42,8 @@
             {% if not user.is_authenticated %}
             <form class="form-inline ml-auto">
               <a href="{% url 'login' %}" class="btn btn-outline-success">Log in</a>
-              <a href="{% url 'signup' %}" class="btn btn-success ml-2">Sign up</a>
+<!--              <a href="{% url 'signup' %}" class="btn btn-success ml-2 js-signup" >Sign up</a>-->
+              <a href="#" class="btn btn-success ml-2 js-signup" >Sign up</a>
             </form>
             {% else %}
             <ul class="navbar-nav ml-auto">
@@ -61,29 +62,53 @@
     </nav>
       
     <br />
-        
-        
       
     {% block body %}  
-    <div class="container">
-        
+    <div id="message_list" class="container-fluid">
       {% if messages %}
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          {{ message }}
-        </div>
+            <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              {{ message }}
+            </div>
         {% endfor %}
       {% endif %}
         
       {% block content %}
       {% endblock %}
-        
     </div>
+      
+    <!-- THE SIGN-UP MODAL -->
+    <div class="modal fade" id="modal-signup" tabindex="-1" role="dialog" aria-labelledby="signUp" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content"></div>
+    </div>
+    </div>
+      
+    <!-- SIGN-UP CONFIRMATION MODAL -->
+    <div class="modal" id="modal-confirmation" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Congratulations!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Please wait for admin to confirm your registration.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>  
+    
     
     <footer class="footer">
-        <div class="container">
-            <span class="text-muted">&copy; Brimbank City Council 2017</p>
+        <div class="container-fluid">
+            <p class="text-muted">&copy; Brimbank City Council 2017</p>
         </div>
     </footer>  
       
@@ -95,6 +120,8 @@
   crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    
+    <script src="{% static 'js/signup.js' %}"></script>
       
 	{% block javascript %}{% endblock %} 
   </body>

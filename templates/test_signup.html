@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<button type="button" class="btn btn-primary js-create-book">Test modal</button>
+
+<table class="table" id="book-table">
+  <thead>
+    <tr>
+      <th>Username</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% include 'includes/partial_user.html' %}
+  </tbody>
+</table>
+    
+<!-- THE MODAL WE WILL BE USING -->
+<div class="modal fade" id="modal-book" tabindex="-1" role="dialog" aria-labelledby="signUp" aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content"></div>
+</div>
+</div>
+{% endblock %}
+    
+{% block javascript %}
+  <script src="{% static 'js/books2.js' %}"></script>
+{% endblock %}

@@ -129,24 +129,25 @@ class ActivityDeleteView(DeleteView):
     model = Activity
     success_url = reverse_lazy('activity_search')
 
-def search_logic(request, keywords):
+def search_logic(request, location_key, name_key):
     activities = Activity.objects.filter(
-    Q(location__istartswith=keywords) | Q(location__iendswith=keywords) | Q(location__icontains=keywords)
+    Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)
     )
     return activities
 
 def search_events(request):
-    activities = search_logic(request, '')
+    activities = search_logic(request, '', '')
     if request.method == 'GET':
-        keywords = request.GET.get('location') # 'location' is the name of the input field
+        location_key = request.GET.get('location') # 'location' is the name of the input field
+        name_key = request.GET.get('name')
         list_of_input_ids=request.GET.getlist('checkboxes')
         str1 = '_'.join(list_of_input_ids)
         search = request.GET.get('search')
         print(list_of_input_ids)
         print(request.GET)
         if search == 'search':
-            if keywords:
-                activities = search_logic(request, keywords)
+            if location_key or name_key:
+                activities = search_logic(request, location_key, name_key)
         if str1 != '':
             kwargs = {'pk': str1}
             if search == 'share':
