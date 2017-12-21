@@ -22,7 +22,7 @@
         <label class="col-form-label" ><h3>{{ field.label_tag }}</h3></label>
         <br />
         {% for radio in form.cost_choice %}
-            <div class="myradio" style="display:inline-block">
+            <div class="myradio">
                 {{ radio }}
             </div>
         {% endfor %}
@@ -33,7 +33,7 @@
         <br />
         {% for radio in form.listing_privacy %}
             <div class="myradio" style="display:inline-block">
-                {{ radio }}
+                {{ radio }}<br />
             </div>
         {% endfor %}
     {% endif %}

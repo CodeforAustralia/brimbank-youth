@@ -7,6 +7,41 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
+    
+    <style>
+        .card-body.select.on {
+        background-color:#CFD8DC;
+/*
+        background-image: url("{% static 'img/checked.png' %}");
+        background-repeat: no-repeat;
+        background-position: 98% 80%;
+*/
+    }
+        .card-img-top.select.on{
+            opacity: 0.2;
+            filter: alpha(opacity=20); /* For IE8 and earlier */
+/*            z-index: -1;*/
+        }
+        
+        img:hover {
+            opacity: 0.2;
+            filter: alpha(opacity=20); /* For IE8 and earlier */
+        }
+        
+        .selectedImg{
+            z-index: 1;
+            position:absolute;
+            top: 20px; right: 20px;
+            display:inline;
+        }
+        
+        .selectedImg:hover {
+            opacity: 1;
+            filter: alpha(opacity=100); /* For IE8 and earlier */
+        }
+
+    </style>
+
 {% endblock %}
 
 {% block content %}
@@ -22,8 +57,7 @@
         <label class="sr-only" for="id_location">Location</label>
         <input type="text" name="location" placeholder="Sunshine, Deer Park... " maxlength="150" class="form-control mr-sm-2" id="id_location" />
         <button type="submit" class="btn btn-success mr-sm-2" name="search" value="search">Search</button>
-<!--    </div>    -->
-    </form>  
+<!--    </div>    -->  
   </div>
 </div>
     
@@ -31,19 +65,45 @@
     <div class="row justify-content-center">
     {% for activity in activities %}
     <div class="col-sm-6">
+        
+      {% if user.is_authenticated %}
+      <div class="card select">
+      {% if activity.activity_img %}
+          <img class="card-img-top select" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;width:100%;height:300px;display:inline;margin: auto">
+          <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
+      {% else %}
+          <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;width:100%;height:300px;display:inline;margin: auto">
+          <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
+      {% endif %}
+      <div class="card-body select" id=card_{{ activity.pk }}>
+        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
+        <p id="b" class="card-text">{{ activity.activity_type }}</p>
+        <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
+        <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
+        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
+      </div>
+      </div>
+        
+      {% else %}
       <div class="card">
       {% if activity.activity_img %}
-      <img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Card image cap">
+          <a href="{% url 'activity_detail' activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;width:100%;height:300px;display:inline;margin: auto"></a>
+          <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+      {% else %}
+          <a href="{% url 'activity_detail' activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;width:100%;height:300px;display:inline;margin: auto"></a>
+          <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
       {% endif %}
-      <div class="card-body">
-        <h3 class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
-        <p class="card-text">{{ activity.activity_type }}</p>
-        <p class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
-        <p class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
-    <!--    <input type="checkbox" name="sent" checked />-->
-        <input type="checkbox" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
+      <div class="card-body" id=card_{{ activity.pk }}>
+        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
+        <p id="b" class="card-text">{{ activity.activity_type }}</p>
+        <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
+        <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
+        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
       </div>
       </div>
+        
+      {% endif %} 
+        
       <br />
     </div>
     {% endfor %}
@@ -57,7 +117,7 @@
     <button type="submit" class="btn btn-outline-success" name="search" value="share">Share via text</button>
     <button type="submit" class="btn btn-outline-success" name="search" value="email">Share via email</button>
     {% endif %}
-<!--</form>-->
+    </form>
 
 <br />
 
@@ -86,6 +146,49 @@ function initialize() {
     var autocomplete = new google.maps.places.Autocomplete(input);
 }
 google.maps.event.addDomListener(window, 'load', initialize);
+    
+$( function() {
+  $('.card-body.select').click( function() {
+      
+      //Change the background colour of card-body
+      $(this).toggleClass('on');
+      
+      //change opacity of card-img-top
+      $(this).siblings(".card-img-top.select").toggleClass('on');
+//      card.children(".card-img-top").toggleClass('on');
+      
+      //show the checklist icon
+      $(this).siblings(".selectedImg.select").toggle();
+//      card.children(".selectedImg").toggle();
+      
+      //checked the checkbox element
+      var checkbox = $(this).children(".selected");
+      checkbox.prop("checked", !checkbox.prop("checked"));
+      
+      //alert($(this).parent(".selected").attr("class"));
+  })
+    
+  $('.card-img-top.select').click( function() {
+      
+      //Change the background colour of card-body
+      $(this).siblings(".card-body.select").toggleClass('on');
+      
+      //change opacity of card-img-top
+      $(this).toggleClass('on');
+      
+      //show the checklist icon
+      $(this).siblings(".selectedImg.select").toggle();
+      
+      //checked the checkbox element
+      var card_body = $(this).siblings(".card-body.select");
+      var checkbox = card_body.children(".selected");
+      checkbox.prop("checked", !checkbox.prop("checked"));
+
+  })    
+    
+});
+    
+
 
 </script>
 

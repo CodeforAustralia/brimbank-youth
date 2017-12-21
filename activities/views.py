@@ -143,8 +143,8 @@ def search_events(request):
         list_of_input_ids=request.GET.getlist('checkboxes')
         str1 = '_'.join(list_of_input_ids)
         search = request.GET.get('search')
-        print(list_of_input_ids)
-        print(request.GET)
+        print('list of checkbox: ', list_of_input_ids)
+        print('request.get: ', request.GET)
         if search == 'search':
             if location_key or name_key:
                 activities = search_logic(request, location_key, name_key)

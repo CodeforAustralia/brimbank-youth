@@ -53,7 +53,7 @@
                 {% include 'includes/base_activity_form_2.html' %}
                 <br />
                 <div class="form-group row">
-                   <div class="col-sm-2 offset-sm-8 col-sm-9">
+                   <div class="col-sm-10 col-sm-2">
                     <a id="id_prev" class="btn btn-primary btn-lg" style="display: none" href="#general_info">Previous</a>
                     <a id="id_next2" class="btn btn-primary btn-lg" href="#other_info"> &nbsp; Next &nbsp; </a>
                   </div> 
@@ -123,7 +123,8 @@
 
 <script>
     
-$( document ).ready(function() {
+//$( document ).ready(function() {
+$( function() {
 var e = document.getElementById("id_term");
 var term = e.options[e.selectedIndex].value;
     if (term == "Daily"){

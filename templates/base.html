@@ -64,7 +64,7 @@
     <br />
       
     {% block body %}  
-    <div id="message_list" class="container-fluid">
+    <div id="message_list" class="container">
       {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
@@ -121,6 +121,7 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     
+<!--    For sign-up modal form -->
     <script src="{% static 'js/signup.js' %}"></script>
       
 	{% block javascript %}{% endblock %} 
