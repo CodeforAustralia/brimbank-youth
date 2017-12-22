@@ -69,10 +69,17 @@ class ActivitySearchForm(forms.ModelForm):
         model = Activity
         fields = ['location']
         
+def file_size(value):
+    limit = 2 * 1024 * 1024
+    if value.size > limit:
+        raise ValidationError('File size is too large. The size should not exceed 2MB')
+        
 class ActivityDraftForm(forms.ModelForm):
     activity_type = forms.ChoiceField(choices=ACTIVITY_TYPES, required=False, label='What type of activity are you creating ?')
     start_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS FROM', required=False)
     end_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS UNTIL', required=False)
+    activity_img = forms.ImageField(required=False, validators=[file_size], label='Add an event image')
+    flyer = forms.FileField(required=False, validators=[file_size], label='Upload an event flyer')
     
 #    def __init__(self, *args, **kwargs):
 #       self.request = kwargs.pop('request', None)
@@ -104,7 +111,7 @@ class ActivityDraftForm(forms.ModelForm):
         model = ActivityDraft
         fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'activity_img', 'flyer', 'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 'listing_privacy')
         labels = {
-            'activity_img': _('Add an event image'),
+#            'activity_img': _('Add an event image'),
             'name': _('What is the name of the activity ?'),
             'location': _('Where is the location ?'),
             'start_time': _('FROM'),
@@ -166,6 +173,8 @@ class ActivityDraftForm(forms.ModelForm):
     
     def clean(self):
         cleaned_data = super().clean()
+        
+        # Validation: start_date must be before end_date
         start_date = cleaned_data.get("start_date")
         end_date = cleaned_data.get("end_date")
         term = cleaned_data.get("term")
@@ -176,7 +185,6 @@ class ActivityDraftForm(forms.ModelForm):
                 msg = "Start date must be before end date."
                 self.add_error('start_date', msg)
                 self.add_error('end_date', msg)
-                raise ValidationError('Please correct the errors below.')
             
 #    def clean(self):
 #        cleaned_data = super().clean()

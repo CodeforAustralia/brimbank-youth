@@ -39,6 +39,11 @@ class ActivityCreateView(CreateView):
         object.save()
         return super(ActivityCreateView, self).form_valid(form)
     
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, 'Please correct the highlighted fields below.', extra_tags='danger')
+        response = super().form_invalid(form)
+        return response
+    
 @method_decorator(login_required, name='dispatch')
 class ActivityDraftUpdateView(UpdateView):
     model = ActivityDraft
