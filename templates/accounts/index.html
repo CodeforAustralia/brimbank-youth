@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width" />
+
+  {% load static %}
+
+  <title>Activate your account</title>
+  <link rel="stylesheet" href="{% static 'css/foundation-emails.css' %}" >
+
+  <style>
+  
+    h2, p{
+      font-family: 'Verdana', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+  
+  </style>
+
+</head>
+
+<body>
+  <!-- <style> -->
+  <table class="body" data-made-with-foundation>
+    <tr>
+      <td class="float-center" align="center" valign="top">
+          <center>
+            <h2>Hi admin,</h2>
+            <p>{{ user.username }} has requested an account.</p>
+            <p>Their email address is {{ user.email }}.</p>
+          </center>  
+        <p>Please click the link below to activate their account.
+        
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -63,6 +63,8 @@ urlpatterns = [
     # Testing
     url(r'^test_signup_real/$', accounts_views.test_signup_real, name='test_signup_real'),
     url(r'^test_signup/$', accounts_views.test_signup, name='test_signup'),
+
+    url(r'^test_email/$', accounts_views.test, name='test_email'),
     
     # Activities
     url(r'^create_activity/$', ActivityCreateView.as_view(), name='create_activity'),

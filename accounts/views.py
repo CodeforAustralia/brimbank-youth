@@ -19,6 +19,9 @@ from .forms import SignUpForm, ProfileForm
 from .tokens import account_activation_token
 from .models import Profile
 
+def test(request):
+    return render(request, "accounts/account_activation_email.html")
+
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -29,7 +32,8 @@ def signup(request):
 			
             # Send confirmation email
             current_site = get_current_site(request)
-            message = render_to_string('accounts/account_activation_email.html', {
+            # message = render_to_string('accounts/account_activation_email.html', {
+            message = render_to_string('accounts/drip.html', {
                 'user':user, 
                 'domain':current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -102,6 +106,7 @@ def signup_ajax_form(request):
             # Send confirmation email
             current_site = get_current_site(request)
             message = render_to_string('accounts/account_activation_email.html', {
+            # message = render_to_string('accounts/drip.html', {
                 'user':user, 
                 'domain':current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
