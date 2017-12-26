@@ -35,7 +35,7 @@ class ActivityCreateView(CreateView):
     def form_valid(self, form):
         object = form.save(commit=False)
         object.created_by = self.request.user
-        object.published_ready = True
+        object.published = False
         object.save()
         return super(ActivityCreateView, self).form_valid(form)
     
@@ -77,7 +77,7 @@ def submit_activity(request, pk):
                             term=draft.term,
                             location=draft.location,
                             organiser=draft.organiser,
-                        contact_number=draft.contact_number,
+                            contact_number=draft.contact_number,
                             description = draft.description,
                             activity_date = draft.activity_date,
                             start_date = draft.start_date,
@@ -132,7 +132,7 @@ class ActivityUpdateView(UpdateView):
 @method_decorator(login_required, name='dispatch')
 class ActivityDeleteView(DeleteView):
     model = Activity
-    success_url = reverse_lazy('activity_search')
+    success_url = reverse_lazy('home')
 
 def search_logic(request, location_key, name_key):
     activities = Activity.objects.filter(

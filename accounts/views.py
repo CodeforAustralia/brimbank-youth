@@ -1,3 +1,5 @@
+import time
+
 from django.contrib import messages
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.decorators import login_required
@@ -98,11 +100,18 @@ def signup_ajax_form(request):
     
     if request.method == 'POST':
         form = SignUpForm(request.POST)
+        # time.sleep(1)  # You don't need this line. This is just to delay the process so you can see the progress bar testing locally.
         if form.is_valid():
             user = form.save(commit=False)
             user.is_active = False
             user.save()
+            # Users are logged in
+            # auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+#            messages2 = messages.add_message(request, messages.SUCCESS, 'Please wait for the admin to confirm your registration.')
             
+            # Send data to AJAX form
+            data['form_is_valid'] = True
+
             # Send confirmation email
             current_site = get_current_site(request)
             message = render_to_string('accounts/account_activation_email.html', {
@@ -116,13 +125,6 @@ def signup_ajax_form(request):
             to_email = ['dsihaloho@student.unimelb.edu.au']
             sender = form.cleaned_data.get('email')
             send_mail(mail_subject, message, sender, to_email, html_message=message)
-            
-            # Users are logged in
-            auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-#            messages2 = messages.add_message(request, messages.SUCCESS, 'Please wait for the admin to confirm your registration.')
-            
-            # Send data to AJAX form
-            data['form_is_valid'] = True
         else:
             data['form_is_valid'] = False
     else:

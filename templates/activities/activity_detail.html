@@ -4,14 +4,23 @@
 
 {% block title %}{{ activity.name }}{% endblock title %}
 
+{% block stylesheet %}
+<style>
+    #map {
+        height: 400px;
+        width: 80%;
+   }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="card">
   <div class="card-body">
-    <h4 class="card-title">{{ activity.name }}</h4>
+    <h4 class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h4>
     <p class="card-text">{{ activity.description }}</p>
     <p class="card-text">{{ activity.activity_type }}</p>
     <p class="card-text">{{ activity.organiser }}</p>
-    <p class="card-text">Where? {{ activity.location }}</p>  
+    <p class="card-text">Where? <a href=# id="address">{{ activity.location }}</a></p>  
     
       
 <!--    Activities that only occur once -->
@@ -71,14 +80,62 @@
 
 {% if not user.is_authenticated %}
 <div class="sharethis-inline-share-buttons"></div>
-{% post_to_facebook '' %}
+<!-- {% post_to_facebook '' %}
     
-{% send_email activity.name "New activity: {{activity.name}}. Check it out!" "" %}
+{% send_email activity.name "New activity: {{activity.name}}. Check it out!" "" %} -->
 
+{% endif %}
+
+{% if activity.location %}
+<div class="row justify-content-center">
+  <div id="map"></div>
+</div>
 {% endif %}
 
 {% endblock %}
 
 {% block javascript %}
 <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&callback=initMap">
+</script>
+
+<script>
+  function initMap() {
+  var geocoder = new google.maps.Geocoder();
+
+  var map = new google.maps.Map(document.getElementById('map'));
+
+  var address = $('#address').text();
+
+  geocodeAddress(geocoder, map);
+
+  var map_url = "https://www.google.com/maps/search/?api=1&query=";
+  var full_url = map_url + address;
+
+  $("#address").attr("href", full_url);
+
+}
+
+function geocodeAddress(geocoder, resultsMap) {
+  var address = $('#address').text();
+  // var address = 'Southern Cross Station';
+  // alert(address);
+  geocoder.geocode({'address': address}, function(results, status) {
+    if (status === 'OK') {
+      resultsMap.setCenter(results[0].geometry.location);
+      resultsMap.setZoom(14);
+      var marker = new google.maps.Marker({
+        map: resultsMap,
+        position: results[0].geometry.location
+      });
+    } 
+    
+    // else {
+    //   $('#map').hide();
+    // }
+  });
+}
+</script>
 {% endblock %}

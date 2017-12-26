@@ -116,6 +116,7 @@
         <p id="b" class="card-text">{{ activity.activity_type }}</p>
         <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
         <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
+        <p class="card-text">Where? <a href=# name="address">{{ activity.location }}</a></p> 
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
       </div>
       </div>
@@ -134,6 +135,7 @@
         <p id="b" class="card-text">{{ activity.activity_type }}</p>
         <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
         <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
+        <p class="card-text">Where? <a href=# id="address">{{ activity.location }}</a></p> 
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
       </div>
       </div>
@@ -168,19 +170,38 @@
 
 <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
+
 <script>
 //var options = {
 //    data: ["Swimming", "Dance", "Soccer", "Basketball", "Volleyball", ]
 //};
 //$('#id_name').easyAutocomplete(options);
+
+//Google maps		
+function initialize() {		
+    var input = document.getElementById('id_location');		
+    var autocomplete = new google.maps.places.Autocomplete(input);
+}		
+google.maps.event.addDomListener(window, 'load', initialize);
     
 $( function() {
 
+   // Add Google Maps URL
+   var form_elems = document.getElementsByName("address");
+   for (var i = 0; i < form_elems.length; i++) {
+       var address = $(form_elems[i]).text();
+       var map_url = "https://www.google.com/maps/search/?api=1&query=";
+       var full_url = map_url + address;
+       $(form_elems[i]).attr("href", full_url);
+   }
+
+  // Add Tooltips on search boxes
   $('#id_location').tooltip();
   $('#id_name').tooltip();
     
+  // Dynamically display checkboxes
   $('.card-body.select').click( function() {
-      
       //Change the background colour of card-body
       $(this).toggleClass('on');
       

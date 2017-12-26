@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/sticky-footer.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/loading.css' %}" type="text/css">
     <link rel="shortcut icon" href="{%  static 'img/favicon.ico' %}">
 	{% block stylesheet %}{% endblock %}  <!-- ADD CUSTOMISED STYLESHEET for PARTICULAR PAGES -->
   </head>
@@ -82,6 +83,18 @@
     <div class="modal fade" id="modal-signup" tabindex="-1" role="dialog" aria-labelledby="signUp" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content"></div>
+    </div>
+    </div>
+
+    <!-- PROGRESS BAR MODAL -->
+    <div class="modal fade" id="modal-progress" tabindex="-1" role="dialog" aria-labelledby="loadingImage" aria-hidden="true">
+      <div class="modal-dialog" role="document" style="text-align: center; margin-top:10%">
+        <div class="row justify-content-center">
+          <img src="{% static 'img/angel.png' %}" class="ld ld-bounce-ltr justify-content-center" height="200" style="animation-duration:2.5s"/>
+        </div>
+        <div class="row justify-content-center" style="text-align: center; color:rgb(242, 243, 191);">
+          <h2>Processing...</h2>
+        </div>
     </div>
     </div>
       
