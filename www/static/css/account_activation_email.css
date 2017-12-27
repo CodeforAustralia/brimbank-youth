@@ -828,7 +828,7 @@ th,
 a {
   color: #0a0a0a;
   /* font-family: Helvetica, Arial, sans-serif; */
-  font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-weight: normal;
   padding: 0;
   margin: 0;
@@ -845,7 +845,7 @@ h6 {
   color: inherit;
   word-wrap: normal;
   /* font-family: Helvetica, Arial, sans-serif; */
-  font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   font-weight: normal;
   margin-bottom: 10px;
   Margin-bottom: 10px; }
@@ -975,7 +975,7 @@ table.button {
     border: 2px solid #2199e8; }
     table.button table td a {
       /* font-family: Helvetica, Arial, sans-serif; */
-      font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       font-size: 16px;
       font-weight: bold;
       color: #fefefe;
@@ -1349,17 +1349,16 @@ body.outlook p {
     table.button.small-expand center,
     table.button.small-expanded center {
       min-width: 0; } }
-
 body,
-html,
-.body {
-  background: #f3f3f3 !important;
-}
-
-.container.header {
-  background: #f3f3f3;
-}
-
-.body-drip {
-  border-top: 8px solid #663399;
-}
+      html,
+      .body {
+        background: #f3f3f3 !important;
+      }
+      
+      .container.header {
+        background: #f3f3f3;
+      }
+      
+      .body-border {
+        border-top: 8px solid #663399;
+      }

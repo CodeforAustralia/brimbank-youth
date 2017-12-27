@@ -7,41 +7,7 @@
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
-    
-    <style>
-        .card-body.select.on {
-        background-color:#CFD8DC;
-/*
-        background-image: url("{% static 'img/checked.png' %}");
-        background-repeat: no-repeat;
-        background-position: 98% 80%;
-*/
-    }
-        .card-img-top.select.on{
-            opacity: 0.2;
-            filter: alpha(opacity=20); /* For IE8 and earlier */
-/*            z-index: -1;*/
-        }
-        
-        img:hover {
-            opacity: 0.2;
-            filter: alpha(opacity=20); /* For IE8 and earlier */
-        }
-        
-        .selectedImg{
-            z-index: 1;
-            position:absolute;
-            top: 20px; right: 20px;
-            display:inline;
-        }
-        
-        .selectedImg:hover {
-            opacity: 1;
-            filter: alpha(opacity=100); /* For IE8 and earlier */
-        }
-
-    </style>
-
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -135,7 +101,7 @@
         <p id="b" class="card-text">{{ activity.activity_type }}</p>
         <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
         <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
-        <p class="card-text">Where? <a href=# id="address">{{ activity.location }}</a></p> 
+        <p class="card-text">Where? <a href=# name="address">{{ activity.location }}</a></p>
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
       </div>
       </div>

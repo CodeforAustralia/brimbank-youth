@@ -114,8 +114,8 @@ def signup_ajax_form(request):
 
             # Send confirmation email
             current_site = get_current_site(request)
-            message = render_to_string('accounts/account_activation_email.html', {
-            # message = render_to_string('accounts/drip.html', {
+            # message = render_to_string('accounts/account_activation_email.html', {
+            message = render_to_string('accounts/welcome.html', {
                 'user':user, 
                 'domain':current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
