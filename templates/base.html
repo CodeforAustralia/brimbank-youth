@@ -12,11 +12,36 @@
     <link rel="stylesheet" href="{% static 'css/sticky-footer.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/loading.css' %}" type="text/css">
     <link rel="shortcut icon" href="{%  static 'img/favicon.ico' %}">
+    <style>
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+    body {
+      /* min-height: 75rem; */
+      padding-top: 5rem;
+      margin-bottom: 60px;
+      /* padding-bottom: 10px; */
+    }
+    .footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      /* height: 50px; */
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      -webkit-box-align: center;
+      align-items: center;
+    }    
+  </style>
 	{% block stylesheet %}{% endblock %}  <!-- ADD CUSTOMISED STYLESHEET for PARTICULAR PAGES -->
   </head>
   <body>
     
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #263238;">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark" style="background-color: #263238;">
         <a class="navbar-brand" href="{% url 'home' %}">
             <img src="{% static 'img/angel.png' %}" width="60" height="60" alt="Test">
         </a>
@@ -61,8 +86,8 @@
             {% endif %}
         </div>
     </nav>
-      
-    <br />
+
+    <br/>
       
     {% block body %}  
     <div id="message_list" class="container-fluid">
@@ -74,10 +99,13 @@
             </div>
         {% endfor %}
       {% endif %}
-        
+    </div>
+    
+    <div class="container-fluid">
       {% block content %}
       {% endblock %}
     </div>
+    
       
     <!-- THE SIGN-UP MODAL -->
     <div class="modal fade" id="modal-signup" tabindex="-1" role="dialog" aria-labelledby="signUp" aria-hidden="true">
@@ -116,18 +144,17 @@
           </div>
         </div>
       </div>
-    </div>  
-    
-    
-    <footer class="footer">
-        <div class="container-fluid">
-            <p class="text-muted">&copy; Brimbank City Council 2017</p>
-        </div>
-    </footer>  
-      
+    </div>
+
     {% endblock body %}
+
+  <footer class="footer">
+    <div class="container-fluid">
+        <p class="text-muted mb-0">&copy; Brimbank City Council 2017</p>
+    </div>
+  </footer>
     
-<!--	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
       <script src="https://code.jquery.com/jquery-3.2.1.min.js"
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous"></script>
@@ -137,6 +164,6 @@
 <!--    For sign-up modal form -->
     <script src="{% static 'js/signup.js' %}"></script>
       
-	{% block javascript %}{% endblock %} 
+	{% block javascript %}{% endblock %}
   </body>
 </html>

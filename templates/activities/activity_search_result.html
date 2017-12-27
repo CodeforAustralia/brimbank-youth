@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
 {% endblock %}
 
 {% block content %}
@@ -123,18 +124,21 @@
     {% endif %}
     </form>
 
-<br />
-
-{% if not user.is_authenticated %}
+<!-- {% if not user.is_authenticated %}
 <div class="sharethis-inline-share-buttons"></div>
-{% endif %}
+{% endif %} -->
 
 {% endblock %}
 
 {% block javascript %}
 <script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
 
-<script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
+<!-- <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script> -->
+
+<!-- <script type="text/javascript" data-cfasync="false" src="//dsms0mj1bbhn4.cloudfront.net/assets/pub/shareaholic.js" data-shr-siteid="c363c07f4215a1d47d25f47dadb72b05" async="async"></script> -->
+
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
 
@@ -161,6 +165,7 @@ $( function() {
        var full_url = map_url + address;
        $(form_elems[i]).attr("href", full_url);
    }
+
 
   // Add Tooltips on search boxes
   $('#id_location').tooltip();

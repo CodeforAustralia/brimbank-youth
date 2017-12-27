@@ -78,13 +78,13 @@
 
 <br />
 
-{% if not user.is_authenticated %}
-<div class="sharethis-inline-share-buttons"></div>
+<!-- {% if not user.is_authenticated %}
+<div class="sharethis-inline-share-buttons"></div> -->
 <!-- {% post_to_facebook '' %}
     
 {% send_email activity.name "New activity: {{activity.name}}. Check it out!" "" %} -->
 
-{% endif %}
+<!-- {% endif %} -->
 
 {% if activity.location %}
 <div class="row justify-content-center">
@@ -95,7 +95,10 @@
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
+<!-- <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script> -->
+
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script>
 
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&callback=initMap">
