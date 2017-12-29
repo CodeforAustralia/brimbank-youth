@@ -21,7 +21,7 @@ from django.contrib.auth import views as auth_views
 
 from events import views
 from sendsms.views import send_sms, SMSCreateView, EmailCreateView
-from activities.views import ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDraftDetailView, ActivityDeleteView, ActivityDraftUpdateView, search_events, submit_activity
+from activities.views import ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDraftDetailView, ActivityDeleteView, ActivityDraftUpdateView, search_events, submit_activity, view_activity_drafts
 from accounts import views as accounts_views
 
 urlpatterns = [
@@ -77,6 +77,8 @@ urlpatterns = [
     url(r'^activity/edit/(?P<pk>\d+)/$', ActivityUpdateView.as_view(), name='edit_activity'),
     url(r'^activity/draft/edit/(?P<pk>\d+)/$', ActivityDraftUpdateView.as_view(), name='edit_draft_activity'),
     url(r'^activity/delete/(?P<pk>\d+)/$', ActivityDeleteView.as_view(), name='delete_activity'),
+
+    url(r'^activity/drafts/$', view_activity_drafts, name='view_activity_drafts'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

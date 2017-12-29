@@ -26,6 +26,7 @@ MESSAGE_TAGS = {
 class ActivityCreateView(CreateView):
     model = ActivityDraft
     form_class = ActivityDraftForm
+    template_name = 'activities/activity_form.html'
 
     def get_success_url(self):
         messages.info(self.request, 'The activity has been saved. You can review the activity before it is published.')
@@ -122,7 +123,7 @@ class ActivityListView(ListView):
 class ActivityUpdateView(UpdateView):
     model = Activity
     form_class = ActivityForm
-    template_name = 'activities/activitydraft_form.html'
+    # template_name = 'activities/activitydraft_form.html'
     
     def get_success_url(self):
         published = True
@@ -136,6 +137,12 @@ class ActivityDeleteView(DeleteView):
 
 def search_logic(request, location_key, name_key):
     activities = Activity.objects.filter(
+    Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)
+    )
+    return activities
+
+def search_logic_drafts(request, location_key, name_key):
+    activities = ActivityDraft.objects.filter(
     Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)
     )
     return activities
@@ -178,3 +185,18 @@ def show_page_numbers(request, result):
         # probably the user tried to add a page number in the url, so we fallback to the last page
         search_result = paginator.page(paginator.num_pages)
     return search_result
+
+@login_required
+def view_activity_drafts(request):
+    activity_drafts = search_logic_drafts(request, '', '')
+    if request.method == 'GET':
+        location_key = request.GET.get('location') # 'location' is the name of the input field
+        name_key = request.GET.get('name')
+        list_of_input_ids=request.GET.getlist('checkboxes')
+        str1 = '_'.join(list_of_input_ids)
+        search = request.GET.get('search')
+        if search == 'search':
+            if location_key or name_key:
+                activity_drafts = search_logic_drafts(request, location_key, name_key)
+        # activity_drafts = show_page_numbers(request, activity_drafts)
+        return render(request, 'activities/activitydraft_search_result.html', {'activity_drafts': activity_drafts,})

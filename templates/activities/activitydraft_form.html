@@ -28,11 +28,7 @@
 
 {% block content %}
 <div class="container">
-{% if not object.published %}
-<form method="post" enctype="multipart/form-data" action="{% url 'create_activity' %}" novalidate>
-{% else %}
-<form method="post" enctype="multipart/form-data" action="{% url 'edit_activity' object.pk %}" novalidate>
-{% endif %}
+<form method="post" enctype="multipart/form-data" action="{% url 'edit_draft_activity' object.pk %}" novalidate>
 <!--Adding action attribute in form will prevent the addition of href url when submitting the form-->
     
 {% csrf_token %}

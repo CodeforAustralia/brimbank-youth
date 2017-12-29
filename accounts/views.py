@@ -126,6 +126,7 @@ def signup_ajax_form(request):
             sender = form.cleaned_data.get('email')
             send_mail(mail_subject, message, sender, to_email, html_message=message)
         else:
+            data['no_progress_display'] = True
             data['form_is_valid'] = False
     else:
         form = SignUpForm()
@@ -135,6 +136,10 @@ def signup_ajax_form(request):
         context,
         request=request,
     )
+    return JsonResponse(data)
+
+def send_progress(data):
+    data['no_progress_display'] = True
     return JsonResponse(data)
     
 def test_signup(request):

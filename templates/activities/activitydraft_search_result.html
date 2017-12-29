@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Youth Poster{% endblock %}
+{% block title %}Activity drafts{% endblock %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
@@ -43,14 +43,14 @@
 <div class="jumbotron mb-6">
   <div class="container text-center">
       <h1 class="display-4">Youth Poster</h1>
-    <p class="lead">Search for events and activities in your area</p>
+    <p class="lead">Drafts of activities</p>
     <hr class="my-3">
     <form method="get" class="justify-content-center" novalidate>
         
         <div class="form-row">
         <div class="form-group offset-sm-2 col-sm-4">
-            <label class="sr-only" for="id_name">Activity name</label>
-            <input type="text" name="name" placeholder="Swimming, Dance..." maxlength="150" class="form-control mr-sm-2" id="id_name" data-toggle="tooltip" data-placement="left" title="Enter the activity name" />
+            <label class="sr-only" for="id_name">activity_draft name</label>
+            <input type="text" name="name" placeholder="Swimming, Dance..." maxlength="150" class="form-control mr-sm-2" id="id_name" data-toggle="tooltip" data-placement="left" title="Enter the activity_draft name" />
         </div>
         <div class="col-sm-4">
             <label class="sr-only" for="id_location">Location</label>
@@ -113,47 +113,47 @@
     
 <!--<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJYdawkGNg1moRrmgS6XeT7AM&key=AIzaSyAMBqqtl6cnrNdV4TUGDSF4z9g4shpp5kM" allowfullscreen></iframe>-->
     
-    {% if activities %}
+    {% if activity_drafts %}
     <div class="container-fluid">
     <div class="row justify-content-center">
-    {% for activity in activities %}
+    {% for activity_draft in activity_drafts %}
     <div class="col-sm-6">
         
       {% if user.is_authenticated %}
       <div class="card select">
-      {% if activity.activity_img %}
-          <img class="card-img-top select" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
+      {% if activity_draft.activity_img %}
+          <img class="card-img-top select" src="{{ activity_draft.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
           <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
       {% else %}
           <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
           <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
       {% endif %}
-      <div class="card-body select" id=card_{{ activity.pk }}>
-        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
-        <p id="b" class="card-text">{{ activity.activity_type }}</p>
-        <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
-        <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
-        <p class="card-text">Where? <a href=# name="address">{{ activity.location }}</a></p> 
-        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
+      <div class="card-body select" id=card_{{ activity_draft.pk }}>
+        <h3 id="a" class="card-title"><a href="{% url 'activity_publish' activity_draft.pk %}">{{ activity_draft.name }}</a></h3>
+        <p id="b" class="card-text">{{ activity_draft.activity_type }}</p>
+        <p id="c" class="card-text">{{ activity_draft.start_date|date:'M d, Y' }} - {{ activity_draft.start_time|time:'H:i' }}</p>
+        <p id="d" class="card-text">{{ activity_draft.end_date|date:'M d, Y' }} - {{ activity_draft.end_time|time:'H:i' }}</p>
+        <p class="card-text">Where? <a href=# name="address">{{ activity_draft.location }}</a></p> 
+        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity_draft.pk }} name ="checkboxes" value={{ activity_draft.pk }} />
       </div>
       </div>
         
       {% else %}
       <div class="card">
-      {% if activity.activity_img %}
-          <a href="{% url 'activity_detail' activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
-          <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+      {% if activity_draft.activity_img %}
+          <a href="{% url 'activity_detail' activity_draft.pk %}"><img class="card-img-top" src="{{ activity_draft.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+          <a href="{% url 'activity_detail' activity_draft.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
       {% else %}
-          <a href="{% url 'activity_detail' activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
-          <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+          <a href="{% url 'activity_detail' activity_draft.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+          <a href="{% url 'activity_detail' activity_draft.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
       {% endif %}
-      <div class="card-body" id=card_{{ activity.pk }}>
-        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
-        <p id="b" class="card-text">{{ activity.activity_type }}</p>
-        <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
-        <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
-        <p class="card-text">Where? <a href=# name="address">{{ activity.location }}</a></p>
-        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
+      <div class="card-body" id=card_{{ activity_draft.pk }}>
+        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity_draft.pk %}">{{ activity_draft.name }}</a></h3>
+        <p id="b" class="card-text">{{ activity_draft.activity_type }}</p>
+        <p id="c" class="card-text">{{ activity_draft.start_date|date:'M d, Y' }} - {{ activity_draft.start_time|time:'H:i' }}</p>
+        <p id="d" class="card-text">{{ activity_draft.end_date|date:'M d, Y' }} - {{ activity_draft.end_time|time:'H:i' }}</p>
+        <p class="card-text">Where? <a href=# name="address">{{ activity_draft.location }}</a></p>
+        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity_draft.pk }} name ="checkboxes" value={{ activity_draft.pk }} />
       </div>
       </div>
         
@@ -166,12 +166,9 @@
     </div>
     {% include 'includes/pagination_2.html' %}
 
-    {% endif %}
-    
-    {% if user.is_authenticated %}
-    <div class="container-fluid">
-        <button type="submit" class="btn btn-outline-success mb-2" name="search" value="share">Share via text</button>
-        <button type="submit" class="btn btn-outline-success mb-2" name="search" value="email">Share via email</button>
+    {% else %}
+    <div class="container-fluid mt-4">
+    <h2>You haven't created any activity</h2>
     </div>
     {% endif %}
     </form>
@@ -208,7 +205,6 @@ function initialize() {
 google.maps.event.addDomListener(window, 'load', initialize);
     
 $( function() {
-
    // Add Google Maps URL
    var form_elems = document.getElementsByName("address");
    for (var i = 0; i < form_elems.length; i++) {
@@ -217,7 +213,6 @@ $( function() {
        var full_url = map_url + address;
        $(form_elems[i]).attr("href", full_url);
    }
-
 
   // Add Tooltips on search boxes
   $('#id_location').tooltip();

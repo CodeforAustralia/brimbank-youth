@@ -147,7 +147,7 @@ class ActivityDraft(models.Model):
     space = models.PositiveSmallIntegerField(blank=True, null=True, default=0)
     listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
     created_by = models.ForeignKey(User, related_name='drafts', null=True)
-    published = models.BooleanField(default=False)
+    published = models.BooleanField(default=True)
     
     def __str__(self):
         return self.name
