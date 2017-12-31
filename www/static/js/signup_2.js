@@ -1,5 +1,4 @@
 $(function () {
-
     $(".js-signup").click(function () {
       $.ajax({
         url: '/signup_ajax_form/',
@@ -32,10 +31,10 @@ $(function () {
       if ((data_split[1] == "username=") || (data_split[2]=="email=") || (data_split[3]=="password1=")|| (data_split[4]=="password2=")){
         $("#modal-progress").modal("hide");
       }
-      else{
-        alert("test");
-        $("#modal-progress").modal("show") && $("#modal-signup").modal("hide");
-      }
+      // else{
+      //   alert("test");
+      //   $("#modal-progress").modal("show") && $("#modal-signup").modal("hide");
+      // }
 
       $.ajax(
         {
@@ -52,15 +51,15 @@ $(function () {
             
           }
           else {
-            if ($('#modal-progress').hasClass('show')){
-              alert("test2");
+            // if ($('#modal-progress').hasClass('show')){
+              // alert("test2");
               a = 0;
               $("#modal-progress").modal("hide");
               $("#modal-signup").modal("show");
               // $("#modal-progress").removeClass("show") && $("#modal-signup").addClass("show");
               // $("#modal-signup").modal("show");
               // break
-            }
+            // }
             // $("#modal-progress").modal("hide");
             // $("#modal-progress").removeClass("show");
             // $("#modal-signup").modal("show");

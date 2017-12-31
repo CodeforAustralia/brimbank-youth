@@ -23,6 +23,7 @@ from events import views
 from sendsms.views import send_sms, SMSCreateView, EmailCreateView
 from activities.views import ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDraftDetailView, ActivityDeleteView, ActivityDraftUpdateView, search_events, submit_activity, view_activity_drafts
 from accounts import views as accounts_views
+from contacts import views as contacts_views
 
 urlpatterns = [
     # Home
@@ -79,6 +80,12 @@ urlpatterns = [
     url(r'^activity/delete/(?P<pk>\d+)/$', ActivityDeleteView.as_view(), name='delete_activity'),
 
     url(r'^activity/drafts/$', view_activity_drafts, name='view_activity_drafts'),
+
+    # SMS & Email Groups
+    url(r'^sms_members/$', contacts_views.sms_member_list, name='sms_member_list'),
+    url(r'^sms_members/create/$', contacts_views.sms_member_create, name='sms_member_create'),
+    url(r'^sms_members/(?P<pk>\d+)/update/$', contacts_views.sms_member_update, name='sms_member_update'),
+    url(r'^sms_members/(?P<pk>\d+)/delete/$', contacts_views.sms_member_delete, name='sms_member_delete'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

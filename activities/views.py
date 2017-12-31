@@ -102,9 +102,6 @@ def submit_activity(request, pk):
                            )
         activity.save()
         draft.delete()
-    #    return render(request, 'activities/activitydraft_detail.html', {
-    #        'pk': pk,
-    #    })
         return render(request, 'activities/activity_detail.html', {
             'pk': pk,
             'activity': activity,
@@ -155,8 +152,6 @@ def search_events(request):
         list_of_input_ids=request.GET.getlist('checkboxes')
         str1 = '_'.join(list_of_input_ids)
         search = request.GET.get('search')
-        print('list of checkbox: ', list_of_input_ids)
-        print('request.get: ', request.GET)
         if search == 'search':
             if location_key or name_key:
                 activities = search_logic(request, location_key, name_key)

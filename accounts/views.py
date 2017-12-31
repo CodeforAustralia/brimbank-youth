@@ -21,6 +21,8 @@ from .forms import SignUpForm, ProfileForm
 from .tokens import account_activation_token
 from .models import Profile
 
+from activities.views import search_logic, show_page_numbers
+
 def test(request):
     return render(request, "accounts/account_activation_email.html")
 
@@ -35,24 +37,26 @@ def signup(request):
             # Send confirmation email
             current_site = get_current_site(request)
             # message = render_to_string('accounts/account_activation_email.html', {
-            message = render_to_string('accounts/drip.html', {
+            message = render_to_string('accounts/welcome.html', {
                 'user':user, 
                 'domain':current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
             mail_subject = 'Activate your account.'
-#            to_email = form.cleaned_data.get('email')
-#            to_email = to_email.split(',')
-#            to_email = ['devy@codeforaustralia.org']
             to_email = ['dsihaloho@student.unimelb.edu.au']
             sender = form.cleaned_data.get('email')
             send_mail(mail_subject, message, sender, to_email, html_message=message)
 			
             # Users are logged in
-            auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            # auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.add_message(request, messages.SUCCESS, 'Please wait for the admin to confirm your registration.')
-            return redirect('account_activation_sent')
+            activities = search_logic(request, '', '')
+            activities = show_page_numbers(request, activities)
+            user_register = True
+            return render(request, 'activities/activity_search_result.html', {'activities': activities,
+                                                                            'user_register': user_register,})
+            # return redirect('account_activation_sent')
     else:
         form = SignUpForm()
     return render(request, 'accounts/signup.html', {'form': form})
@@ -102,6 +106,7 @@ def signup_ajax_form(request):
         form = SignUpForm(request.POST)
         # time.sleep(1)  # You don't need this line. This is just to delay the process so you can see the progress bar testing locally.
         if form.is_valid():
+            data['no_progress_display'] = False
             user = form.save(commit=False)
             user.is_active = False
             user.save()

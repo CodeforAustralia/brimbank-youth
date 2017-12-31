@@ -54,15 +54,24 @@
           </li>
           {% if user.is_authenticated %}
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="activity" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Activity
             </a>
-            <div class="dropdown-menu" style="width:100px;" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu" style="width:100px;" aria-labelledby="activity">
               <a class="dropdown-item" href="{% url 'view_activity_drafts' %}">Drafts</a>
               <a class="dropdown-item" href="{% url 'create_activity' %}">Create new</a>
               <a class="dropdown-item" href="#">Bookmarks</a>
               <!-- <a class="dropdown-item" href="{% url 'search_activity' %}">Search activities</a> -->
             </div>
+          </li>
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="contact" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Contacts
+              </a>
+              <div class="dropdown-menu" style="width:100px;" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'sms_member_list' %}">Mobile</a>
+                <a class="dropdown-item" href="#">Email</a>
+              </div>
           </li>
           {% else %}
           <li class="nav-item">
@@ -73,8 +82,8 @@
         {% if not user.is_authenticated %}
         <form class="form-inline ml-auto">
           <a href="{% url 'login' %}" class="btn btn-outline-success">Log in</a>
-<!--              <a href="{% url 'signup' %}" class="btn btn-success ml-2 js-signup" >Sign up</a>-->
-          <a href="#" class="btn btn-success ml-2 js-signup" >Sign up</a>
+          <a href="{% url 'signup' %}" class="btn btn-success ml-2" >Sign up</a>
+          <!-- <a href="#" class="btn btn-success ml-2 js-signup" >Sign up</a> Sign-up AJAX form -->
         </form>
         {% else %}
         <ul class="navbar-nav ml-auto mr-2">
@@ -96,8 +105,8 @@
     </nav>
           
     {% block body %}  
-    <div id="message_list" class="container-fluid mt-4">
       {% if messages %}
+      <div id="message_list" class="container-fluid mt-4">
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -117,6 +126,7 @@
     <div class="modal fade" id="modal-signup" tabindex="-1" role="dialog" aria-labelledby="signUp" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content"></div>
+      <!-- <span id="show_progress" style="display:none;" value="True"></span> -->
     </div>
     </div>
 
@@ -133,6 +143,7 @@
     </div>
       
     <!-- SIGN-UP CONFIRMATION MODAL -->
+    <!-- {% if user_register %} -->
     <div class="modal" id="modal-confirmation" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -151,6 +162,7 @@
         </div>
       </div>
     </div>
+    <!-- {% endif %} -->
 
     {% endblock body %}
 
@@ -160,15 +172,19 @@
     </div>
   </footer>
     
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-      <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+	<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     
 <!--    For sign-up modal form -->
-    <script src="{% static 'js/signup_2.js' %}"></script>
+  <script src="{% static 'js/signup_2.js' %}"></script>
+
+  <!-- <script>
+  $(function () {
+   
+  }
+  </script> -->
       
 	{% block javascript %}{% endblock %}
   </body>
