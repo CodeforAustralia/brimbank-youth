@@ -24,8 +24,7 @@ var saveForm = function () {
     dataType: 'json',
     success: function (data) {
       if (data.form_is_valid) {
-        // $("#group").html(data.html_group_list);
-        $(".contact-table tbody").html(data.html_sms_member_list);
+        $("#contact-table tbody").html(data.html_sms_member_list);
         $("#modal-contact").modal("hide");
       }
       else {
@@ -71,26 +70,6 @@ var saveGroupForm = function () {
   return false;
 };
 
-var saveGroupForm2 = function () {
-  var form = $(this);
-  $.ajax({
-    url: form.attr("action"),
-    data: form.serialize(),
-    type: form.attr("method"),
-    dataType: 'json',
-    success: function (data) {
-      if (data.form_is_valid) {
-        $("#group").html(data.html_group_list);
-        location.reload();
-      }
-      else {
-        $("#modal-group .modal-content").html(data.html_form);
-      }
-    }
-  });
-  return false;
-};
-
 // Create SMS group
 $(".js-create-group").click(loadGroupForm);
 $("#modal-group").on("submit", ".js-group-create-form", saveGroupForm);
@@ -101,7 +80,7 @@ $("#modal-group").on("submit", ".js-sms-group-update-form",saveGroupForm);
 
 // Delete SMS group
 $("#group").on("click", ".js-delete-sms-group", loadGroupForm);
-$("#modal-group").on("submit", ".js-sms-group-delete-form", saveGroupForm2);
+$("#modal-group").on("submit", ".js-sms-group-delete-form", saveGroupForm);
   
 // Create SMS contact
 $(".js-create-sms-member").click(loadForm);

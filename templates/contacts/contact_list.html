@@ -4,35 +4,35 @@
 
 {% block content %}
 <div class="container-fluid mt-4">
-  <!-- BUTTON TO TRIGGER THE ACTION -->
-    <a class="btn btn-primary btn-lg js-create-sms-member" href="#" data-url="{% url 'sms_member_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
+    <!-- BUTTON TO TRIGGER THE ACTION -->
+    <a class="btn btn-primary btn-lg js-create-sms-member" href="#" data-url="{% url 'sms_member_create' group_id %}" role="button" aria-haspopup="true" aria-expanded="false">
         New contact
-    </a> 
+    </a>
+    <p style="display:none"> {{ group_id }} </p>
 </div>
 
-  <div class="container-fluid mt-4">
-  <table class="table" id="contact-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Mobile number</th>
-        <th>Group</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% include 'contacts/includes/partial_contact_list.html' %}
-    </tbody>
-  </table>
-  </div>
+<div class="container-fluid mt-4">
+    <table class="table" id="contact-table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Mobile number</th>
+            <th>Group</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% include 'contacts/includes/partial_contact_list.html' %}
+        </tbody>
+    </table>   
+</div>
 
-   <!-- THE MODAL WE WILL BE USING -->
-   <div class="modal fade" id="modal-contact">
+<!-- THE MODAL WE WILL BE USING -->
+<div class="modal fade" id="modal-contact">
     <div class="modal-dialog">
-      <div class="modal-content">
-      </div>
+        <div class="modal-content">
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}
 

@@ -5,7 +5,7 @@
         <a data-toggle="collapse" href="#{{ group.id }}" role="button" aria-expanded="true" aria-controls="collapseOne">
         {{ group.name }}
         </a>
-        <a class="btn btn-primary btn-sm float-right mb-2 mt-0" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <a class="small float-right mb-2 mt-0" href="{% url 'sms_contact_list' group.id %}" role="button" aria-haspopup="true" aria-expanded="false">
             Add contact
         </a>
         </span>

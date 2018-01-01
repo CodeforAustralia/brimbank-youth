@@ -82,8 +82,12 @@ urlpatterns = [
     url(r'^activity/drafts/$', view_activity_drafts, name='view_activity_drafts'),
 
     # SMS & Email Groups
+
+    # --- SMS Contact without AJAX ---
+    url(r'^sms_contacts/group/(?P<group_pk>\d+)/$', contacts_views.sms_contact_list, name='sms_contact_list'),
     
-    url(r'^sms_members/create/$', contacts_views.sms_member_create, name='sms_member_create'),
+    # --- SMS Contact with AJAX ---
+    url(r'^sms_members/create/(?P<group_pk>\d+)/$', contacts_views.sms_member_create, name='sms_member_create'),
     url(r'^sms_members/(?P<pk>\d+)/update/$', contacts_views.sms_member_update, name='sms_member_update'),
     url(r'^sms_members/(?P<pk>\d+)/delete/$', contacts_views.sms_member_delete, name='sms_member_delete'),
 
