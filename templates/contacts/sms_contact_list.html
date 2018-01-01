@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+  <!-- BUTTON TO TRIGGER THE ACTION -->
+    <a class="btn btn-primary btn-lg js-create-sms-member" href="#" data-url="{% url 'sms_member_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
+        New contact
+    </a>
+</div>
+
+<div class="container-fluid mt-4">
+    <table class="table contact-table" id="id_{{ group.id }}">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Mobile number</th>
+            <th>Group</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% include 'contacts/includes/partial_contact_list.html' %}
+        </tbody>
+    </table>   
+</div>
+
+<!-- THE MODAL WE WILL BE USING -->
+<div class="modal fade" id="modal-contact">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'contacts/js/contacts.js' %}"></script>
+{% endblock %}

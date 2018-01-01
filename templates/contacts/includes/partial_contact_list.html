@@ -1,21 +1,21 @@
 {% for sms_member in sms_members %}
-  <tr>
+    <tr>
     <td>{{ sms_member.name }}</td>
     <td>{{ sms_member.mobile }}</td>
     <td>{{ sms_member.group }}</td>
     <td>
-      <button type="button"
-              class="btn btn-warning btn-sm js-update-sms-member"
-              data-url="{% url 'sms_member_update' sms_member.id %}">Edit
-      </button>
-      <button type="button"
-              class="btn btn-danger btn-sm js-delete-sms-member"
-              data-url="{% url 'sms_member_delete' sms_member.id %}">Delete
-      </button>
+        <button type="button"
+                class="btn btn-warning btn-sm js-update-sms-member"
+                data-url="{% url 'sms_member_update' sms_member.id %}">Edit
+        </button>
+        <button type="button"
+                class="btn btn-danger btn-sm js-delete-sms-member"
+                data-url="{% url 'sms_member_delete' sms_member.id %}">Delete
+        </button>
     </td>
-  </tr>
+    </tr>
 {% empty %}
-  <tr>
+    <tr>
     <td colspan="7" class="text-center bg-warning">No member yet</td>
-  </tr>
+    </tr>
 {% endfor %}

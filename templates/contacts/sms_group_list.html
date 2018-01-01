@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+  <!-- BUTTON TO TRIGGER THE ACTION -->
+  <a class="btn btn-primary btn-lg js-create-group" href="#" data-url="{% url 'group_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
+      New group
+  </a>
+</div>
+
+<div class="container-fluid mt-4">
+  <div id="accordion" class="row justify-content-center" role="tablist">
+    <div class="card" style="width: 80%;">
+      <div id="group">
+      {% include 'contacts/includes/partial_group_list.html' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- THE MODAL WE WILL BE USING -->
+  <div class="modal fade" id="modal-group">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'contacts/js/contacts.js' %}"></script>
+{% endblock %}
