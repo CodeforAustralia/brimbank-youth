@@ -5,22 +5,40 @@
         <a data-toggle="collapse" href="#{{ group.id }}" role="button" aria-expanded="true" aria-controls="collapseOne">
         {{ group.name }}
         </a>
-        <a class="small float-right mb-2 mt-0" href="{% url 'sms_contact_list' group.id %}" role="button" aria-haspopup="true" aria-expanded="false">
-            Add contact
-        </a>
         </span>
+        <a class="btn btn-danger btn-sm js-delete-sms-group ml-2 float-right" 
+        data-url="{% url 'sms_group_delete' group.id %}"
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">Delete</a>
+        <a class="btn btn-warning btn-sm js-update-sms-group float-right" 
+            data-url="{% url 'sms_group_update' group.id %}"
+            href="#" role="button" aria-haspopup="true" aria-expanded="false">Edit</a>
+        
     </h5>
     </div>
 
     <div id={{ group.id }} class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
         <div class="card-body sms_group">
             <p class="lead">{{ group.description }}</p>
-            <a class="btn btn-warning btn-sm js-update-sms-group" 
-            data-url="{% url 'sms_group_update' group.id %}"
-            href="#" role="button" aria-haspopup="true" aria-expanded="false">Edit</a>
-            <a class="btn btn-danger btn-sm js-delete-sms-group" 
-            data-url="{% url 'sms_group_delete' group.id %}"
-            href="#" role="button" aria-haspopup="true" aria-expanded="false">Delete</a>
+            <div class="container-fluid mt-4">
+                <table class="table" id="contact-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Mobile number</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for sms_member in sms_members %}
+                    {% if sms_member.group.id == group.id %}
+                        <tr>
+                        <td>{{ sms_member.name }}</td>
+                        <td>{{ sms_member.mobile }}</td>
+                        </tr>
+                    {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>   
+            </div>
         </div>
     </div>
     

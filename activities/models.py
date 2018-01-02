@@ -101,6 +101,8 @@ class Activity(models.Model):
     listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
     created_by = models.ForeignKey(User, related_name='activities', null=True)
     published = models.BooleanField(default=True)
+    bookmarked = models.BooleanField(default=False)
+    bookmarked_users = models.ManyToManyField(User, related_name='bookmarked_activities')
 #    time_zone = TimeZoneField(default='Australia/Melbourne')
 
     # Additional fields not visible to users

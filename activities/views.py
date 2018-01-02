@@ -138,6 +138,13 @@ def search_logic(request, location_key, name_key):
     )
     return activities
 
+def search_logic_bookmarks(request, location_key, name_key):
+    activities = Activity.objects.filter(bookmarked = True, bookmarked_users = request.user)
+    activities = activities.filter(
+    Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)
+    )
+    return activities
+
 def search_logic_drafts(request, location_key, name_key):
     activities = ActivityDraft.objects.filter(
     Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)
@@ -170,7 +177,7 @@ def search_events(request):
 
 def show_page_numbers(request, result):
     page = request.GET.get('page', 1)
-    paginator = Paginator(result, 6)
+    paginator = Paginator(result, 9)
 
     try:
         search_result = paginator.page(page)
@@ -195,3 +202,41 @@ def view_activity_drafts(request):
                 activity_drafts = search_logic_drafts(request, location_key, name_key)
         # activity_drafts = show_page_numbers(request, activity_drafts)
         return render(request, 'activities/activitydraft_search_result.html', {'activity_drafts': activity_drafts,})
+
+def bookmark_activity(request, pk):
+    activity = Activity.objects.get(pk=pk)
+    if (activity.bookmarked):
+        activity.bookmarked = False
+        activity.bookmarked_users.remove(request.user)
+    else:
+        activity.bookmarked = True
+        activity.bookmarked_users.add(request.user)
+    activity.save()
+    # new_user = activity.bookmarked_users.get(pk=request.user.pk)
+    return HttpResponse('Bookmark test')
+
+@login_required
+def bookmark_list(request):
+    activities = Activity.objects.filter(bookmarked = True)
+    if request.method == 'GET':
+        location_key = request.GET.get('location') # 'location' is the name of the input field
+        name_key = request.GET.get('name')
+        list_of_input_ids=request.GET.getlist('checkboxes')
+        str1 = '_'.join(list_of_input_ids)
+        search = request.GET.get('search')
+        if search == 'search':
+            if location_key or name_key:
+                activities = search_logic_bookmarks(request, location_key, name_key)
+                activities.filter(bookmarked = True)
+        if str1 != '':
+            kwargs = {'pk': str1}
+            if search == 'share':
+                form = SendSMSForm()
+                return redirect('sms_create', **kwargs)
+            if search == 'email':
+                form = SendEmailForm()
+                return redirect('email_create', **kwargs)
+        if (str1 == '' and search == 'share') or (str1 == '' and search == 'email'):
+            messages.add_message(request, messages.ERROR, 'Please select at least one activity.', extra_tags='danger')
+        activities = show_page_numbers(request, activities)
+        return render(request, 'activities/activity_bookmarks_list.html', {'activities': activities,})

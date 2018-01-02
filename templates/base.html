@@ -60,13 +60,13 @@
             <div class="dropdown-menu" style="width:100px;" aria-labelledby="activity">
               <a class="dropdown-item" href="{% url 'view_activity_drafts' %}">Drafts</a>
               <a class="dropdown-item" href="{% url 'create_activity' %}">Create new</a>
-              <a class="dropdown-item" href="#">Bookmarks</a>
+              <a class="dropdown-item" href="{% url 'bookmark_list' %}">Bookmarks</a>
               <!-- <a class="dropdown-item" href="{% url 'search_activity' %}">Search activities</a> -->
             </div>
           </li>
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="contact" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Contacts
+                Groups
               </a>
               <div class="dropdown-menu" style="width:100px;" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href="{% url 'sms_group_list' %}">Mobile</a>
@@ -74,9 +74,9 @@
               </div>
           </li>
           {% else %}
-          <li class="nav-item">
+          <!-- <li class="nav-item">
               <a class="nav-link" href="#">Bookmarks</a>
-          </li>
+          </li> -->
           {% endif %}
         </ul>
         {% if not user.is_authenticated %}

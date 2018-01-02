@@ -5,14 +5,17 @@
 {% block content %}
 <div class="container-fluid mt-4">
   <!-- BUTTON TO TRIGGER THE ACTION -->
-  <a class="btn btn-primary btn-lg js-create-group" href="#" data-url="{% url 'group_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
-      New group
+  <a class="btn btn-primary btn-sm js-create-group ml-4" href="#" data-url="{% url 'group_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
+      New Group
+  </a>
+  <a class="ml-2" href="{% url 'sms_contact_list' %}" role="button" aria-haspopup="true" aria-expanded="false">
+    Add Contact
   </a>
 </div>
 
 <div class="container-fluid mt-4">
   <div id="accordion" class="row justify-content-center" role="tablist">
-    <div class="card" style="width: 80%;">
+    <div class="card" style="width: 95%;">
       <div id="group">
       {% include 'contacts/includes/partial_group_list.html' %}
       </div>

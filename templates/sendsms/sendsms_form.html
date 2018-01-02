@@ -11,19 +11,28 @@
 {% endblock %}
 
 {% block content %}
-        <form method="post" novalidate>
-        {% csrf_token %}
-        
-        {% include 'includes/form.html' %}
-            
-        {{ pk }}
-            
-        <div class="form-group row">
-          <div class="col-sm-offset-2 col-sm-10">
-            <a href="{% url 'home' %}" class="btn btn-outline-primary">Cancel</a>
-            <button type="submit" class="btn btn-primary"> Send </button>
+<div class="container-fluid mt-4" style="width:100%;">
+    <div class="row justify-content-center">
+      <div class="card" style="width: 75%;">
+        <div class="card-body">
+          <h3 class="card-title">Send text message</h3>
+          <form method="post" novalidate>
+          {% csrf_token %}
+          
+          {% include 'includes/form.html' %}
+              
+          {{ pk }}
+              
+          <div class="form-group row">
+            <div class="col-sm-offset-2 col-sm-10">
+              <a href="{% url 'home' %}" class="btn btn-outline-primary">Cancel</a>
+              <button type="submit" class="btn btn-primary"> Send </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

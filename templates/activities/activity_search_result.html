@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
     <style>
     li.dropdown.special {
         position: static;
@@ -35,6 +37,10 @@
           display: block;
         }
       }
+
+    .btn.active{
+        background-color:rgb(92,184,92);
+    }
     </style>
 
 {% endblock %}
@@ -117,7 +123,7 @@
     <div class="container-fluid">
     <div class="row justify-content-center">
     {% for activity in activities %}
-    <div class="col-sm-6">
+    <div class="col-sm-4">
         
       {% if user.is_authenticated %}
       <div class="card select">
@@ -135,7 +141,19 @@
         <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
         <p class="card-text">Where? <a href=# name="address">{{ activity.location }}</a></p> 
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
-      </div>
+
+    </div>
+    <div class="card-footer">
+        {% if activity.bookmarked %}
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn float-right js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <img src="{% static 'img/bookmark-white.png' %}">
+        </button>
+        {% else %}
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn float-right js-bookmark-article" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <img src="{% static 'img/bookmark-white.png' %}">
+        </button>
+        {% endif %}
+    </div>
       </div>
         
       {% else %}
@@ -154,7 +172,7 @@
         <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
         <p class="card-text">Where? <a href=# name="address">{{ activity.location }}</a></p>
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
-      </div>
+    </div>
       </div>
         
       {% endif %} 
@@ -184,13 +202,15 @@
 
 {% block javascript %}
 <script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script src="{% static 'activities/js/bookmarks.js' %}"></script>
 
 <!-- <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script> -->
 
 <!-- <script type="text/javascript" data-cfasync="false" src="//dsms0mj1bbhn4.cloudfront.net/assets/pub/shareaholic.js" data-shr-siteid="c363c07f4215a1d47d25f47dadb72b05" async="async"></script> -->
 
 <!-- Go to www.addthis.com/dashboard to customize your tools -->
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script>
+<!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script> -->
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
 
@@ -206,6 +226,21 @@ function initialize() {
     var autocomplete = new google.maps.places.Autocomplete(input);
 }		
 google.maps.event.addDomListener(window, 'load', initialize);
+
+function markActivity(clicked_id) {
+    var url_dest = '/activity/bookmark/'+clicked_id+'/'
+    $.ajax({
+        url: url_dest,
+        type: 'get',
+        dataType: 'json',
+        beforeSend: function () {
+            // alert(url_dest);
+        },
+        success: function(){
+            // alert(url_dest);
+        }
+    });
+};
     
 $( function() {
 
@@ -244,7 +279,6 @@ $( function() {
   })
     
   $('.card-img-top.select').click( function() {
-      
       //Change the background colour of card-body
       $(this).siblings(".card-body.select").toggleClass('on');
       

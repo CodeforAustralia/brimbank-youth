@@ -1,8 +1,8 @@
 {% for sms_member in sms_members %}
     <tr>
+    <td>{{ sms_member.group }}</td>
     <td>{{ sms_member.name }}</td>
     <td>{{ sms_member.mobile }}</td>
-    <td>{{ sms_member.group }}</td>
     <td>
         <button type="button"
                 class="btn btn-warning btn-sm js-update-sms-member"

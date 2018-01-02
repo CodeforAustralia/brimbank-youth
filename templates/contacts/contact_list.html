@@ -5,19 +5,18 @@
 {% block content %}
 <div class="container-fluid mt-4">
     <!-- BUTTON TO TRIGGER THE ACTION -->
-    <a class="btn btn-primary btn-lg js-create-sms-member" href="#" data-url="{% url 'sms_member_create' group_id %}" role="button" aria-haspopup="true" aria-expanded="false">
+    <a class="btn btn-primary js-create-sms-member" href="#" data-url="{% url 'sms_member_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
         New contact
     </a>
-    <p style="display:none"> {{ group_id }} </p>
 </div>
 
 <div class="container-fluid mt-4">
     <table class="table" id="contact-table">
         <thead>
         <tr>
+            <th>Group</th>
             <th>Name</th>
             <th>Mobile number</th>
-            <th>Group</th>
             <th></th>
         </tr>
         </thead>

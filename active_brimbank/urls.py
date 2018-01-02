@@ -21,7 +21,7 @@ from django.contrib.auth import views as auth_views
 
 from events import views
 from sendsms.views import send_sms, SMSCreateView, EmailCreateView
-from activities.views import ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDraftDetailView, ActivityDeleteView, ActivityDraftUpdateView, search_events, submit_activity, view_activity_drafts
+from activities.views import bookmark_list, bookmark_activity, ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDraftDetailView, ActivityDeleteView, ActivityDraftUpdateView, search_events, submit_activity, view_activity_drafts
 from accounts import views as accounts_views
 from contacts import views as contacts_views
 
@@ -81,13 +81,16 @@ urlpatterns = [
 
     url(r'^activity/drafts/$', view_activity_drafts, name='view_activity_drafts'),
 
+    url(r'^activity/bookmark/(?P<pk>\d+)/$', bookmark_activity, name='bookmark_activity'),
+    url(r'^activity/bookmarks/$', bookmark_list, name='bookmark_list'),
+
     # SMS & Email Groups
 
     # --- SMS Contact without AJAX ---
-    url(r'^sms_contacts/group/(?P<group_pk>\d+)/$', contacts_views.sms_contact_list, name='sms_contact_list'),
+    url(r'^sms_contacts/group/$', contacts_views.sms_contact_list, name='sms_contact_list'),
     
     # --- SMS Contact with AJAX ---
-    url(r'^sms_members/create/(?P<group_pk>\d+)/$', contacts_views.sms_member_create, name='sms_member_create'),
+    url(r'^sms_members/create/$', contacts_views.sms_member_create, name='sms_member_create'),
     url(r'^sms_members/(?P<pk>\d+)/update/$', contacts_views.sms_member_update, name='sms_member_update'),
     url(r'^sms_members/(?P<pk>\d+)/delete/$', contacts_views.sms_member_delete, name='sms_member_delete'),
 

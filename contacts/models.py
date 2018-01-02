@@ -5,12 +5,10 @@ class ContactGroup(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500, null=True)
 
+    def __str__(self):
+        return self.name
+
 class SMSMember(models.Model):
-    GROUP_NAMES = (
-        (1, 'Group A'),
-        (2, 'Group B'),
-        (3, 'Group C'),
-    )
     name = models.CharField(max_length=100)
     mobile = models.CharField(max_length=10, null=True)
-    group = models.PositiveSmallIntegerField(choices=GROUP_NAMES)
+    group = models.ForeignKey(ContactGroup, related_name='sms_members', null=True)

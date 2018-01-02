@@ -2,12 +2,14 @@
 
 {% load static %}
 
-{% block title %}Activity drafts{% endblock %}
+{% block title %}Bookmarks{% endblock %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
     <style>
     li.dropdown.special {
@@ -35,6 +37,10 @@
           display: block;
         }
       }
+
+    .btn.active{
+        background-color:rgb(92,184,92);
+    }
     </style>
 
 {% endblock %}
@@ -42,15 +48,15 @@
 {% block content %}
 <div class="jumbotron mb-6">
   <div class="container text-center">
-      <h1 class="display-4">Activity drafts</h1>
-    <!-- <p class="lead">Drafts of activities</p> -->
+      <h1 class="display-4">Bookmarked activities</h1>
+    <!-- <p class="lead">Search for events and activities in your area</p> -->
     <hr class="my-3">
     <form method="get" class="justify-content-center" novalidate>
         
         <div class="form-row">
         <div class="form-group offset-sm-2 col-sm-4">
-            <label class="sr-only" for="id_name">activity_draft name</label>
-            <input type="text" name="name" placeholder="Swimming, Dance..." maxlength="150" class="form-control mr-sm-2" id="id_name" data-toggle="tooltip" data-placement="left" title="Enter the activity_draft name" />
+            <label class="sr-only" for="id_name">Activity name</label>
+            <input type="text" name="name" placeholder="Swimming, Dance..." maxlength="150" class="form-control mr-sm-2" id="id_name" data-toggle="tooltip" data-placement="left" title="Enter the activity name" />
         </div>
         <div class="col-sm-4">
             <label class="sr-only" for="id_location">Location</label>
@@ -113,48 +119,60 @@
     
 <!--<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJYdawkGNg1moRrmgS6XeT7AM&key=AIzaSyAMBqqtl6cnrNdV4TUGDSF4z9g4shpp5kM" allowfullscreen></iframe>-->
     
-    {% if activity_drafts %}
+    {% if activities %}
     <div class="container-fluid">
     <div class="row justify-content-center">
-    {% for activity_draft in activity_drafts %}
+    {% for activity in activities %}
     <div class="col-sm-4">
         
       {% if user.is_authenticated %}
       <div class="card select">
-      {% if activity_draft.activity_img %}
-          <img class="card-img-top select" src="{{ activity_draft.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
+      {% if activity.activity_img %}
+          <img class="card-img-top select" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
           <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
       {% else %}
           <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
           <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
       {% endif %}
-      <div class="card-body select" id=card_{{ activity_draft.pk }}>
-        <h3 id="a" class="card-title"><a href="{% url 'activity_publish' activity_draft.pk %}">{{ activity_draft.name }}</a></h3>
-        <p id="b" class="card-text">{{ activity_draft.activity_type }}</p>
-        <p id="c" class="card-text">{{ activity_draft.start_date|date:'M d, Y' }} - {{ activity_draft.start_time|time:'H:i' }}</p>
-        <p id="d" class="card-text">{{ activity_draft.end_date|date:'M d, Y' }} - {{ activity_draft.end_time|time:'H:i' }}</p>
-        <p class="card-text">Where? <a href=# name="address">{{ activity_draft.location }}</a></p> 
-        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity_draft.pk }} name ="checkboxes" value={{ activity_draft.pk }} />
-      </div>
+      <div class="card-body select" id=card_{{ activity.pk }}>
+        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
+        <p id="b" class="card-text">{{ activity.activity_type }}</p>
+        <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
+        <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
+        <p class="card-text">Where? <a href=# name="address">{{ activity.location }}</a></p> 
+        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
+
+    </div>
+    <div class="card-footer">
+        {% if activity.bookmarked %}
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn float-right js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <img src="{% static 'img/bookmark-white.png' %}">
+        </button>
+        {% else %}
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn float-right js-bookmark-article" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <img src="{% static 'img/bookmark-white.png' %}">
+        </button>
+        {% endif %}
+    </div>
       </div>
         
       {% else %}
       <div class="card">
-      {% if activity_draft.activity_img %}
-          <a href="{% url 'activity_detail' activity_draft.pk %}"><img class="card-img-top" src="{{ activity_draft.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
-          <a href="{% url 'activity_detail' activity_draft.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+      {% if activity.activity_img %}
+          <a href="{% url 'activity_detail' activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+          <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
       {% else %}
-          <a href="{% url 'activity_detail' activity_draft.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
-          <a href="{% url 'activity_detail' activity_draft.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+          <a href="{% url 'activity_detail' activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+          <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
       {% endif %}
-      <div class="card-body" id=card_{{ activity_draft.pk }}>
-        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity_draft.pk %}">{{ activity_draft.name }}</a></h3>
-        <p id="b" class="card-text">{{ activity_draft.activity_type }}</p>
-        <p id="c" class="card-text">{{ activity_draft.start_date|date:'M d, Y' }} - {{ activity_draft.start_time|time:'H:i' }}</p>
-        <p id="d" class="card-text">{{ activity_draft.end_date|date:'M d, Y' }} - {{ activity_draft.end_time|time:'H:i' }}</p>
-        <p class="card-text">Where? <a href=# name="address">{{ activity_draft.location }}</a></p>
-        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity_draft.pk }} name ="checkboxes" value={{ activity_draft.pk }} />
-      </div>
+      <div class="card-body" id=card_{{ activity.pk }}>
+        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
+        <p id="b" class="card-text">{{ activity.activity_type }}</p>
+        <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
+        <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
+        <p class="card-text">Where? <a href=# name="address">{{ activity.location }}</a></p>
+        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
+    </div>
       </div>
         
       {% endif %} 
@@ -166,9 +184,12 @@
     </div>
     {% include 'includes/pagination_2.html' %}
 
-    {% else %}
-    <div class="container-fluid mt-4">
-    <h2>You haven't created any activity</h2>
+    {% endif %}
+    
+    {% if user.is_authenticated %}
+    <div class="container-fluid">
+        <button type="submit" class="btn btn-outline-success mb-2" name="search" value="share">Share via text</button>
+        <button type="submit" class="btn btn-outline-success mb-2" name="search" value="email">Share via email</button>
     </div>
     {% endif %}
     </form>
@@ -181,13 +202,15 @@
 
 {% block javascript %}
 <script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script src="{% static 'activities/js/bookmarks.js' %}"></script>
 
 <!-- <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script> -->
 
 <!-- <script type="text/javascript" data-cfasync="false" src="//dsms0mj1bbhn4.cloudfront.net/assets/pub/shareaholic.js" data-shr-siteid="c363c07f4215a1d47d25f47dadb72b05" async="async"></script> -->
 
 <!-- Go to www.addthis.com/dashboard to customize your tools -->
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script>
+<!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script> -->
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
 
@@ -203,8 +226,24 @@ function initialize() {
     var autocomplete = new google.maps.places.Autocomplete(input);
 }		
 google.maps.event.addDomListener(window, 'load', initialize);
+
+function markActivity(clicked_id) {
+    var url_dest = '/activity/bookmark/'+clicked_id+'/'
+    $.ajax({
+        url: url_dest,
+        type: 'get',
+        dataType: 'json',
+        beforeSend: function () {
+            // alert(url_dest);
+        },
+        success: function(){
+            // alert(url_dest);
+        }
+    });
+};
     
 $( function() {
+
    // Add Google Maps URL
    var form_elems = document.getElementsByName("address");
    for (var i = 0; i < form_elems.length; i++) {
@@ -213,6 +252,7 @@ $( function() {
        var full_url = map_url + address;
        $(form_elems[i]).attr("href", full_url);
    }
+
 
   // Add Tooltips on search boxes
   $('#id_location').tooltip();
