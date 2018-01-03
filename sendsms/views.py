@@ -19,7 +19,20 @@ class SMSCreateView(CreateView):
     form_class = SendSMSForm
     
     def get_success_url(self):
-        send_sms(self.object.message, self.object.recipient_no)
+        text_msg = str(self.object.message + '\n' + self.object.activity_list)
+        if self.object.recipient_group is not None:
+            recipient_no_group = self.object.recipient_group.sms_members.all()
+            if recipient_no_group:
+                for member in recipient_no_group:
+                    send_sms(text_msg, member.mobile)
+
+        if self.object.recipient_no != '':
+            recipient_no_list = self.object.recipient_no.split(',')
+            for index, recipient_no in enumerate(recipient_no_list):
+                send_sms(text_msg, recipient_no)
+                
+        # send_sms(text_msg, self.object.recipient_no)
+        # send_sms(self.object.message, self.object.recipient_no)
         messages.add_message(self.request, messages.SUCCESS, 'Your text has been sent')
         return reverse('search_activity')
     
@@ -30,7 +43,7 @@ class SMSCreateView(CreateView):
         initial = super(CreateView, self).get_initial()
         activity_pk_list = self.kwargs['pk']
         activity_pk_list = activity_pk_list.split('_')
-        activity_url = 'Activities you may be interested in:'
+        activity_url = ''
         for index, pk in enumerate(activity_pk_list):
             activity = Activity.objects.get(pk=pk)
             activity_pk = activity.pk
@@ -38,10 +51,12 @@ class SMSCreateView(CreateView):
             current_site = get_current_site(self.request)
             domain = current_site.domain
 #            activity_url_temp = name + ' http://localhost:8000'+str(reverse('activity_detail', args=[activity_pk]))
-            activity_url_temp = name + ' '+ domain +str(reverse('activity_detail', args=[activity_pk]))
-            activity_url = str(activity_url + '\n' + activity_url_temp)
-        print(activity_url)
-        initial['message'] = activity_url
+            activity_url_temp = name + ': http://'+ domain +str(reverse('activity_detail', args=[activity_pk]))
+            if (activity_url != ''):
+                activity_url = str(activity_url + '\n' + activity_url_temp)
+            else:
+                activity_url = str(activity_url_temp)
+        initial['activity_list'] = activity_url
         return initial
     
 class EmailCreateView(CreateView):
@@ -58,8 +73,7 @@ class EmailCreateView(CreateView):
         msg_html = render_to_string('sendsms/email.html',
                    {'activities': activities,
                    'domain':current_site.domain,
-                   }
-                                   )
+                   })
         send_email(self.request, 
                    self.object.subject, 
                    self.object.message, 
