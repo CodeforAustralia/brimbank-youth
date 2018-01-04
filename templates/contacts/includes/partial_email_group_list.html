@@ -1,0 +1,54 @@
+{% for group in groups %}
+    <div class="card-header" role="tab">
+    <h5 class="mb-0">
+        <span class="align-middle">
+        <a data-toggle="collapse" href="#{{ group.id }}" role="button" aria-expanded="true" aria-controls="collapseOne">
+        {{ group.name }}
+        </a>
+        </span>
+        <a class="btn btn-danger btn-sm js-delete-email-group ml-2 float-right" 
+        data-url="{% url 'email_group_delete' group.id %}"
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">Delete</a>
+        <a class="btn btn-warning btn-sm js-update-email-group float-right" 
+            data-url="{% url 'email_group_update' group.id %}"
+            href="#" role="button" aria-haspopup="true" aria-expanded="false">Edit</a>
+        
+    </h5>
+    </div>
+
+    <div id={{ group.id }} class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+        <div class="card-body sms_group">
+            <p class="lead">{{ group.description }}</p>
+            <div class="container-fluid mt-4">
+                <table class="table" id="contact-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for sms_member in sms_members %}
+                    {% if sms_member.group.id == group.id %}
+                        <tr>
+                        <td>{{ sms_member.name }}</td>
+                        <td>{{ sms_member.email }}</td>
+                        </tr>
+                    {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>   
+            </div>
+        </div>
+    </div>
+    
+    {% empty %}
+    <div class="card-header" role="tab">
+    <h5 class="mb-0">
+        <a data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseOne">
+        No group yet
+        </a>
+    </h5>
+    </div>
+{% endfor %}
+

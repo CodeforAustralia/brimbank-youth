@@ -1,0 +1,21 @@
+{% for email_member in email_members %}
+    <tr>
+    <td>{{ email_member.group }}</td>
+    <td>{{ email_member.name }}</td>
+    <td>{{ email_member.email }}</td>
+    <td>
+        <button type="button"
+                class="btn btn-warning btn-sm js-update-email-member"
+                data-url="{% url 'email_member_update' email_member.id %}">Edit
+        </button>
+        <button type="button"
+                class="btn btn-danger btn-sm js-delete-email-member"
+                data-url="{% url 'email_member_delete' email_member.id %}">Delete
+        </button>
+    </td>
+    </tr>
+{% empty %}
+    <tr>
+    <td colspan="7" class="text-center bg-warning">No member yet</td>
+    </tr>
+{% endfor %}

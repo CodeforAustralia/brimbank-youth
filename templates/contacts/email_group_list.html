@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Email Group {% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+  <!-- BUTTON TO TRIGGER THE ACTION -->
+  <a class="btn btn-primary btn-sm js-create-email-group ml-4" href="#" data-url="{% url 'email_group_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
+      New Group
+  </a>
+  <a class="ml-2" href="{% url 'email_contact_list' %}" role="button" aria-haspopup="true" aria-expanded="false">
+    Add Contact
+  </a>
+</div>
+
+<div class="container-fluid mt-4">
+  <div id="accordion" class="row justify-content-center" role="tablist">
+    <div class="card" style="width: 95%;">
+      <div id="group">
+      {% include 'contacts/includes/partial_email_group_list.html' %}
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- THE MODAL WE WILL BE USING -->
+  <div class="modal fade" id="modal-group">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block javascript %}
+  <script src="{% static 'contacts/js/contacts.js' %}"></script>
+{% endblock %}

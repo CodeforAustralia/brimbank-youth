@@ -41,6 +41,12 @@
     .btn.active{
         background-color:rgb(92,184,92);
     }
+
+    .easy-autocomplete-container ul{
+        text-align: left;
+    }
+
+
     </style>
 
 {% endblock %}
@@ -53,8 +59,8 @@
     <hr class="my-3">
     <form method="get" class="justify-content-center" novalidate>
         
-        <div class="form-row">
-        <div class="form-group offset-sm-2 col-sm-4">
+        <div class="form-row justify-content-center">
+        <div class="form-group col-sm-4">
             <label class="sr-only" for="id_name">Activity name</label>
             <input type="text" name="name" placeholder="Swimming, Dance..." maxlength="150" class="form-control mr-sm-2" id="id_name" data-toggle="tooltip" data-placement="left" title="Enter the activity name" />
         </div>
@@ -215,17 +221,39 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
 
 <script>
-//var options = {
-//    data: ["Swimming", "Dance", "Soccer", "Basketball", "Volleyball", ]
-//};
-//$('#id_name').easyAutocomplete(options);
+// $(function(){
+//    var options = {
+//    data: ["Swimming", "Dance", "Soccer", "Basketball", "Volleyball", ],
+//    list: {
+//         match: {
+//             enabled: true
+//         }
+//     }
+// };
+// $('#id_name').easyAutocomplete(options);
+
+// var suburbs = {
+//     data: ["Sunshine", "Deer Park", "Melbourne", "Brunswick", ],
+
+//     // url: "{% static 'js/suburbs.js' %}",
+
+//     list: {
+//         match: {
+//             enabled: true
+//         }
+//     }
+// };
+// $('#id_location').easyAutocomplete(suburbs);
+// });
+
+
 
 //Google maps		
-function initialize() {		
-    var input = document.getElementById('id_location');		
-    var autocomplete = new google.maps.places.Autocomplete(input);
-}		
-google.maps.event.addDomListener(window, 'load', initialize);
+// function initialize() {		
+//     var input = document.getElementById('id_location');		
+//     var autocomplete = new google.maps.places.Autocomplete(input);
+// }		
+// google.maps.event.addDomListener(window, 'load', initialize);
 
 function markActivity(clicked_id) {
     var url_dest = '/activity/bookmark/'+clicked_id+'/'

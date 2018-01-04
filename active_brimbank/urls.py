@@ -68,13 +68,13 @@ urlpatterns = [
     url(r'^test_email/$', accounts_views.test, name='test_email'),
     
     # Activities
+    url(r'^activity/search/$', search_events, name='search_activity'),
     url(r'^create_activity/$', ActivityCreateView.as_view(), name='create_activity'),
-    url(r'^activity/$', ActivityListView.as_view(), name='activity_list'),
+    # url(r'^activity/$', ActivityListView.as_view(), name='activity_list'),
     url(r'^activity/detail/(?P<pk>\d+)/$', ActivityDetailView.as_view(), name='activity_detail'),
     url(r'^activity/publish/(?P<pk>\d+)/$', ActivityDraftDetailView.as_view(), name='activity_publish'),
     
     url(r'^activity/submit/(?P<pk>\d+)/$', submit_activity, name='submit_activity'),
-    url(r'^activity/search/$', search_events, name='search_activity'),
     url(r'^activity/edit/(?P<pk>\d+)/$', ActivityUpdateView.as_view(), name='edit_activity'),
     url(r'^activity/draft/edit/(?P<pk>\d+)/$', ActivityDraftUpdateView.as_view(), name='edit_draft_activity'),
     url(r'^activity/delete/(?P<pk>\d+)/$', ActivityDeleteView.as_view(), name='delete_activity'),
@@ -86,18 +86,29 @@ urlpatterns = [
 
     # SMS & Email Groups
 
-    # --- SMS Contact without AJAX ---
+    # --- SMS contacts ---
     url(r'^sms_contacts/group/$', contacts_views.sms_contact_list, name='sms_contact_list'),
-    
-    # --- SMS Contact with AJAX ---
     url(r'^sms_members/create/$', contacts_views.sms_member_create, name='sms_member_create'),
     url(r'^sms_members/(?P<pk>\d+)/update/$', contacts_views.sms_member_update, name='sms_member_update'),
     url(r'^sms_members/(?P<pk>\d+)/delete/$', contacts_views.sms_member_delete, name='sms_member_delete'),
 
+    # --- SMS groups ---
     url(r'^sms_groups/$', contacts_views.sms_group_list, name='sms_group_list'),
     url(r'^sms_groups/create/$', contacts_views.group_create, name='group_create'),
     url(r'^sms_groups/(?P<pk>\d+)/update/$', contacts_views.sms_group_update, name='sms_group_update'),
     url(r'^sms_groups/(?P<pk>\d+)/delete/$', contacts_views.sms_group_delete, name='sms_group_delete'),
-]
+
+    # --- Email groups ---
+    url(r'^email_groups/$', contacts_views.email_group_list, name='email_group_list'),
+    url(r'^email_groups/create/$', contacts_views.email_group_create, name='email_group_create'),
+    url(r'^email_groups/(?P<pk>\d+)/update/$', contacts_views.email_group_update, name='email_group_update'),
+    url(r'^email_groups/(?P<pk>\d+)/delete/$', contacts_views.email_group_delete, name='email_group_delete'),
+
+    # --- Email contacts ---
+    url(r'^email_contacts/group/$', contacts_views.email_contact_list, name='email_contact_list'),
+    url(r'^email_members/create/$', contacts_views.email_member_create, name='email_member_create'),
+    url(r'^email_members/(?P<pk>\d+)/update/$', contacts_views.email_member_update, name='email_member_update'),
+    url(r'^email_members/(?P<pk>\d+)/delete/$', contacts_views.email_member_delete, name='email_member_delete'),
+]   
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

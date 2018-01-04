@@ -5,7 +5,7 @@ from .models import SendSMS, SendEmail
 
 class SendSMSForm(forms.ModelForm):
     message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Enter additional message here...'}))
-    activity_list = forms.CharField(widget=forms.Textarea)
+    activity_list = forms.CharField(widget=forms.Textarea(attrs={'readonly':'readonly'}))
     # recipient_no = forms.CharField(widget=forms.TextInput(attrs={'type':'number'}))
     
     class Meta:
@@ -28,10 +28,23 @@ class SendSMSForm(forms.ModelForm):
             raise forms.ValidationError(msg)
 
 class SendEmailForm(forms.ModelForm):
-    # recipients = forms.CharField(widget=forms.TextInput(attrs={'type':'text'}))
+    message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Enter additional message here...'}))
+    activity_list = forms.CharField(widget=forms.Textarea(attrs={'readonly':'readonly'}))
     class Meta:
         model = SendEmail
-        fields = ['sender', 'recipients', 'subject', 'message']
+        fields = ['sender', 'recipients', 'recipient_group', 'subject', 'message', 'activity_list',]
         widgets = {
             'recipients': forms.TextInput(attrs={'placeholder': 'Separate email addresses by comma'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Validation: either recipients or recipient_no must be entered
+        recipients = cleaned_data.get("recipients")
+        recipient_group = cleaned_data.get("recipient_group")
+        if recipients == '' and recipient_group is None:
+            msg = "Either recipients or recipient group must be entered."
+            self.add_error('recipients','')
+            self.add_error('recipient_group','')
+            raise forms.ValidationError(msg)
