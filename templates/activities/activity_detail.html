@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% load social_share %}
 
 {% block title %}{{ activity.name }}{% endblock title %}
 
 {% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+<!-- <link rel="stylesheet" href="{% static 'css/fontawesome-all.css'%}"> -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/jssocials.css'%}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/jssocials-theme-flat.css'%}" />
 <style>
     #map {
         height: 400px;
@@ -14,6 +20,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="container-fluid mt-4">
 <div class="card">
   <div class="card-body">
     <h4 class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h4>
@@ -75,6 +82,7 @@
       
   </div>
 </div>
+</div>
 
 <br />
 
@@ -87,25 +95,48 @@
 <!-- {% endif %} -->
 
 {% if activity.location %}
-<div class="row justify-content-center">
-  <div id="map"></div>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+  <div class="offset-md-2 col-md-8">
+    <div id="map"></div>
+  </div>
+  <div class="col-md-1">
+    <div id="share"></div>
+  </div>
+  </div>
+</div>
+{% else %}
+<div class="row">
+    <div id="share"></div>
 </div>
 {% endif %}
+
+<!-- <div class="container-fluid">
+  <div id="share"></div>
+</div> -->
 
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
+<!-- <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script> -->
 
 <!-- Go to www.addthis.com/dashboard to customize your tools -->
 <!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script> -->
-
+<script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
 
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&region=AU&callback=initMap">
 </script>
 
+<script src="{% static 'js/jssocials.js' %}"></script>
+
 <script>
+  $("#share").jsSocials({
+      shares: ["messenger", "facebook", "whatsapp", "sms"],
+      showLabel: false,
+      shareIn: "popup",
+  });
+
   function initMap() {
   var geocoder = new google.maps.Geocoder();
 
@@ -142,4 +173,8 @@ function geocodeAddress(geocoder, resultsMap) {
   });
 }
 </script>
+
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script> -->
+
 {% endblock %}

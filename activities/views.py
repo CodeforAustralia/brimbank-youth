@@ -132,10 +132,28 @@ class ActivityDeleteView(DeleteView):
     model = Activity
     success_url = reverse_lazy('home')
 
-def search_logic(request, location_key, name_key):
-    activities = Activity.objects.filter(
-    Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)
-    )
+def search_logic(request, location_key, name_key, search_names):
+    i = 0
+    if search_names:
+        name_checkboxes = Q()
+        for i in range(0,len(search_names)):
+            name_checkboxes.add(
+            Q(name__istartswith=search_names[i]) | Q(name__iendswith=search_names[i]) | Q(name__icontains=search_names[i]), 
+            Q.OR)
+        
+        if name_key:
+            name_checkboxes.add(
+            Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key), 
+            Q.OR)
+        
+        activities = Activity.objects.filter(
+        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key),
+        name_checkboxes)
+    else:
+        activities = Activity.objects.filter(
+        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
+        Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+        )
     return activities
 
 def search_logic_bookmarks(request, location_key, name_key):
@@ -152,16 +170,18 @@ def search_logic_drafts(request, location_key, name_key):
     return activities
 
 def search_events(request):
-    activities = search_logic(request, '', '')
+    activities = search_logic(request, '', '', '')
     if request.method == 'GET':
         location_key = request.GET.get('location') # 'location' is the name of the input field
         name_key = request.GET.get('name')
         list_of_input_ids=request.GET.getlist('checkboxes')
         str1 = '_'.join(list_of_input_ids)
+        # search based on the checkbox input
+        search_names=request.GET.getlist('search_name')
         search = request.GET.get('search')
         if search == 'search':
-            if location_key or name_key:
-                activities = search_logic(request, location_key, name_key)
+            if location_key or name_key or search_names:
+                activities = search_logic(request, location_key, name_key, search_names)
         if str1 != '':
             kwargs = {'pk': str1}
             if search == 'share':
@@ -173,7 +193,24 @@ def search_events(request):
         if (str1 == '' and search == 'share') or (str1 == '' and search == 'email'):
             messages.add_message(request, messages.ERROR, 'Please select at least one activity.', extra_tags='danger')
         activities = show_page_numbers(request, activities)
-        return render(request, 'activities/activity_search_result.html', {'activities': activities,})
+        if name_key is None:
+            name_key = ''
+        if location_key is None:
+            location_key =''
+        url = ''
+        if search_names:
+            url = "&name=" + name_key + "&location=" + location_key
+            for i in range(0,len(search_names)):
+                url = url + "&search_name=" + search_names[i]
+            url = url + "&search=search"
+        else:
+            url = "&name=" + name_key + "&location=" + location_key + "&search=search"
+
+        return render(request, 'activities/activity_search_result.html', {
+                      'activities': activities,
+                      'name': name_key,
+                      'url': url,
+                      })
 
 def show_page_numbers(request, result):
     page = request.GET.get('page', 1)

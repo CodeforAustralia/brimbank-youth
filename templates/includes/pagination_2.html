@@ -5,7 +5,7 @@
 	
 	  {% if activities.number > 1 %}
         <li class="page-item">
-          <a class="page-link" href="?page=1">First</a>
+          <a class="page-link" href="?page=1{{ url }}">First</a>
         </li>
       {% else %}
         <li class="page-item disabled">
@@ -15,7 +15,7 @@
 	
       {% if activities.has_previous %}
         <li class="page-item">
-          <a class="page-link" href="?page={{ activities.previous_page_number }}">Previous</a>
+          <a class="page-link" href="?page={{ activities.previous_page_number }}{{ url }}">Previous</a>
         </li>
       {% else %}
         <li class="page-item disabled">
@@ -33,14 +33,14 @@
           </li>
         {% elif page_num > activities.number|add:'-3' and page_num|mul:'-1' > activities.number|add:'3'|mul:'-1' %}
           <li class="page-item">
-            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+            <a class="page-link" href="?page={{ page_num }}{{ url }}">{{ page_num }}</a>
           </li>
         {% endif %}
       {% endfor %}
 
       {% if activities.has_next %}
         <li class="page-item">
-          <a class="page-link" href="?page={{ activities.next_page_number }}">Next</a>
+          <a class="page-link" href="?page={{ activities.next_page_number }}{{ url }}">Next</a>
         </li>
       {% else %}
         <li class="page-item disabled">

@@ -8,9 +8,8 @@
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
-
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-
+    
     <style>
     li.dropdown.special {
         position: static;
@@ -86,16 +85,16 @@
                 <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sport</a> 
                 <ul class="dropdown-menu special" style="width:200px;">
                 <div class="container-fluid">
-                <li><a class="dropdown-item" data-value="Volleyball" tabIndex="-1"><input type="checkbox"/>&nbsp;Volleyball</a></li>
-                <li><a class="dropdown-item" data-value="Badminton" tabIndex="-1"><input type="checkbox"/>&nbsp;Badminton</a></li>
+                <li><a class="dropdown-item" data-value="Volleyball" tabIndex="-1"><input type="checkbox" name="search_name" value="volleyball"/>&nbsp;Volleyball</a></li>
+                <li><a class="dropdown-item" data-value="Badminton" tabIndex="-1"><input type="checkbox" name="search_name" value="badminton"/>&nbsp;Badminton</a></li>
                 </div>
                 <div class="container-fluid">
-                <li><a class="dropdown-item" data-value="Soccer" tabIndex="-1"><input type="checkbox"/>&nbsp;Soccer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-                <li><a class="dropdown-item" data-value="Tennis" tabIndex="-1"><input type="checkbox"/>&nbsp;Tennis</a></li>
+                <li><a class="dropdown-item" data-value="Soccer" tabIndex="-1"><input type="checkbox" name="search_name" value="soccer"/>&nbsp;Soccer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+                <li><a class="dropdown-item" data-value="Tennis" tabIndex="-1"><input type="checkbox" name="search_name" value="tennis"/>&nbsp;Tennis</a></li>
                 </div>
                 <div class="container-fluid">
-                <li><a class="dropdown-item" data-value="Netball" tabIndex="-1"><input type="checkbox"/>&nbsp;Netball&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-                <li><a class="dropdown-item" data-value="Basketball" tabIndex="-1"><input type="checkbox"/>&nbsp;Basketball</a></li>
+                <li><a class="dropdown-item" data-value="Netball" tabIndex="-1"><input type="checkbox" name="search_name" value="netball"/>&nbsp;Netball&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+                <li><a class="dropdown-item" data-value="Basketball" tabIndex="-1"><input type="checkbox" name="search_name" value="basketball"/>&nbsp;Basketball</a></li>
                 </div>
                 </ul>
             </li>
@@ -104,11 +103,11 @@
                     <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Get a job</a> 
                     <ul class="dropdown-menu special" style="width:200px;">
                     <div class="container-fluid">
-                    <li><a class="dropdown-item" data-value="Volleyball" tabIndex="-1"><input type="checkbox"/>&nbsp;Resume</a></li>
-                    <li><a class="dropdown-item" data-value="Badminton" tabIndex="-1"><input type="checkbox"/>&nbsp;Interviews</a></li>
+                    <li><a class="dropdown-item" data-value="Volleyball" tabIndex="-1"><input type="checkbox" name="search_name" value="resume"/>&nbsp;Resume</a></li>
+                    <li><a class="dropdown-item" data-value="Badminton" tabIndex="-1"><input type="checkbox" name="search_name" value="interviews"/>&nbsp;Interviews</a></li>
                     </div>
                     <div class="container-fluid">
-                    <li><a class="dropdown-item" data-value="Soccer" tabIndex="-1"><input type="checkbox"/>&nbsp;xxx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
+                    <li><a class="dropdown-item" data-value="Soccer" tabIndex="-1"><input type="checkbox"/>&nbsp;xxx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
                     <li><a class="dropdown-item" data-value="Tennis" tabIndex="-1"><input type="checkbox"/>&nbsp;xxx</a></li>
                     </div>
                     </ul>
@@ -180,7 +179,6 @@
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
     </div>
       </div>
-        
       {% endif %} 
         
       <br />
@@ -190,13 +188,20 @@
     </div>
     {% include 'includes/pagination_2.html' %}
 
+    {% else %}
+    <div class="container-fluid">
+        <p class="lead" style="text-align:center;">No activity that matches the search query</p>
+    </div>
+
     {% endif %}
     
     {% if user.is_authenticated %}
+    {% if activities %}
     <div class="container-fluid">
         <button type="submit" class="btn btn-outline-success mb-2" name="search" value="share">Share via text</button>
         <button type="submit" class="btn btn-outline-success mb-2" name="search" value="email">Share via email</button>
     </div>
+    {% endif %}
     {% endif %}
     </form>
 
