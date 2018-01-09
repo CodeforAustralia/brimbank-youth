@@ -73,6 +73,9 @@ def file_size(value):
     limit = 2 * 1024 * 1024
     if value.size > limit:
         raise ValidationError('File size is too large. The size should not exceed 2MB')
+
+class ShareURLForm(forms.Form):
+    url = forms.CharField(max_length=300)
         
 class ActivityDraftForm(forms.ModelForm):
     activity_type = forms.ChoiceField(choices=ACTIVITY_TYPES, required=False, label='What type of activity are you creating ?')

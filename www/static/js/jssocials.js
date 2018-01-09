@@ -449,6 +449,7 @@
             label: "Like",
             logo: "fab fa-facebook",
             shareUrl: "https://facebook.com/sharer/sharer.php?u={url}",
+            // shareUrl: "https://www.facebook.com/dialog/share?href={url}", 
             countUrl: "https://graph.facebook.com/?id={url}",
             getCount: function(data) {
                 return data.share && data.share.share_count || 0;
@@ -544,6 +545,17 @@
             label: "Share",
             logo: "fab fa-facebook-messenger",
             shareUrl: "fb-messenger://share?link={url}",
+            countUrl: "",
+            shareIn: "self"
+        },
+
+        messenger2: {
+            label: "Share",
+            logo: "fab fa-facebook-messenger",
+            // shareUrl: "http://www.facebook.com/dialog/sendlink={url}",
+            shareUrl: "http://www.facebook.com/dialog/send?link={url}",
+            // shareUrl: "http://www.facebook.com/dialog/send?link=http://www.nytimes.com/interactive/2015/04/15/travel/europe-favorite-streets.html",
+            // shareUrl: "fb://messaging/compose/new?app_id=1943348669252986?link={url}",
             countUrl: "",
             shareIn: "self"
         },

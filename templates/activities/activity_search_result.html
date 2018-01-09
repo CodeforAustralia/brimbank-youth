@@ -45,6 +45,9 @@
         text-align: left;
     }
 
+    button {
+      cursor: pointer;
+    }
 
     </style>
 
@@ -79,7 +82,7 @@
         </div>
   
         <div class="justify-content-center">
-            <div class="btn-group mr-2 mb-2" role="group" aria-label="Second group"><button type="submit" class="btn btn-primary" href="#" role="button">All</button></div>
+            <!-- <div class="btn-group mr-2 mb-2" role="group" aria-label="Second group"><button type="submit" class="btn btn-primary" href="#" role="button">All</button></div> -->
   
             <li class="btn-group mr-2 mb-2 dropdown special" role="group" aria-label="Sport">
                 <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sport</a> 
@@ -150,12 +153,12 @@
     </div>
     <div class="card-footer">
         {% if activity.bookmarked %}
-        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn float-right js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-            <img src="{% static 'img/bookmark-white.png' %}">
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn btn-outline-primary float-right js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="far fa-bookmark"></i>
         </button>
         {% else %}
-        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn float-right js-bookmark-article" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-            <img src="{% static 'img/bookmark-white.png' %}">
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn btn-outline-primary float-right js-bookmark-article" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="far fa-bookmark"></i>
         </button>
         {% endif %}
     </div>
@@ -224,7 +227,7 @@
 <!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script> -->
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
-
+<script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
 <script>
 // $(function(){
 //    var options = {
@@ -285,7 +288,6 @@ $( function() {
        var full_url = map_url + address;
        $(form_elems[i]).attr("href", full_url);
    }
-
 
   // Add Tooltips on search boxes
   $('#id_location').tooltip();

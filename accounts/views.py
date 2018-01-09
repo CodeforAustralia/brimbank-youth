@@ -96,7 +96,7 @@ class EnterProfileView(UpdateView):
     def form_valid(self, form):
         profile = form.save(commit=False)
         profile.save()
-        messages.add_message(request, messages.SUCCESS, 'Your profile has been updated.')
+        messages.add_message(self.request, messages.SUCCESS, 'Your profile has been updated.')
         return redirect('home')
     
 def signup_ajax_form(request):

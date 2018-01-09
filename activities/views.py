@@ -10,9 +10,10 @@ from django.contrib.messages import constants as messages_const
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
+from django.contrib.sites.shortcuts import get_current_site
 
 from .models import Activity, ActivityDraft
-from .forms import ActivityForm, ActivitySearchForm, ActivityDraftForm
+from .forms import ActivityForm, ActivitySearchForm, ActivityDraftForm, ShareURLForm
 from sendsms.forms import SendSMSForm, SendEmailForm
 
 activities = []
@@ -109,6 +110,21 @@ def submit_activity(request, pk):
 
 class ActivityDetailView(DetailView):
     model = Activity
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        context['org_activities'] = Activity.objects.filter(created_by=self.object.created_by).exclude(id=self.object.pk).order_by('name')
+        recommended_activities_full = Activity.objects.filter(activity_type=self.object.activity_type).exclude(id=self.object.pk).order_by('name')
+        if recommended_activities_full.count() > 1:
+            recommended_activities = recommended_activities_full[1:]
+        else:
+            recommended_activities = recommended_activities_full
+        context['recommended_activities'] = recommended_activities
+        current_site = get_current_site(self.request)
+        domain = current_site.domain
+        context['domain'] = domain
+        return context
     
 class ActivityListView(ListView):
     model = Activity
@@ -277,3 +293,12 @@ def bookmark_list(request):
             messages.add_message(request, messages.ERROR, 'Please select at least one activity.', extra_tags='danger')
         activities = show_page_numbers(request, activities)
         return render(request, 'activities/activity_bookmarks_list.html', {'activities': activities,})
+
+def share_url(request):
+    form = ShareURLForm()
+    data = dict()
+    context = {
+        'form': form,
+    }
+    data['html_form'] = render_to_string('activities/includes/partial_share_url.html', context, request=request)
+    return JsonResponse(data)

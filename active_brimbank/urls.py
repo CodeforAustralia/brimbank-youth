@@ -21,7 +21,7 @@ from django.contrib.auth import views as auth_views
 
 from events import views
 from sendsms.views import send_sms, SMSCreateView, EmailCreateView
-from activities.views import bookmark_list, bookmark_activity, ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDraftDetailView, ActivityDeleteView, ActivityDraftUpdateView, search_events, submit_activity, view_activity_drafts
+from activities.views import share_url, bookmark_list, bookmark_activity, ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDraftDetailView, ActivityDeleteView, ActivityDraftUpdateView, search_events, submit_activity, view_activity_drafts
 from accounts import views as accounts_views
 from contacts import views as contacts_views
 
@@ -83,6 +83,8 @@ urlpatterns = [
 
     url(r'^activity/bookmark/(?P<pk>\d+)/$', bookmark_activity, name='bookmark_activity'),
     url(r'^activity/bookmarks/$', bookmark_list, name='bookmark_list'),
+
+    url(r'^share_url/$', share_url, name='share_url'),
 
     # SMS & Email Groups
 

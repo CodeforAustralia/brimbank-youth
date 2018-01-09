@@ -123,6 +123,7 @@ def email_group_update(request, pk):
         form = EmailGroupForm(instance=group)
     return save_contact_group_form(request, form, 'contacts/includes/partial_email_group_update.html')
 
+@login_required
 def sms_group_delete(request, pk):
     group = get_object_or_404(ContactGroup, pk=pk)
     data = dict()
@@ -143,6 +144,7 @@ def sms_group_delete(request, pk):
         )
     return JsonResponse(data)
 
+@login_required
 def email_group_delete(request, pk):
     group = get_object_or_404(EmailGroup, pk=pk)
     data = dict()

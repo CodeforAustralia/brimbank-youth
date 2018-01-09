@@ -7,113 +7,281 @@
 {% block title %}{{ activity.name }}{% endblock title %}
 
 {% block stylesheet %}
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" /> -->
 <!-- <link rel="stylesheet" href="{% static 'css/fontawesome-all.css'%}"> -->
 <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials.css'%}" />
 <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials-theme-flat.css'%}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/slick.css'%}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/slick-theme.css'%}"/>
+<!-- <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css" /> -->
+<!-- <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-flat.css" /> -->
+
 <style>
     #map {
-        height: 400px;
-        width: 80%;
-   }
+      height: 600px;
+      width: 100%;
+    }
+    #fb_desktop {
+      border-radius: 0%;
+    }
+    button {
+      cursor: pointer;
+    }
+    #id_others {
+      background-color: rgb(233, 227, 227);
+      padding-top: 0.5em;
+      padding-bottom: 2em;
+    }
+    
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid mt-4">
 <div class="card">
-  <div class="card-body">
-    <h4 class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h4>
-    <p class="card-text">{{ activity.description }}</p>
-    <p class="card-text">{{ activity.activity_type }}</p>
-    <p class="card-text">{{ activity.organiser }}</p>
-    <p class="card-text">Where? <a href=# id="address">{{ activity.location }}</a></p>  
-    
-      
-<!--    Activities that only occur once -->
-    {% if activity.activity_date %}
-        <p class="card-text">{{ activity.activity_date|date:'D, d M Y' }}</p>
-        <p class="card-text">{{ activity.start_time|time:'g:i A' }} to {{ activity.end_time|time:'g:i A' }}</p>
-    {% endif %}
-    
-<!--      Daily, weekly, fortnightly, monthly activities-->
-    {% if activity.term != 'Once' %}
-      {% if activity.activity_day %}
-      <p class="card-text">Happening every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d M Y' }} to {{ activity.end_date|date:'D, d M Y' }}</p>
-      {% else %}
-      <p class="card-text">Happening every day from {{ activity.start_date|date:'D, d M Y' }} to {{ activity.end_date|date:'D, d M Y' }}</p>
-      {% endif %}
-      
-<!--      Show the time of the activities-->
-      <p class="card-text">{{ activity.start_time|time:'g:i A' }} to {{ activity.end_time|time:'g:i A' }}</p>
-    {% endif %}
-      
-    <!--      Number of available spaces-->
-      {% if activity.space_choice == 'Limited' %}
-        <p class="card-text">Available space: {{ activity.space }}</p>
-      {% endif %}
-      
-<!--      Activity cost-->
-      {% if activity.cost_choice == 'N' %}
-        <p class="card-text">No cost</p>
-      {% endif %}
-      {% if activity.cost_choice == 'Y' %}
-        <p class="card-text">Cost: ${{ activity.cost }}</p>
-      {% endif %}
-      
-<!--      Eligibility-->
-      {% if activity.living_duration != 'Open' %}
-      <p class="card-text">Living in Australia {{ activity.living_duration|lower }} than 5 years </p>      
-      {% endif %}
-      
-      {% if activity.living_duration == 'Open' %}
-      <p class="card-text">Open to anyone</p>
-      {% endif %}
+    <row style="border-bottom:solid 0.5px LightGray;border-bottom:solid 0.5px LightGray;">
+      <div class="row">
+      <div class="col-md-9">
+        {% if activity.activity_img %}
+        <img class="card-img-top select" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:400px;display:inline;">
+        {% else %}
+        <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:400px;">
+        {% endif %}
+      </div>
+      <div class="col-md-3 mt-5">
+        <!--    Activities that only occur once -->
+        {% if activity.activity_date %}
+        <h4 class="strong"><b>{{ activity.activity_date|date:'M'|upper }}.</b></h4>
+        <h4 class="strong"><b>{{ activity.activity_date|date:'d' }}</b></h4>
+        {% endif %}
+        <h4 class="mt-5"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name|upper }}</a></h4>
+        <p>By: {{ activity.created_by.profile.organisation_name }}</p>
+        {% if activity.cost_choice == 'N' %}
+          <h6 class="strong mt-5">FREE!</h6>
+        {% endif %}
+        {% if activity.cost_choice == 'Y' %}
+          <h6 class="strong mt-5">Cost: ${{ activity.cost }}</h6>
+        {% endif %}
+      </div>
+      </div>
+    </row>
+
+    <row style="border-bottom:solid 0.5px LightGray;border-bottom:solid 0.5px LightGray;">
+        <div class="row" >
+        <div class="col-md-9 mt-4 mb-4">
+            <a href="#" data-url="{% url 'share_url' %}" class="btn btn-outline-primary ml-4 mr-2 js-share-url"><i class="fas fa-share"></i> Share</a>
+            {% if activity.bookmarked %}
+            <button onclick="markActivity(this.id)" id="{{ activity.pk }}" type="button" class="btn btn-outline-primary js-bookmark-article mr-2 active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+              <i class="far fa-bookmark"></i>
+            </button>
+            {% else %}
+            <button onclick="markActivity(this.id)" id={{ activity.pk }} type="button" class="btn btn-outline-primary js-bookmark-article mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+              <i class="far fa-bookmark"></i>
+            </button>
+            {% endif %}
+            <!-- <a href="#" id="id_bookmark" class="btn btn-outline-primary mr-2"><i class="far fa-bookmark"></i> Save</a> -->
+            {% if activity.flyer  %}
+            <a href="{{ activity.flyer.url }}" class="btn btn-outline-primary"><i class="fas fa-print"></i> Print flyer</a>
+            {% endif %}
+            {% if not activity.flyer %}
+            <a href="#" class="btn btn-outline-primary disabled"><i class="fas fa-print"></i> Print flyer</a>
+            {% endif %}
+          </div>
+        <div class="col-md-3 mt-2 mb-2">
+          <button class="btn btn-success btn-lg" style="width:90%;height:100%;">ATTEND</button>
+        </div>
+        </div>
+      </row>
+
+  <div class="card-body mt-4 ml-5">
+      <div class="row">
+        <div class="col-md-9 mt-4 mb-4">
+          <h6 class="card-title">DESCRIPTION</h6>
+          <p class="card-text" style="margin-bottom:5%;">{{ activity.description }}</p>
+          <h6 class="card-title">ELIGIBILITY</h6>
+          {% if activity.gender == 'B' %}Both females and males{% endif %}
+          {% if activity.gender == 'F' %}Only females{% endif %}
+          {% if activity.gender == 'M' %}Only males{% endif %}
+          {% if activity.living_duration != 'Open' %}
+          <p class="card-text" style="margin-bottom:5%;">Living in Australia for {{ activity.living_duration|lower }} than 5 years </p>      
+          {% endif %}
+
+          <h6 class="card-title">OTHER INFO</h6>
+          <!--      Number of available spaces-->
+          {% if activity.space_choice == 'Limited' %}
+          <p class="card-text">Available space: {{ activity.space }}</p>
+          {% endif %}
+          <!--      Activity cost-->
+          {% if activity.cost_choice == 'N' %}Free of charge
+          {% else %}Cost: ${{ activity.cost }}{% endif %}
+
+        </div>
+
+        <div class="col-md-3 mt-4">
+          <h6 class="card-title">DATE AND TIME</h6>
+
+          <!--    Activities that only occur once -->
+          {% if activity.activity_date %}
+          <p class="card-text">{{ activity.activity_date|date:'D, d M Y' }}</p>
+          {% endif %}
+
+          <!--      Daily, weekly, fortnightly, monthly activities-->
+          {% if activity.term != 'Once' %}
+          {% if activity.activity_day %}
+          <p class="card-text">Happening every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d M Y' }} to {{ activity.end_date|date:'D, d M Y' }}</p>
+          {% else %}
+          <p class="card-text">Happening every day from {{ activity.start_date|date:'D, d M Y' }} to {{ activity.end_date|date:'D, d M Y' }}</p>
+          {% endif %}
+          <p class="card-text">{{ activity.start_time|time:'g:i A' }} to {{ activity.end_time|time:'g:i A' }}</p>
+          {% endif %}
+
+          <!--      Show the time of the activities-->
+          <p class="card-text" style="margin-bottom:10%;">{{ activity.start_time|time:'g:i A' }} - {{ activity.end_time|time:'g:i A' }}</p>
+          
+
+          <h6 class="card-title">LOCATION</h6>
+          <p class="card-text" id="address">{{ activity.location }}</p>
+          <p class="card-text"><a href=# id="address2">Open in Google Maps</a></p>
+
+          <h6 class="card-title" style="margin-top:10%;">CONTACT ORGANISER</h6>
+          <p class="card-text">Kumari 042327652</p>
+        </div>
+
+      </div>
       
     {% if user.is_authenticated %}
     <a href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary">Send SMS</a>
     <a href="{% url 'email_create' activity.pk %}" class="btn btn-outline-primary">Send Email</a>
-    <a class="col-sm-2 col-sm-4">
+    <a class="col-sm-2">
         <a href="{% url 'edit_activity' activity.pk %}" class="btn btn-outline-primary">Edit</a>
-        <a href="{% url 'create_activity' %}" class="btn btn-primary"> Create another </a>
-        <a class="btn btn-danger" data-method="delete" href="{% url 'delete_activity' activity.id %}">Delete</a>
+        <!-- <a href="{% url 'create_activity' %}" class="btn btn-primary"> Create another </a>
+        <a class="btn btn-danger" data-method="delete" href="{% url 'delete_activity' activity.id %}">Delete</a> -->
     </a>
     {% endif %}
-      
   </div>
 </div>
 </div>
 
 <br />
 
-<!-- {% if not user.is_authenticated %}
-<div class="sharethis-inline-share-buttons"></div> -->
-<!-- {% post_to_facebook '' %}
-    
-{% send_email activity.name "New activity: {{activity.name}}. Check it out!" "" %} -->
+<!-- Organisation description -->
+<div class="container-fluid mt-6">
+  <h3 class="text-center">{{ activity.created_by.profile.organisation_name }}</h3>
+  <p class="text-center lead">{{ activity.created_by.profile.description }}</p>
+</div>
 
-<!-- {% endif %} -->
+<!-- More activities from the same organisation -->
+<div class="container-fluid mt-4">
+  <h3 class="text-center" style="margin-top:10%;margin-bottom:2%;">More activities and events from this organiser</h3>
+  <div class="container-fluid mt-4">
+    <div class="multiple-items">
+      {% for org_activity in org_activities %}
+      <div class="card mr-2">
+        {% if org_activity.activity_img %}
+        <img class="card-img-top" src="{{ org_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;height:200px;display:inline;">
+        {% else %}
+        <img class="card-img-top" src="http://via.placeholder.com/350x200?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:200px;">
+        {% endif %}
+        <div class="card-body">
+          <p class="lead"><a href="{% url 'activity_detail' org_activity.pk %}">{{ org_activity.name }}</a></p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+</div>
 
+<!-- Google Maps -->
 {% if activity.location %}
 <div class="container-fluid">
   <div class="row justify-content-center">
-  <div class="offset-md-2 col-md-8">
-    <div id="map"></div>
+    <div id="map" style="margin-top:5%;"></div>
   </div>
-  <div class="col-md-1">
-    <div id="share"></div>
-  </div>
-  </div>
-</div>
-{% else %}
-<div class="row">
-    <div id="share"></div>
 </div>
 {% endif %}
 
-<!-- <div class="container-fluid">
-  <div id="share"></div>
-</div> -->
+<!-- Other events and activities you may like -->
+<div id="id_others" class="container-fluid mt-4 mb-0">
+<h3 class="text-center" style="margin-top:10%;margin-bottom:2%;">Other Events and Activities You May Like</h3>
+<div class="container-fluid mt-4">
+<div class="multiple-items">
+  {% for recommended_activity in recommended_activities %}
+  <div class="card mr-2">
+    {% if recommended_activity.activity_img %}
+    <img class="card-img-top" src="{{ recommended_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x200?text=Image not available';" style="object-fit:cover;height:200px;display:inline;">
+    {% else %}
+    <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:200px;">
+    {% endif %}
+    <div class="card-body">
+      <p class="lead"><a href="{% url 'activity_detail' recommended_activity.pk %}">{{ recommended_activity.name }}</a></p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</div>
+</div>
+
+<!-- THE MODAL FOR SHARING URL -->
+<div class="modal fade" id="modal-share-url">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Share the link</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-1 offset-md-4 mr-2">
+              <div id="share2" class="mr-2"></div>
+            </div>
+            <div class="col-md-1 mr-2">
+              <div id="share3"></div>
+            </div>
+            <div class="col-md-1 ml-2 mr-2">
+              <div id="id_send_dialog" class="jssocials">
+                <div class="jssocials-shares">
+                  <div class="jssocials-share jssocials-share-messenger2">
+                    <a href="#" target="_self" id="fb_desktop" class="btn btn-primary"><i class="fab fa-facebook-messenger"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-1 offset-md-3 mr-2">
+              <div id="share4" class="mr-2"></div>
+            </div>
+            <div class="col-md-1 mr-2">
+              <div id="share5" class="mr-2"></div>
+            </div>
+            <div class="col-md-1">
+              <div id="share"></div>
+            </div>
+        </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-10">
+        <input class="form-control" readonly id="id_share_url" type="text" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
+        </div>
+        <div class="col-sm-1">
+        <button class="btn btn-outline-success" onclick="copyURL()"><i class="far fa-copy"></i></button>
+        </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+          <p class="small" id="id_url_text"></p>
+          </div>
+        </div>
+        </div>
+      </div>
+      </div>
+    </div>
+</div>
 
 {% endblock %}
 
@@ -129,49 +297,124 @@
 </script>
 
 <script src="{% static 'js/jssocials.js' %}"></script>
+<script src="{% static 'activities/js/share_url.js' %}"></script>
+<script src="{% static 'js/slick.js' %}"></script>
 
+<!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.min.js"></script> -->
 <script>
+
+  // Show the map
+  function initMap() {
+    var geocoder = new google.maps.Geocoder();
+    var map = new google.maps.Map(document.getElementById('map'));
+    
+    // Populate addresses from GMaps on address input
+    var address = $('#address').text();
+    geocodeAddress(geocoder, map);
+
+    // Populate GMaps URL on the address link
+    var map_url = "https://www.google.com/maps/search/?api=1&query=";
+    var full_url = map_url + address;
+    $("#address2").attr("href", full_url);
+  }
+
+  function geocodeAddress(geocoder, resultsMap) {
+    var address = $('#address').text();
+    // var address = 'Southern Cross Station';
+    // alert(address);
+    geocoder.geocode({'address': address}, function(results, status) {
+      if (status === 'OK') {
+        resultsMap.setCenter(results[0].geometry.location);
+        resultsMap.setZoom(14);
+        var marker = new google.maps.Marker({
+          map: resultsMap,
+          position: results[0].geometry.location
+        });
+      }
+    });
+  }
+
   $("#share").jsSocials({
-      shares: ["messenger", "facebook", "whatsapp", "sms"],
+      shares: ["messenger"],
+      showLabel: false,
+      shareIn: "popup",
+  });
+  $("#share2").jsSocials({
+      shares: ["facebook"],
+      showLabel: false,
+      shareIn: "popup",
+  });
+  $("#share3").jsSocials({
+      shares: ["email"],
+      showLabel: false,
+      shareIn: "popup",
+  });
+  $("#share4").jsSocials({
+      shares: ["whatsapp"],
+      showLabel: false,
+      shareIn: "popup",
+  });
+  $("#share5").jsSocials({
+      shares: ["sms"],
       showLabel: false,
       shareIn: "popup",
   });
 
-  function initMap() {
-  var geocoder = new google.maps.Geocoder();
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId            : '1943348669252986',
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v2.11'
+    });
+  };
 
-  var map = new google.maps.Map(document.getElementById('map'));
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
 
-  var address = $('#address').text();
+   $("#id_send_dialog").click(sendDialog);
 
-  geocodeAddress(geocoder, map);
+  function sendDialog() {
+    FB.ui({
+      method: 'send',
+      link: window.location.href
+    });
+  }
 
-  var map_url = "https://www.google.com/maps/search/?api=1&query=";
-  var full_url = map_url + address;
-
-  $("#address").attr("href", full_url);
-
+function copyURL() {
+  var copyText = document.getElementById("id_share_url");
+  copyText.select();
+  document.execCommand("Copy");
+  // $("#id_url_text").show();
+  $("#id_url_text").html("Link has been copied!");
 }
+</script>
 
-function geocodeAddress(geocoder, resultsMap) {
-  var address = $('#address').text();
-  // var address = 'Southern Cross Station';
-  // alert(address);
-  geocoder.geocode({'address': address}, function(results, status) {
-    if (status === 'OK') {
-      resultsMap.setCenter(results[0].geometry.location);
-      resultsMap.setZoom(14);
-      var marker = new google.maps.Marker({
-        map: resultsMap,
-        position: results[0].geometry.location
-      });
-    } 
-    
-    // else {
-    //   $('#map').hide();
-    // }
+<script>
+$(function() {   
+  var isMobile = window.matchMedia("only screen and (max-width: 760px)");
+
+  if (isMobile.matches) {
+    $("#id_send_dialog").hide();
+  }
+  else{
+    $("#share").hide();
+    $("#share4").hide();
+    $("#share5").hide();
+  }
+
+  $('.multiple-items').slick({
+    infinite: true,
+    slidesToShow: 3,
+    slidesToScroll: 1
   });
-}
+
+});
 </script>
 
 <!-- Go to www.addthis.com/dashboard to customize your tools -->

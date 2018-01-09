@@ -80,7 +80,7 @@ class Activity(models.Model):
     location = models.CharField(max_length=150, blank=True, null=True)
     organiser = models.CharField(max_length=150, blank=True, null=True)
     contact_number = models.CharField(max_length=15, blank=True, null=True)
-    description = models.TextField(max_length=150, blank=True, null=True)
+    description = models.TextField(max_length=500, blank=True, null=True)
     activity_date = models.DateField(blank=True, null=True) # for one-time activity
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
@@ -106,7 +106,7 @@ class Activity(models.Model):
 #    time_zone = TimeZoneField(default='Australia/Melbourne')
 
     # Additional fields not visible to users
-#    created_time = models.DateTimeField(auto_now_add=True, null=True)
+    # created_time = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
 #        return 'Appointment #{0} - {1}'.format(self.pk, self.name)
@@ -128,8 +128,9 @@ class ActivityDraft(models.Model):
     term = models.CharField(max_length=50, choices=TERMS, blank=True, default='Once')
     location = models.CharField(max_length=150, blank=True, null=True)
     organiser = models.CharField(max_length=150, blank=True, null=True)
+    organiser = models.CharField(max_length=150, blank=True, null=True)
     contact_number = models.CharField(max_length=15, blank=True, null=True)
-    description = models.TextField(max_length=150, blank=True, null=True)
+    description = models.TextField(max_length=500, blank=True, null=True)
     activity_date = models.DateField(blank=True, null=True) # for one-time activity
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)

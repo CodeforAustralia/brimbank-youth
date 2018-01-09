@@ -69,6 +69,12 @@
   .jssocials-share-sms .jssocials-share-link:hover {
     background: #006acc; }
 
+/* Messenger for web */
+.jssocials-share-messenger2 .jssocials-share-link {
+  background: #0084ff; }
+  .jssocials-share-messenger2 .jssocials-share-link:hover {
+    background: #006acc; }
+
 .jssocials-share-vkontakte .jssocials-share-link {
   background: #45668e; }
   .jssocials-share-vkontakte .jssocials-share-link:hover {

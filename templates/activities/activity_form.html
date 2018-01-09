@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<!-- <div class = "container mt-4"> -->
 {% if not object.published %}
 <form method="post" enctype="multipart/form-data" action="{% url 'create_activity' %}" novalidate>
 {% else %}
@@ -36,69 +36,76 @@
 <!--Adding action attribute in form will prevent the addition of href url when submitting the form-->
     
 {% csrf_token %}
-
+<div class = "container mt-4">
 <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card bg-light mb-3">
         <div class="card-body">
                 {% include 'includes/base_activity_form.html' %}
                 <br />
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                   <div class="col-sm-12">
                     <a id="id_next" class="btn btn-primary btn-lg float-right" href="#schedule_info" >Next</a>
                   </div>
-                </div>
+                </div> -->
           </div>
         </div>
     </div>
 </div>
+</div>
 
+<div class="container mt-4">
 {% if messages %}
 <div class="row justify-content-center" id="schedule_info">
 {% else %}
-<div class="row justify-content-center" id="schedule_info" style="display:none">
+<div class="row justify-content-center" id="schedule_info">
 {% endif %}
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card bg-light mb-3" >
         <div class="card-body">
                 {% include 'includes/base_activity_form_2.html' %}
                 <br />
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                    <div class="col-sm-2 offset-sm-8 col-sm-9">
                     <a id="id_prev" class="btn btn-primary btn-lg" href="#general_info">Previous</a>
                     <a id="id_next2" class="btn btn-primary btn-lg" href="#other_info"> &nbsp; Next &nbsp; </a>
                   </div> 
-                </div>
+                </div> -->
           </div>
         </div>
     </div>
 </div>
+</div>
 
+<div class="container mt-4" >
 {% if messages %}
 <div class="row justify-content-center" id="other_info">
 {% else %}
-<div class="row justify-content-center" id="other_info" style="display:none">
+<div class="row justify-content-center" id="other_info">
 {% endif %}
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card bg-light mb-3">
         <div class="card-body">
                 {% include 'includes/base_activity_form_3.html' %}
                 <br />
-                <div class="form-group row">
+                <!-- <div class="form-group row">
                   <div class="col-sm-2 offset-sm-8 col-sm-9">
                     <a id="id_prev2" class="btn btn-primary btn-lg" href="#schedule_info">Previous</a>
                     <a id="id_next3" class="btn btn-primary btn-lg" href="#eligibility_info"> &nbsp; Next &nbsp; </a>
                   </div>
-                </div>
+                </div> -->
           </div>
         </div>
     </div>
 </div>
+</div>
+
+<div class="container mt-4">
 
 {% if messages %}
 <div class="row justify-content-center" id="eligibility_info">
 {% else %}
-<div class="row justify-content-center" id="eligibility_info" style="display:none">
+<div class="row justify-content-center" id="eligibility_info">
 {% endif %}
     <div class="col-lg-8 col-md-10 col-sm-12">
       <div class="card bg-light mb-3">
@@ -124,9 +131,9 @@
         </div>
     </div>
 </div>
-</form>
 </div>
-
+</form>
+<!-- </div> -->
 {% endblock %}
 
 {% block javascript %}
