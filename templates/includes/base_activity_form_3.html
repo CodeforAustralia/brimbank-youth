@@ -2,40 +2,62 @@
 
 {% for field in form %}
 
-{% if field.label == "Describe the event" or field.label == "Add an event image" or field.label == "Upload an event flyer" or field.label == "Organiser details" %}
-
+{% if field.label == "Describe the event" or field.label == "Add an event image" or field.label == "Upload an event flyer" %}
     <div class="form-group">
     {% if field.label == "Describe the event" %}
         <p class = "card-title">STEP 3 OF 4</p>
     {% endif %}
         
-        {% if field.label == "OCCURS FROM" %}
-        <label class="col-form-label" id="label_start_date"><h3>{{ field.label_tag }}</h3></label>
-        {% elif field.label == "OCCURS UNTIL" %}
-        <label class="col-form-label" id="label_end_date"><h3>{{ field.label_tag }}</h3></label>
-        {% elif field.label == "Activity day" %}
-        <label class="col-form-label" id="label_activity_day"><h3>{{ field.label_tag }}</h3></label>
-        {% elif field.label == "Activity date" %}
-        <label class="col-form-label" id="label_activity_date"><h3>{{ field.label_tag }}</h3></label>
-        {% else %}
-        <label class="col-form-label" ><h3>{{ field.label_tag }}</h3></label>
-        {% endif %}
-        
-        
-        {% render_field field class=field|input_class %}
-        {% for error in field.errors %}
-            <div class="invalid-feedback">
-                {{ error }}
-            </div>
-        {% endfor %}
-        
-        {% if field.help_text %}
-          <small class="form-text text-muted">
-            {{ field.help_text|safe }}
-          </small>
-        {% endif %}
-    </div>
-
+    {% if field.label == "OCCURS FROM" %}
+    <label class="col-form-label" id="label_start_date"><h3>{{ field.label_tag }}</h3></label>
+    {% elif field.label == "OCCURS UNTIL" %}
+    <label class="col-form-label" id="label_end_date"><h3>{{ field.label_tag }}</h3></label>
+    {% elif field.label == "Activity day" %}
+    <label class="col-form-label" id="label_activity_day"><h3>{{ field.label_tag }}</h3></label>
+    {% elif field.label == "Activity date" %}
+    <label class="col-form-label" id="label_activity_date"><h3>{{ field.label_tag }}</h3></label>
+    {% else %}
+    <label class="col-form-label" ><h3>{{ field.label_tag }}</h3></label>
     {% endif %}
+        
+    {% render_field field class=field|input_class %}
+    {% for error in field.errors %}
+        <div class="invalid-feedback">
+        {{ error }}
+        </div>
+    {% endfor %}
+        
+    {% if field.help_text %}
+        <small class="form-text text-muted">
+        {{ field.help_text|safe }}
+        </small>
+    {% endif %}
+    </div>
+{% endif %}
+
+{% if field.label == "Organiser details" %}
+<div class="form-group">
+<div class="row">
+    <div class="col-md-12">
+        <label class="col-form-label"><h3>{{ field.label_tag }}</h3></label>
+    </div>
+</div>
+    
+<div class="row">
+    <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
+        {% render_field form.organiser class="form-control" %}
+        {% for error in form.organiser.errors %}
+        <div class=" col-md-6 col-sm-12 col-xs-12 mb-3 invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="col-md-6 col-sm-12 col-xs-12">
+        {% render_field form.contact_number class="form-control" %}
+        {% for error in form.contact_number.errors %}
+        <div class=" col-md-6 mb-3 invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+{% endif %}
 
 {% endfor %}

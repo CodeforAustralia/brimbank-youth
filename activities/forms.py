@@ -5,21 +5,31 @@ from django.utils.translation import ugettext_lazy as _
 from .models import Activity, ActivityType, ActivityDraft, ACTIVITY_TYPES, SPACE_OPTIONS, COST_OPTIONS, LISTING_PRIVACY
 
 import arrow
+
+def file_size(value):
+    limit = 2 * 1024 * 1024
+    if value.size > limit:
+        raise ValidationError('File size is too large. The size should not exceed 2MB')
 		
 class ActivityForm(forms.ModelForm):
     activity_type = forms.ChoiceField(choices=ACTIVITY_TYPES, required=False, label='What type of activity are you creating ?')
+    start_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS FROM', required=False)
+    end_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS UNTIL', required=False)
+    activity_img = forms.ImageField(required=False, validators=[file_size], label='Add an event image')
+    flyer = forms.FileField(required=False, validators=[file_size], label='Upload an event flyer')
     
     class Meta:
         model = Activity
-        fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'activity_img', 'flyer', 'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 'listing_privacy')
+        fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'contact_number', 'activity_img', 'flyer', 'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 'listing_privacy')
         labels = {
-            'activity_img': _('Add an event image'),
+#            'activity_img': _('Add an event image'),
             'name': _('What is the name of the activity ?'),
             'location': _('Where is the location ?'),
             'start_time': _('FROM'),
             'end_time': _('TO'),
             'description': _('Describe the event'),
             'organiser': _('Organiser details'),
+            'contact_number': _('Contact number'),
             'flyer': _('Upload an event flyer'),
             'term': _('HOW OFTEN DOES THIS EVENT OCCUR'),
             'space': _('Space'),
@@ -40,6 +50,8 @@ class ActivityForm(forms.ModelForm):
             'listing_privacy': forms.RadioSelect(choices=LISTING_PRIVACY),
             'min_age': forms.TextInput(attrs={'placeholder': 'Minimum age'}),
             'max_age': forms.TextInput(attrs={'placeholder': 'Maximum age'}),
+            'organiser': forms.TextInput(attrs={'placeholder': 'Contact person'}),
+            'contact_number': forms.TextInput(attrs={'placeholder': 'Contact number'}),
         }
         error_messages = {
             'name': {
@@ -68,11 +80,6 @@ class ActivitySearchForm(forms.ModelForm):
     class Meta:
         model = Activity
         fields = ['location']
-        
-def file_size(value):
-    limit = 2 * 1024 * 1024
-    if value.size > limit:
-        raise ValidationError('File size is too large. The size should not exceed 2MB')
 
 class ShareURLForm(forms.Form):
     url = forms.CharField(max_length=300)
@@ -83,36 +90,10 @@ class ActivityDraftForm(forms.ModelForm):
     end_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS UNTIL', required=False)
     activity_img = forms.ImageField(required=False, validators=[file_size], label='Add an event image')
     flyer = forms.FileField(required=False, validators=[file_size], label='Upload an event flyer')
-    
-#    def __init__(self, *args, **kwargs):
-#       self.request = kwargs.pop('request', None)
-#       return super(ActivityDraftForm, self).__init__(*args, **kwargs)
-#    
-#    def save(self, *args, **kwargs):
-#       kwargs['commit']=False
-#       obj = super(ActivityDraftForm, self).save(*args, **kwargs)
-#       if self.request:
-#           obj.user = self.request.user
-#       obj.save()
-#       return obj
-
-#    def clean(self):
-#        cleaned_data = super().clean()
-#        start_date = cleaned_data.get("start_date")
-#        end_date = cleaned_data.get("end_date")
-#        term = cleaned_data.get("term")
-#        
-#        if term != 'Once':
-#            begin_date = arrow.get(start_date, 'Australia/Melbourne')
-#            finish_date = arrow.get(end_date, 'Australia/Melbourne')
-#            if finish_date < begin_date:
-#                msg = "Must put 'help' in subject when cc'ing yourself."
-#                self.add_error('start_date', msg)
-#                self.add_error('end_date', msg)
-#                        
+                            
     class Meta:
         model = ActivityDraft
-        fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'activity_img', 'flyer', 'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 'listing_privacy')
+        fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'contact_number', 'activity_img', 'flyer', 'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 'listing_privacy')
         labels = {
 #            'activity_img': _('Add an event image'),
             'name': _('What is the name of the activity ?'),
@@ -121,6 +102,7 @@ class ActivityDraftForm(forms.ModelForm):
             'end_time': _('TO'),
             'description': _('Describe the event'),
             'organiser': _('Organiser details'),
+            'contact_number': _('Contact number'),
             'flyer': _('Upload an event flyer'),
             'term': _('HOW OFTEN DOES THIS EVENT OCCUR'),
             'space': _('Space'),
@@ -141,6 +123,8 @@ class ActivityDraftForm(forms.ModelForm):
             'listing_privacy': forms.RadioSelect(choices=LISTING_PRIVACY),
             'min_age': forms.TextInput(attrs={'placeholder': 'Minimum age'}),
             'max_age': forms.TextInput(attrs={'placeholder': 'Maximum age'}),
+            'organiser': forms.TextInput(attrs={'placeholder': 'Contact person'}),
+            'contact_number': forms.TextInput(attrs={'placeholder': 'Contact number'}),
         }
         error_messages = {
             'name': {
@@ -188,6 +172,7 @@ class ActivityDraftForm(forms.ModelForm):
                 msg = "Start date must be before end date."
                 self.add_error('start_date', msg)
                 self.add_error('end_date', msg)
+                raise ValidationError('Please correct the errors below.')
             
 #    def clean(self):
 #        cleaned_data = super().clean()

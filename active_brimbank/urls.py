@@ -84,8 +84,6 @@ urlpatterns = [
     url(r'^activity/bookmark/(?P<pk>\d+)/$', bookmark_activity, name='bookmark_activity'),
     url(r'^activity/bookmarks/$', bookmark_list, name='bookmark_list'),
 
-    url(r'^share_url/$', share_url, name='share_url'),
-
     # SMS & Email Groups
 
     # --- SMS contacts ---

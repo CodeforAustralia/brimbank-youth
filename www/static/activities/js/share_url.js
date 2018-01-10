@@ -19,11 +19,6 @@ $(function () {
     // Display share-url modal
     // $(".js-share-url").click(loadForm);
 
-    $(".js-share-url").click(function () {
-      $("#id_url_text").html("");
-      $("#modal-share-url").modal("show");
-    });
-
     // $("#modal-group").on("submit", ".js-group-create-form", saveGroupForm);
     
 });

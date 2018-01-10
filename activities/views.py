@@ -136,7 +136,7 @@ class ActivityListView(ListView):
 class ActivityUpdateView(UpdateView):
     model = Activity
     form_class = ActivityForm
-    # template_name = 'activities/activitydraft_form.html'
+    template_name = 'activities/activity_form.html'
     
     def get_success_url(self):
         published = True
