@@ -148,40 +148,61 @@ class ActivityDeleteView(DeleteView):
     model = Activity
     success_url = reverse_lazy('home')
 
-def search_logic(request, location_key, name_key, search_names):
-    i = 0
-    if search_names:
-        name_checkboxes = Q()
-        for i in range(0,len(search_names)):
-            name_checkboxes.add(
-            Q(name__istartswith=search_names[i]) | Q(name__iendswith=search_names[i]) | Q(name__icontains=search_names[i]), 
-            Q.OR)
+def search_logic(request, location_key, name_key, category):
+    # i = 0
+    # if search_names:
+    #     name_checkboxes = Q()
+    #     for i in range(0,len(search_names)):
+    #         name_checkboxes.add(
+    #         Q(name__istartswith=search_names[i]) | Q(name__iendswith=search_names[i]) | Q(name__icontains=search_names[i]), 
+    #         Q.OR)
         
-        if name_key:
-            name_checkboxes.add(
-            Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key), 
-            Q.OR)
+    #     if name_key:
+    #         name_checkboxes.add(
+    #         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key), 
+    #         Q.OR)
         
-        activities = Activity.objects.filter(
-        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key),
-        name_checkboxes)
-    else:
-        activities = Activity.objects.filter(
+    #     activities = Activity.objects.filter(
+    #     Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key),
+    #     name_checkboxes)
+
+    # if category:
+    #     name_query = Q()
+    #     name_query.add(
+    #         Q(name__istartswith=category) | Q(name__iendswith=category) | Q(name__icontains=category), 
+    #         Q.OR)
+    #     activities = Activity.objects.filter(
+    #     Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key),
+    #     name_query)
+
+    # else:
+    #     activities = Activity.objects.filter(
+    #     Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
+    #     Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+    #     )
+
+    if category is None:
+        category = ''
+    activities = Activity.objects.filter(
         Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+        Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
         )
     return activities
 
 def search_logic_bookmarks(request, location_key, name_key):
     activities = Activity.objects.filter(bookmarked = True, bookmarked_users = request.user)
     activities = activities.filter(
-    Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)
+    Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
+    Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)
     )
     return activities
 
-def search_logic_drafts(request, location_key, name_key):
+def search_logic_drafts(request, location_key, name_key, category):
     activities = ActivityDraft.objects.filter(
-    Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)
+    Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
+    Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+    Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
     )
     return activities
 
@@ -192,12 +213,19 @@ def search_events(request):
         name_key = request.GET.get('name')
         list_of_input_ids=request.GET.getlist('checkboxes')
         str1 = '_'.join(list_of_input_ids)
-        # search based on the checkbox input
+
         search_names=request.GET.getlist('search_name')
+
+        category = request.GET.get('category')
+
         search = request.GET.get('search')
-        if search == 'search':
-            if location_key or name_key or search_names:
-                activities = search_logic(request, location_key, name_key, search_names)
+
+        # if search == 'search':
+        #     if location_key or name_key or search_names or category:
+        #         activities = search_logic(request, location_key, name_key, search_names, category)
+        # if search == 'search':
+        if location_key or name_key or search_names or category:
+            activities = search_logic(request, location_key, name_key, category)
         if str1 != '':
             kwargs = {'pk': str1}
             if search == 'share':
@@ -213,19 +241,29 @@ def search_events(request):
             name_key = ''
         if location_key is None:
             location_key =''
-        url = ''
-        if search_names:
-            url = "&name=" + name_key + "&location=" + location_key
-            for i in range(0,len(search_names)):
-                url = url + "&search_name=" + search_names[i]
-            url = url + "&search=search"
-        else:
-            url = "&name=" + name_key + "&location=" + location_key + "&search=search"
+        if category is None:
+            category =''
+
+        # url = ''
+        # if search_names:
+        #     url = "&name=" + name_key + "&location=" + location_key
+        #     for i in range(0,len(search_names)):
+        #         url = url + "&search_name=" + search_names[i]
+        #     url = url + "&search=search"
+        # else:
+            # url = "&name=" + name_key + "&location=" + location_key + "&search=search"
+
+        url = "&name=" + name_key + "&location=" + location_key + "&category=" + category + "&search=search"
+
+        # Get domain for each activity (to be populated in the share button)
+        current_site = get_current_site(request)
+        domain = current_site.domain
 
         return render(request, 'activities/activity_search_result.html', {
                       'activities': activities,
                       'name': name_key,
                       'url': url,
+                      'domain': domain
                       })
 
 def show_page_numbers(request, result):
@@ -243,18 +281,24 @@ def show_page_numbers(request, result):
 
 @login_required
 def view_activity_drafts(request):
-    activity_drafts = search_logic_drafts(request, '', '')
+    activity_drafts = search_logic_drafts(request, '', '', '')
     if request.method == 'GET':
         location_key = request.GET.get('location') # 'location' is the name of the input field
         name_key = request.GET.get('name')
         list_of_input_ids=request.GET.getlist('checkboxes')
-        str1 = '_'.join(list_of_input_ids)
-        search = request.GET.get('search')
-        if search == 'search':
-            if location_key or name_key:
-                activity_drafts = search_logic_drafts(request, location_key, name_key)
-        # activity_drafts = show_page_numbers(request, activity_drafts)
-        return render(request, 'activities/activitydraft_search_result.html', {'activity_drafts': activity_drafts,})
+        category = request.GET.get('category')
+        # str1 = '_'.join(list_of_input_ids)
+        if location_key or name_key or category:
+            activity_drafts = search_logic_drafts(request, location_key, name_key, category)
+        activity_drafts = show_page_numbers(request, activity_drafts)
+
+        # Also display bookmarked activities
+        bookmarks = Activity.objects.filter(bookmarked = True, bookmarked_users = request.user)
+
+        return render(request, 'activities/activitydraft_search_result.html', {
+                'activities': activity_drafts,
+                'bookmarks': bookmarks,
+                })
 
 def bookmark_activity(request, pk):
     activity = Activity.objects.get(pk=pk)
@@ -270,7 +314,7 @@ def bookmark_activity(request, pk):
 
 @login_required
 def bookmark_list(request):
-    activities = Activity.objects.filter(bookmarked = True)
+    activities = Activity.objects.filter(bookmarked = True).filter(bookmarked_users=request.user)
     if request.method == 'GET':
         location_key = request.GET.get('location') # 'location' is the name of the input field
         name_key = request.GET.get('name')

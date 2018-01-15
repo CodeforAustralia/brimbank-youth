@@ -32,6 +32,12 @@
     padding-top: 0.5em;
     padding-bottom: 2em;
   }
+  .btn.focus {
+    outline-color: transparent;
+  }
+  .btn.active {
+    background-color:rgb(92,184,92);
+  }
 </style>
 {% endblock %}
 
@@ -49,8 +55,10 @@
     </div>
     <div class="col-md-3 mt-5">
       <!--    Activities that only occur once -->
+      {% if activity.term == 'Once' %}
       {% if activity.activity_date %}
       <h4 class="strong"><b>{{ activity.activity_date|date:'M'|upper }} {{ activity.activity_date|date:'d, Y' }}</b></h4>
+      {% endif %}
       {% endif %}
 
       <!--    Weekly, daily, fortnightly, monthly activities -->
@@ -81,11 +89,11 @@
       <div class="col-md-7 mt-4 mb-4">
         <a href="#" class="btn btn-outline-primary ml-4 mr-2 js-share-url"><i class="fas fa-share"></i> Share</a>
         {% if activity.bookmarked %}
-        <button onclick="markActivity(this.id)" id="{{ activity.pk }}" type="button" class="btn btn-outline-primary js-bookmark-article mr-2 active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <button onclick="markActivity(this.id)" id="{{ activity.pk }}" type="button" class="btn js-bookmark-article mr-2 active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
           <i class="far fa-bookmark"></i>
         </button>
         {% else %}
-        <button onclick="markActivity(this.id)" id={{ activity.pk }} type="button" class="btn btn-outline-primary js-bookmark-article mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <button onclick="markActivity(this.id)" id={{ activity.pk }} type="button" class="btn js-bookmark-article mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
           <i class="far fa-bookmark"></i>
         </button>
         {% endif %}
@@ -150,8 +158,10 @@
         <h6 class="card-title">DATE AND TIME</h6>
 
         <!--    Activities that only occur once -->
+        {% if activity.term == 'Once' %}
         {% if activity.activity_date %}
         <p class="card-text">{{ activity.activity_date|date:'D, d M Y' }}</p>
+        {% endif %}
         {% endif %}
 
         <!--      Daily, weekly, fortnightly, monthly activities-->
@@ -169,16 +179,16 @@
         <h6 class="card-title">LOCATION</h6>
         {% if activity.location %}
         <p class="card-text" id="address">{{ activity.location }}</p>
-        <p class="card-text"><a href=# id="address2">Open in Google Maps</a></p>
+        <p class="card-text small"><a href=# id="address2">Open in Google Maps</a></p>
         {% else %}
-        <p class="card-text">Location hasn't been specified</p>
+        <p class="card-text small"><i>Location hasn't been specified</i></p>
         {% endif %}
 
         <h6 class="card-title" style="margin-top:10%;">CONTACT ORGANISER</h6>
         {% if activity.organiser %}
         <p class="card-text">{{ activity.organiser }}&nbsp;{{ activity.contact_number }}</p>
         {% else %}
-        <p class="card-text">Organiser contact hasn't been specified</p>
+        <p class="card-text small"><i>Organiser contact hasn't been specified</i></p>
         {% endif %}
 
         {% if user.is_authenticated %}
@@ -217,24 +227,22 @@
         {% endif %}
         <div class="card-body">
         <p class="lead"><a href="{% url 'activity_detail' org_activity.pk %}">{{ org_activity.name }}</a></p>
-        
+        {% if org_activity.location %}<p class="card-text"> {{ org_activity.location }} </p>{% endif %}
         <!--    Activities that only occur once -->
+        {% if org_activity.term == 'Once' %}
         {% if org_activity.activity_date %}
-        <p class="card-text">{{ org_activity.activity_date|date:'D, d M Y' }}</p>
+        <p class="card-text">{{ org_activity.activity_date|date:'D, d M Y'|upper }} - {{ org_activity.start_time|time:'g:i A' }}</p>
+        {% endif %}
         {% endif %}
 
         <!--      Daily, weekly, fortnightly, monthly activities-->
         {% if org_activity.term != 'Once' %}
         {% if org_activity.term != 'Daily' %}
-        <p class="card-text">Every {{ org_activity.activity_day }} from {{ org_activity.start_date|date:'D, d M Y' }} to {{ org_activity.end_date|date:'D, d M Y' }}</p>
+        <p class="card-text">Every {{ org_activity.activity_day }} - {{ org_activity.start_time|time:'g:i A' }}</p>
         {% else %}
-        <p class="card-text">Every day from {{ org_activity.start_date|date:'D, d M Y' }} to {{ org_activity.end_date|date:'D, d M Y' }}</p>
+        <p class="card-text">Every day - {{ org_activity.start_time|time:'g:i A' }}</p>
         {% endif %}
         {% endif %}
-
-        <!--      Show the time of the activities-->
-        <p class="card-text">{{ org_activity.start_time|time:'g:i A' }} - {{ org_activity.end_time|time:'g:i A' }}</p>
-
         </div>
       </div>
       {% endfor %}
@@ -267,24 +275,23 @@
     {% endif %}
     <div class="card-body">
       <p class="lead"><a href="{% url 'activity_detail' recommended_activity.pk %}">{{ recommended_activity.name }}</a></p>
-
+      {% if recommended_activity.location %}<p class="card-text"> {{ recommended_activity.location }} </p>{% endif %}
+      
       <!--    Activities that only occur once -->
+      {% if recommended_activity.term == 'Once' %}
       {% if recommended_activity.activity_date %}
-      <p class="card-text">{{ recommended_activity.activity_date|date:'D, d M Y' }}</p>
+      <p class="card-text">{{ recommended_activity.activity_date|date:'D, d M Y'|upper }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
+      {% endif %}
       {% endif %}
 
       <!--      Daily, weekly, fortnightly, monthly activities-->
       {% if recommended_activity.term != 'Once' %}
       {% if recommended_activity.term != 'Daily' %}
-      <p class="card-text">Every {{ recommended_activity.activity_day }} from {{ recommended_activity.start_date|date:'D, d M Y' }} to {{ recommended_activity.end_date|date:'D, d M Y' }}</p>
+      <p class="card-text">Every {{ recommended_activity.activity_day }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
       {% else %}
-      <p class="card-text">Every day from {{ recommended_activity.start_date|date:'D, d M Y' }} to {{ recommended_activity.end_date|date:'D, d M Y' }}</p>
+      <p class="card-text">Every day from {{ recommended_activity.start_date|date:'D, d M Y' }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
       {% endif %}
       {% endif %}
-
-      <!--      Show the time of the activities-->
-      <p class="card-text">{{ recommended_activity.start_time|time:'g:i A' }} - {{ recommended_activity.end_time|time:'g:i A' }}</p>
-
     </div>
   </div>
   {% endfor %}
@@ -408,6 +415,7 @@
       shares: ["messenger"],
       showLabel: false,
       shareIn: "popup",
+      url: window.location.hostname+"{% url 'activity_detail' activity.pk %}",
   });
   $("#share2").jsSocials({
       shares: ["facebook"],
@@ -463,6 +471,21 @@ function copyURL() {
   // $("#id_url_text").show();
   $("#id_url_text").html("Link has been copied!");
 }
+
+function markActivity(clicked_id) {
+    var url_dest = '/activity/bookmark/'+clicked_id+'/'
+    $.ajax({
+        url: url_dest,
+        type: 'get',
+        dataType: 'json',
+        beforeSend: function () {
+            // alert(url_dest);
+        },
+        success: function(){
+            // alert(url_dest);
+        }
+    });
+};
 
 $(function() {
   $('.multiple-items').slick({

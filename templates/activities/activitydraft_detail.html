@@ -8,72 +8,164 @@
         height: 400px;
         width: 80%;
    }
+   button {
+     cursor: pointer;
+   }
 </style>
 {% endblock %}
 
 {% block content %}
-
-<!--<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJYdawkGNg1moRrmgS6XeT7AM&key=AIzaSyAMBqqtl6cnrNdV4TUGDSF4z9g4shpp5kM" allowfullscreen></iframe>-->
-
-<div class="card">
-  <div class="card-body">
-    <h4 class="card-title">{{ activitydraft.name }}</h4>
-    <p class="card-text">{{ activitydraft.description }}</p>
-    <p class="card-text">{{ activitydraft.activity_type }}</p>
-    <p class="card-text">{{ activitydraft.organiser }}</p>
-    <p class="card-text">Where? <a href=# id="address">{{ activitydraft.location }}</a></p>  
+<div class="container-fluid mt-4">
+    <div class="card">
+      <row style="border-bottom:solid 0.5px LightGray;border-bottom:solid 0.5px LightGray;">
+        <div class="row">
+        <div class="col-md-9">
+          {% if activitydraft.activity_img %}
+          <img class="card-img-top select" src="{{ activitydraft.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:400px;display:inline;">
+          {% else %}
+          <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:400px;">
+          {% endif %}
+        </div>
+        <div class="col-md-3 mt-5">
+          <!--    Activities that only occur once -->
+          {% if activitydraft.term == 'Once' %}
+          {% if activitydraft.activity_date %}
+          <h4 class="strong"><b>{{ activitydraft.activity_date|date:'M'|upper }} {{ activitydraft.activity_date|date:'d, Y' }}</b></h4>
+          {% endif %}
+          {% endif %}
     
-      
-<!--    Activities that only occur once -->
-    {% if activitydraft.activity_date %}
-        <p class="card-text">{{ activitydraft.activity_date|date:'D, d M Y' }}</p>
-        <p class="card-text">{{ activitydraft.start_time|time:'g:i A' }} to {{ activitydraft.end_time|time:'g:i A' }}</p>
-    {% endif %}
+          <!--    Weekly, daily, fortnightly, monthly activities -->
+          {% if activitydraft.term != 'Once' %}
+          {% if activitydraft.term == 'Daily' %}
+          <!-- <h4 class="strong"><b> -->
+            <!-- {{ activitydraft.start_date|date:'M'|upper }} {{ activitydraft.start_date|date:'d, Y' }} to {{ activitydraft.start_date|date:'M'|upper }}  {{ activitydraft.start_date|date:'d, Y' }}</b></h4> -->
+          <h4 class="strong"><b>EVERY DAY</b></h4>
+          {% else %}
+          <h4 class="strong"><b>EVERY {{ activitydraft.activity_day|upper }}</b></h4>
+          {% endif %}
+          {% endif %}
     
-<!--      Daily, weekly, fortnightly, monthly activities-->
-    {% if activitydraft.term != 'Once' %}
-      {% if activitydraft.activity_day %}
-      <p class="card-text">Happening every {{ activitydraft.activity_day }} from {{ activitydraft.start_date|date:'D, d M Y' }} to {{ activitydraft.end_date|date:'D, d M Y' }}</p>
-      {% else %}
-      <p class="card-text">Happening every day from {{ activitydraft.start_date|date:'D, d M Y' }} to {{ activitydraft.end_date|date:'D, d M Y' }}</p>
-      {% endif %}
-      
-<!--      Show the time of the activities-->
-      <p class="card-text">{{ activitydraft.start_time|time:'g:i A' }} to {{ activitydraft.end_time|time:'g:i A' }}</p>
-    {% endif %}
-      
-    <!--      Number of available spaces-->
-      {% if activitydraft.space_choice == 'Limited' %}
-        <p class="card-text">Available space: {{ activitydraft.space }}</p>
-      {% endif %}
-      
-<!--      Activity cost-->
-      {% if activitydraft.cost_choice == 'N' %}
-        <p class="card-text">No cost</p>
-      {% endif %}
-      {% if activitydraft.cost_choice == 'Y' %}
-        <p class="card-text">Cost: ${{ activitydraft.cost }}</p>
-      {% endif %}
-      
-<!--      Eligibility-->
-      {% if activitydraft.living_duration != 'Open' %}
-      <p class="card-text">Living in Australia {{ activitydraft.living_duration|lower }} than 5 years </p>      
-      {% endif %}
-      
-      {% if activitydraft.living_duration == 'Open' %}
-      <p class="card-text">Open to anyone</p>
-      {% endif %}
-      
-    <a href="{% url 'edit_draft_activity' activitydraft.pk %}" class="btn btn-outline-primary">Edit</a>
-    <a href="{% url 'submit_activity' activitydraft.pk %}" class="btn btn-outline-primary">Publish</a>
-      
+          <h4 class="mt-5"><a href="{% url 'activity_detail' activitydraft.pk %}">{{ activitydraft.name|upper }}</a></h4>
+          <p>By: {{ activitydraft.created_by.profile.organisation_name }}</p>
+          {% if activitydraft.cost_choice == 'N' %}
+            <h6 class="strong mt-5">FREE!</h6>
+          {% endif %}
+          {% if activitydraft.cost_choice == 'Y' %}
+            <h6 class="strong mt-5">Cost: AUD {{ activitydraft.cost }}</h6>
+          {% endif %}
+        </div>
+        </div>
+      </row>
+
+      <row style="border-bottom:solid 0.5px LightGray;border-bottom:solid 0.5px LightGray;">
+        <div class="row ml-1">
+          <div class="col-md-9 mt-4 mb-4">
+            {% if activitydraft.flyer  %}
+            <a href="{{ activitydraft.flyer.url }}" class="btn btn-outline-primary"><i class="fas fa-print"></i> Print flyer</a>
+            {% endif %}
+            {% if not activitydraft.flyer %}
+            <a href="#" class="btn btn-outline-primary disabled"><i class="fas fa-print"></i> Print flyer</a>
+            {% endif %}
+          </div>
+          <div class="col-md-3 mt-3">
+            <a href="{% url 'edit_draft_activity' activitydraft.pk %}" class="btn btn-success btn-lg" style="width:93%;">EDIT</a>
+          </div>
+        </div>
+      </row>
+
+      <div class="card-body mt-4 ml-5">
+        <div class="row">
+          <div class="col-md-9 mb-4">
+            <h6 class="card-title">DESCRIPTION</h6>
+            {% if activitydraft.description %}
+            <p class="card-text" style="margin-bottom:5%;">{{ activitydraft.description }}</p>
+            {% else %}
+            <p class="small" style="margin-bottom:5%;"><i>No description yet</i></p>
+            {% endif %}
+            <h6 class="card-title">ELIGIBILITY</h6>
+            {% if activitydraft.min_age and activitydraft.max_age %}
+              {{ activitydraft.min_age }} to {{ activitydraft.max_age }} years of age<br />
+            {% endif %}
+    
+            {% if activitydraft.max_age and not activitydraft.min_age %}
+              Maximum: {{ activitydraft.max_age }} years old <br />
+            {% endif %}
+    
+            {% if activitydraft.min_age and not activitydraft.max_age %}
+              Minimum: {{ activitydraft.min_age }} years old <br />
+            {% endif %}
+    
+            {% if activitydraft.background %} {{ activitydraft.background }}<br />{% endif %}
+    
+            {% if activitydraft.gender == 'B' %}Both females and males{% endif %}
+            {% if activitydraft.gender == 'F' %}Only females{% endif %}
+            {% if activitydraft.gender == 'M' %}Only males{% endif %}
+            {% if activitydraft.living_duration != 'Open' %}
+            <p class="card-text" style="margin-bottom:5%;">Living in Australia for {{ activitydraft.living_duration|lower }} than 5 years </p>      
+            {% endif %}
+    
+            <h6 class="card-title">OTHER INFO</h6>
+            <!--      Number of available spaces-->
+            {% if activitydraft.space_choice == 'Limited' %}
+            <p class="card-text">Maximum space: {{ activitydraft.space }} people</p>
+            {% endif %}
+            <!--      activitydraft cost-->
+            {% if activitydraft.cost_choice == 'N' %}Free of charge
+            {% else %}Cost: AUD {{ activitydraft.cost }}{% endif %}
+          </div>
+    
+          <div class="col-md-3">
+            <h6 class="card-title">DATE AND TIME</h6>
+    
+            <!--    Activities that only occur once -->
+            {% if activitydraft.term == 'Once' %}
+            {% if activitydraft.activity_date %}
+            <p class="card-text">{{ activitydraft.activity_date|date:'D, d M Y' }}</p>
+            {% endif %}
+            {% endif %}
+    
+            <!--      Daily, weekly, fortnightly, monthly activities-->
+            {% if activitydraft.term != 'Once' %}
+            {% if activitydraft.term != 'Daily' %}
+            <p class="card-text">Every {{ activitydraft.activity_day }} from {{ activitydraft.start_date|date:'D, d M Y' }} to {{ activitydraft.end_date|date:'D, d M Y' }}</p>
+            {% else %}
+            <p class="card-text">Every day from {{ activitydraft.start_date|date:'D, d M Y' }} to {{ activitydraft.end_date|date:'D, d M Y' }}</p>
+            {% endif %}
+            {% endif %}
+    
+            <!--      Show the time of the activities-->
+            <p class="card-text" style="margin-bottom:10%;">{{ activitydraft.start_time|time:'g:i A' }} - {{ activitydraft.end_time|time:'g:i A' }}</p>
+            
+            <h6 class="card-title">LOCATION</h6>
+            {% if activitydraft.location %}
+            <p class="card-text" id="address">{{ activitydraft.location }}</p>
+            <p class="card-text small"><a href=# id="address2">Open in Google Maps</a></p>
+            {% else %}
+            <p class="card-text small"><i>Location hasn't been specified</i></p>
+            {% endif %}
+    
+            <h6 class="card-title" style="margin-top:10%;">CONTACT ORGANISER</h6>
+            {% if activitydraft.organiser %}
+            <p class="card-text">{{ activitydraft.organiser }}&nbsp;{{ activitydraft.contact_number }}</p>
+            {% else %}
+            <p class="card-text small"><i>Organiser contact hasn't been specified</i></p>
+            {% endif %}
+          </div>
+          </div>
+        </div>
+
+
+    </div>  
   </div>
-</div>
+
 <br/>
 
+<!-- Google Maps -->
 {% if activitydraft.location %}
-<div class="row justify-content-center">
-  <div id="map"></div>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div id="map" style="margin-top:1%;"></div>
+  </div>
 </div>
 {% endif %}
 
@@ -82,7 +174,7 @@
 {% block javascript %}
 
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&callback=initMap">
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&region=AU&callback=initMap">
 </script>
 
 <!--
@@ -93,21 +185,19 @@
 
 <script>
 
-function initMap() {
+setTimeout(function initMap() {
   var geocoder = new google.maps.Geocoder();
-
   var map = new google.maps.Map(document.getElementById('map'));
-
+  
+  // Populate addresses from GMaps on address input
   var address = $('#address').text();
-
   geocodeAddress(geocoder, map);
 
+  // Populate GMaps URL on the address link
   var map_url = "https://www.google.com/maps/search/?api=1&query=";
   var full_url = map_url + address;
-
-  $("#address").attr("href", full_url);
-
-}
+  $("#address2").attr("href", full_url);
+}, 1000);
 
 function geocodeAddress(geocoder, resultsMap) {
   var address = $('#address').text();

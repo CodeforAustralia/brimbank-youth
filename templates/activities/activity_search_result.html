@@ -8,16 +8,17 @@
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
     <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials.css'%}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials-theme-flat.css'%}" />
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     
     <style>
-    li.dropdown.special {
+    /* li.dropdown.special {
         position: static;
     }
       
     li.dropdown.special.show .dropdown-menu.special{
         display: table;
-        /* border-radius: 0px; */
         width: 100%;
         text-align: center;
         left: 0;
@@ -27,7 +28,6 @@
     .dropdown-menu.special > div li {
         display: table-cell;
         height: 20px;
-        /* line-height: 50px; */
         vertical-align: middle;
       }
       
@@ -35,9 +35,8 @@
         .dropdown-menu.special > div li {
           display: block;
         }
-      }
-
-    .btn.active{
+    } */
+    .btn.active {
         background-color:rgb(92,184,92);
     }
 
@@ -47,6 +46,37 @@
 
     button {
       cursor: pointer;
+    }
+
+    .send_dialog2 {
+        border-radius: 0%;
+    }
+
+    .btn-circle {
+        border-radius: 100%;
+        z-index: 4;
+        height: 75px;
+        width: 75px;
+        border-width: 2px;
+        float:right;
+    }
+
+    .fixed {
+        position: -webkit-sticky;  /*required for Safari*/
+        position: sticky;
+    }
+
+    #id_share_text {
+        top: 60%;
+        right: 0;
+        margin-bottom: 2px;
+        margin-right:0;
+    }
+
+    #id_share_mobile {
+        top: 75%;
+        right: 0;
+        margin-top: 2px;
     }
 
     </style>
@@ -59,7 +89,7 @@
       <h1 class="display-4">Youth Poster</h1>
     <p class="lead">Search for events and activities in your area</p>
     <hr class="my-3">
-    <form method="get" class="justify-content-center" novalidate>
+    <form method="get" id="id_form" class="justify-content-center" novalidate>
         
         <div class="form-row justify-content-center">
         <div class="form-group col-sm-4">
@@ -80,133 +110,186 @@
             <p class="lead">or search by category</p>
             </div>
         </div>
-  
+
         <div class="justify-content-center">
-            <!-- <div class="btn-group mr-2 mb-2" role="group" aria-label="Second group"><button type="submit" class="btn btn-primary" href="#" role="button">All</button></div> -->
-  
-            <li class="btn-group mr-2 mb-2 dropdown special" role="group" aria-label="Sport">
-                <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sport</a> 
-                <ul class="dropdown-menu special" style="width:200px;">
-                <div class="container-fluid">
-                <li><a class="dropdown-item" data-value="Volleyball" tabIndex="-1"><input type="checkbox" name="search_name" value="volleyball"/>&nbsp;Volleyball</a></li>
-                <li><a class="dropdown-item" data-value="Badminton" tabIndex="-1"><input type="checkbox" name="search_name" value="badminton"/>&nbsp;Badminton</a></li>
-                </div>
-                <div class="container-fluid">
-                <li><a class="dropdown-item" data-value="Soccer" tabIndex="-1"><input type="checkbox" name="search_name" value="soccer"/>&nbsp;Soccer&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-                <li><a class="dropdown-item" data-value="Tennis" tabIndex="-1"><input type="checkbox" name="search_name" value="tennis"/>&nbsp;Tennis</a></li>
-                </div>
-                <div class="container-fluid">
-                <li><a class="dropdown-item" data-value="Netball" tabIndex="-1"><input type="checkbox" name="search_name" value="netball"/>&nbsp;Netball&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-                <li><a class="dropdown-item" data-value="Basketball" tabIndex="-1"><input type="checkbox" name="search_name" value="basketball"/>&nbsp;Basketball</a></li>
-                </div>
-                </ul>
-            </li>
-
-            <li class="btn-group mr-2 mb-2 dropdown special" role="group" aria-label="Sport">
-                    <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Get a job</a> 
-                    <ul class="dropdown-menu special" style="width:200px;">
-                    <div class="container-fluid">
-                    <li><a class="dropdown-item" data-value="Volleyball" tabIndex="-1"><input type="checkbox" name="search_name" value="resume"/>&nbsp;Resume</a></li>
-                    <li><a class="dropdown-item" data-value="Badminton" tabIndex="-1"><input type="checkbox" name="search_name" value="interviews"/>&nbsp;Interviews</a></li>
-                    </div>
-                    <div class="container-fluid">
-                    <li><a class="dropdown-item" data-value="Soccer" tabIndex="-1"><input type="checkbox"/>&nbsp;xxx&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></li>
-                    <li><a class="dropdown-item" data-value="Tennis" tabIndex="-1"><input type="checkbox"/>&nbsp;xxx</a></li>
-                    </div>
-                    </ul>
-                </li>
-
-            <div class="btn-group mr-2 mb-2" role="group" aria-label="Second group"><button type="button" class="btn btn-primary dropdown-toggle">Fun</button></div>
-            <div class="btn-group mr-2 mb-2" role="group" aria-label="Second group"><button type="button" class="btn btn-primary dropdown-toggle">Culture</button></div>
-            <div class="btn-group mr-2 mb-2" role="group" aria-label="Second group"><button type="button" class="btn btn-primary dropdown-toggle">Learn</button></div>
-            
+            <button type="submit" name="category" value="sport" class="btn mr-2">Sport</button>
+            <button type="submit" name="category" value="fun" class="btn mr-2">Fun</button>
+            <button type="submit" name="category" value="culture" class="btn mr-2">Culture</button>
+            <button type="submit" name="category" value="career" class="btn mr-2">Career</button>
+            <button type="submit" name="category" value="learn" class="btn">Learn</button>
         </div>
         
   </div>
 </div>
-    
-<!--<iframe width="600" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJYdawkGNg1moRrmgS6XeT7AM&key=AIzaSyAMBqqtl6cnrNdV4TUGDSF4z9g4shpp5kM" allowfullscreen></iframe>-->
-    
-    {% if activities %}
-    <div class="container-fluid">
-    <div class="row justify-content-center">
-    {% for activity in activities %}
-    <div class="col-sm-4">
-        
-      {% if user.is_authenticated %}
-      <div class="card select">
-      {% if activity.activity_img %}
-          <img class="card-img-top select" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
-          <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
-      {% else %}
-          <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
-          <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
-      {% endif %}
-      <div class="card-body select" id=card_{{ activity.pk }}>
-        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
-        <p id="b" class="card-text">{{ activity.activity_type }}</p>
-        <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
-        <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
-        <p class="card-text">Where? <a href=# name="address">{{ activity.location }}</a></p> 
-        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
 
+{% if activities %}
+{% if user.is_authenticated %}
+<div class="container-fluid row">
+<div class="container-fluid col-sm-11">
+{% else %}
+<div class="container-fluid">
+<div class="container-fluid">
+{% endif %}
+<div class="row">
+{% for activity in activities %}
+<div class="col-sm-4">
+    {% if user.is_authenticated %}
+    <div class="card select">
+    {% if activity.activity_img %}
+        <img class="card-img-top select" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
+        <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
+    {% else %}
+        <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
+        <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
+    {% endif %}
+    <div class="card-body select" id=card_{{ activity.pk }}>
+        <p id="b" class="card-text small">{{ activity.activity_type|upper }}</p>
+        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
+        <p class="card-text small"><a href=# name="address">{{ activity.location }}</a></p>
+        {% if activity.term == 'Once' %}
+        <p id="c" class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
+        {% else %}
+            {% if activity.start_date %}
+            <p id="c" class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
+            {% endif %}
+        {% endif %}
+        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
     </div>
     <div class="card-footer">
+        <a  target="_blank" href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a>
+        <a target="_blank" href="{% url 'email_create' activity.pk %}" class="btn btn-outline-primary float-right mr-2 share_btn"><i class="far fa-envelope"></i></a>
+
         {% if activity.bookmarked %}
-        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn btn-outline-primary float-right js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="far fa-bookmark"></i>
         </button>
         {% else %}
-        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn btn-outline-primary float-right js-bookmark-article" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="far fa-bookmark"></i>
         </button>
         {% endif %}
+        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="fas fa-share"></i>
+        </button>
     </div>
-      </div>
-        
-      {% else %}
-      <div class="card">
-      {% if activity.activity_img %}
-          <a href="{% url 'activity_detail' activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
-          <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
-      {% else %}
-          <a href="{% url 'activity_detail' activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
-          <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
-      {% endif %}
-      <div class="card-body" id=card_{{ activity.pk }}>
-        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
-        <p id="b" class="card-text">{{ activity.activity_type }}</p>
-        <p id="c" class="card-text">{{ activity.start_date|date:'M d, Y' }} - {{ activity.start_time|time:'H:i' }}</p>
-        <p id="d" class="card-text">{{ activity.end_date|date:'M d, Y' }} - {{ activity.end_time|time:'H:i' }}</p>
-        <p class="card-text">Where? <a href=# name="address">{{ activity.location }}</a></p>
-        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
-    </div>
-      </div>
-      {% endif %} 
-        
-      <br />
-    </div>
-    {% endfor %}
-    </div>
-    </div>
-    {% include 'includes/pagination_2.html' %}
-
-    {% else %}
-    <div class="container-fluid">
-        <p class="lead" style="text-align:center;">No activity that matches the search query</p>
-    </div>
-
-    {% endif %}
+</div>
     
-    {% if user.is_authenticated %}
-    {% if activities %}
-    <div class="container-fluid">
-        <button type="submit" class="btn btn-outline-success mb-2" name="search" value="share">Share via text</button>
-        <button type="submit" class="btn btn-outline-success mb-2" name="search" value="email">Share via email</button>
+    {% else %}
+    <div class="card">
+    {% if activity.activity_img %}
+        <a href="{% url 'activity_detail' activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+    {% else %}
+        <a href="{% url 'activity_detail' activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+    {% endif %}
+    <div class="card-body" id=card_{{ activity.pk }}>
+    <p id="b" class="card-text small">{{ activity.activity_type|upper }}</p>
+    <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
+    <p class="card-text small"><a href=# name="address">{{ activity.location }}</a></p>
+    {% if activity.term == 'Once' %}
+    <p id="c" class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
+    {% else %}
+        {% if activity.start_date %}
+        <p id="c" class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
+        {% endif %}
+    {% endif %}
+    <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
+</div>
+<div class="card-footer">
+    <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <i class="fas fa-share"></i>
+    </button>
+</div>
     </div>
-    {% endif %}
-    {% endif %}
-    </form>
+    {% endif %} 
+    
+    <br />
+</div>
+
+<!-- THE MODAL FOR SHARING URL -->
+<div class="modal fade" id="modal_{{ activity.id }}">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title">Share the link</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-1 offset-md-4 mr-2">
+                    <div id="share2_{{ activity.id }}" class="mr-2"></div>
+                    </div>
+                    <div class="col-md-1 mr-2">
+                    <div id="share3_{{ activity.id }}"></div>
+                    </div>
+                    <div class="col-md-1 ml-2 mr-2">
+                    <div class="jssocials send_dialog">
+                        <div class="jssocials-shares">
+                        <div class="jssocials-share jssocials-share-messenger2">
+                            <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' activity.pk %}" class="btn btn-primary send_dialog2"><i class="fab fa-facebook-messenger"></i></button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="col-md-1 offset-md-3 mr-2">
+                    <div id="share4_{{ activity.id }}" class="mr-2 share4"></div>
+                    </div>
+                    <div class="col-md-1 mr-2">
+                    <div id="share5_{{ activity.id }}" class="mr-2 share5"></div>
+                    </div>
+                    <div class="col-md-1">
+                    <div id="share_{{ activity.id }}" class="mr-2 share"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="modal-footer">
+        <div class="container-fluid">
+        <div class="row">
+        <div class="col-sm-10">
+        <input class="form-control" readonly type="text" id="textshow_{{ activity.id }}" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
+        </div>
+        <div class="col-sm-1">
+        <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ activity.id }}"><i class="far fa-copy"></i></button>
+        </div>
+        </div>
+        <div class="row">
+        <div class="col-sm-12">
+        <p class="small" id="input_{{ activity.id }}"></p>
+        </div>
+        </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+</div>
+
+{% if user.is_authenticated %}
+{% if activities %}
+<div class="col-sm-1 mb-2">
+    <button type="submit" id="id_share_text" class="btn btn-outline-success btn-circle fixed" name="search" value="share"><div style="font-size:2em;"><i class="far fa-comment-alt"></i></div></button>
+    <button type="submit" id="id_share_mobile" class="btn btn-outline-success btn-circle fixed" name="search" value="email"><div style="font-size:2em;"><i class="far fa-envelope"></i></div></button>    
+</div>
+{% endif %}
+{% endif %}
+
+</div>
+
+{% include 'includes/pagination_2.html' %}
+
+{% else %}
+<div class="container-fluid">
+    <p class="lead" style="text-align:center;">No activity that matches the search query</p>
+</div>
+{% endif %}
+</form>
 
 <!-- {% if not user.is_authenticated %}
 <div class="sharethis-inline-share-buttons"></div>
@@ -228,6 +311,7 @@
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
+<script src="{% static 'js/jssocials.js' %}"></script>
 <script>
 // $(function(){
 //    var options = {
@@ -277,9 +361,105 @@ function markActivity(clicked_id) {
         }
     });
 };
+
+window.fbAsyncInit = function() {
+FB.init({
+    appId            : '1943348669252986',
+    autoLogAppEvents : true,
+    xfbml            : true,
+    version          : 'v2.11'
+});
+};
+
+(function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+function sendDialog(id) {
+    var url_arr = id.split("send_dialog_/");
+    var url = url_arr[1];
+    var url_final = window.location.href + url;
+
+    FB.ui({
+      method: 'send',
+      link: url_final
+    });
+}
+
+// $(".send_dialog").click(sendDialog);
+
+function getURL(id, value) {
+    var text_input_arr = id.split("sharebutton_");
+    var activity_id = text_input_arr[1];
+
+    var modal_id = "#modal_" + activity_id;
+    var input_id = "#input_" + activity_id;
+
+    $(input_id).html("");
+    $(modal_id).modal("show");
+
+    var share = "#share_" + activity_id;
+    var share2 = "#share2_" + activity_id;
+    var share3 = "#share3_" + activity_id;
+    var share4 = "#share4_" + activity_id;
+    var share5 = "#share5_" + activity_id;
+
+    var url_val = value.substring(1);
+    var url_final = window.location.href + url_val;
+
+    $(share).jsSocials({
+      shares: ["messenger"],
+      showLabel: false,
+      shareIn: "popup",
+      url: url_final,
+    });
+    $(share2).jsSocials({
+        shares: ["facebook"],
+        showLabel: false,
+        shareIn: "popup",
+        url: url_final,
+    });
+    $(share3).jsSocials({
+        shares: ["email"],
+        showLabel: false,
+        shareIn: "popup",
+        url: url_final,
+    });
+    $(share4).jsSocials({
+        shares: ["whatsapp"],
+        showLabel: false,
+        shareIn: "popup",
+        url: url_final,
+    });
+    $(share5).jsSocials({
+        shares: ["sms"],
+        showLabel: false,
+        shareIn: "popup",
+        url: url_final,
+    });
+}
+
+function copyURL(id) {
+    var msg_arr = id.split("cpbtn_");
+    var activity_id = msg_arr[1];
+    // alert(activity_id);
+
+    var id_share_url = "textshow_" + activity_id;
+
+    var copyText = document.getElementById(id_share_url);
+    copyText.select();
+    document.execCommand("Copy");
+
+    var input_id = "#input_" + activity_id;
+
+    $(input_id).html("Link has been copied!");
+}
     
 $( function() {
-
    // Add Google Maps URL
    var form_elems = document.getElementsByName("address");
    for (var i = 0; i < form_elems.length; i++) {
@@ -288,6 +468,18 @@ $( function() {
        var full_url = map_url + address;
        $(form_elems[i]).attr("href", full_url);
    }
+
+   
+   var isMobile = window.matchMedia("only screen and (max-width: 760px)");
+
+    if (isMobile.matches) {
+        $(".send_dialog").hide();
+    }
+    else{
+        $(".share").hide();
+        $(".share4").hide();
+        $(".share5").hide();
+    }
 
   // Add Tooltips on search boxes
   $('#id_location').tooltip();
@@ -328,8 +520,19 @@ $( function() {
       var checkbox = card_body.children(".selected");
       checkbox.prop("checked", !checkbox.prop("checked"));
 
-  })    
-    
+  })
+
+  var id_form = document.getElementById("id_form");
+    $('#id_share_text').click(function(){
+        id_form.setAttribute("target", "_blank");
+    })
+    $('#id_share_mobile').click(function(){
+        id_form.setAttribute("target", "_blank");
+    })
+    $('.share_btn').click(function(){
+        id_form.setAttribute("target", "_blank");
+    })
+
 });
 </script>
 
