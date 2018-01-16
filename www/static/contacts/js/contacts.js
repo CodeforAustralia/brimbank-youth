@@ -17,14 +17,43 @@ var loadForm = function () {
 
 var saveForm = function () {
   var form = $(this);
+  var group_id = "#table_" + form.attr("id") + " tbody";
   $.ajax({
-    url: form.attr("action"),
+    // url: form.attr("action"),
+    url: '/sms_members/' + form.attr("id") + '/create/',
     data: form.serialize(),
     type: form.attr("method"),
     dataType: 'json',
     success: function (data) {
       if (data.form_is_valid) {
-        $("#contact-table tbody").html(data.html_sms_member_list);
+        // change id of contact-table into {{ group.id }} [DONE]
+        // change URL of sms_member_create to include group.pk
+        // change sms_member_create function in views.py to receive group.pk
+        
+        // $("#contact-table tbody").html(data.html_sms_member_list);
+        $(group_id).html(data.html_sms_member_list);
+        $("#modal-contact").modal("hide");
+      }
+      else {
+        $("#modal-contact .modal-content").html(data.html_form);
+      }
+    }
+  });
+  return false;
+};
+
+var modifyDeleteForm = function () {
+  var form = $(this);
+  var group_id = "#table_" + form.attr("id") + " tbody";
+  $.ajax({
+    url: form.attr("action"),
+    // url: '/sms_members/' + form.attr("id") + '/create/',
+    data: form.serialize(),
+    type: form.attr("method"),
+    dataType: 'json',
+    success: function (data) {
+      if (data.form_is_valid) {
+        $(group_id).html(data.html_sms_member_list);
         $("#modal-contact").modal("hide");
       }
       else {
@@ -103,8 +132,10 @@ $("#contact-table").on("click", ".js-update-sms-member",loadForm);
 $("#modal-contact").on("submit", ".js-sms-member-update-form",saveForm);
 
 // Delete contact
-$("#contact-table").on("click", ".js-delete-sms-member", loadForm);
-$("#modal-contact").on("submit", ".js-sms-member-delete-form", saveForm);
+// $("#contact-table").on("click", ".js-delete-sms-member", loadForm);
+$(".contact").on("click", ".js-delete-sms-member", loadForm);
+// $("#modal-contact").on("submit", ".js-sms-member-delete-form", saveForm);
+$("#modal-contact").on("submit", ".js-sms-member-delete-form", modifyDeleteForm);
 
 // Create Email contact
 $(".js-create-email-member").click(loadForm);

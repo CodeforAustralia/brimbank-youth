@@ -1,16 +1,16 @@
 {% for sms_member in sms_members %}
     <tr>
-    <td>{{ sms_member.group }}</td>
+    <!-- <td>{{ sms_member.group }}</td> -->
     <td>{{ sms_member.name }}</td>
     <td>{{ sms_member.mobile }}</td>
     <td>
-        <button type="button"
+        <!-- <button type="button"
                 class="btn btn-warning btn-sm js-update-sms-member"
                 data-url="{% url 'sms_member_update' sms_member.id %}">Edit
-        </button>
+        </button> -->
         <button type="button"
                 class="btn btn-danger btn-sm js-delete-sms-member"
-                data-url="{% url 'sms_member_delete' sms_member.id %}">Delete
+                data-url="{% url 'sms_member_delete' sms_member.id %}"><i class="far fa-trash-alt"></i>
         </button>
     </td>
     </tr>

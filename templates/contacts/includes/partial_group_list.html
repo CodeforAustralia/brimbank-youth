@@ -3,7 +3,7 @@
     <h5 class="mb-0">
         <span class="align-middle">
         <a data-toggle="collapse" href="#{{ group.id }}" role="button" aria-expanded="true" aria-controls="collapseOne">
-        {{ group.name }}
+        <i class="fas fa-angle-down"></i> {{ group.name }}
         </a>
         </span>
         <a class="btn btn-danger btn-sm js-delete-sms-group ml-2 float-right" 
@@ -19,20 +19,37 @@
     <div id={{ group.id }} class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
         <div class="card-body sms_group">
             <p class="lead">{{ group.description }}</p>
+
             <div class="container-fluid mt-4">
-                <table class="table" id="contact-table">
+            <!-- BUTTON TO CREATE NEW CONTACT -->
+                <a class="js-create-sms-member" href="#" data-url="{% url 'sms_member_create' group.pk %}" role="button" aria-haspopup="true" aria-expanded="false">
+                    Add person to this group
+                </a>
+            </div>
+
+            <div class="container-fluid mt-4">
+                <!-- <table class="table" id="contact-table"> -->
+                <table class="table contact" id="table_{{ group.id }}">
                     <thead>
                     <tr>
+                        <!-- <th>Group</th> -->
                         <th>Name</th>
                         <th>Mobile number</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for sms_member in sms_members %}
                     {% if sms_member.group.id == group.id %}
                         <tr>
+                        <!-- <td>{{ sms_member.group }}</td> -->
                         <td>{{ sms_member.name }}</td>
                         <td>{{ sms_member.mobile }}</td>
+                        <td>
+                            <button type="button"
+                            class="btn btn-danger btn-sm js-delete-sms-member"
+                            data-url="{% url 'sms_member_delete' sms_member.id %}"><i class="far fa-trash-alt"></i>
+                            </button></td>
                         </tr>
                     {% endif %}
                     {% endfor %}

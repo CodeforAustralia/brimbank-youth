@@ -15,7 +15,11 @@ class Profile(models.Model):
     email_confirmed = models.BooleanField(default=False)
     phone = models.CharField(max_length=15, blank=True)
     organisation_name = models.CharField(max_length=100, blank=True)
-    description = models.TextField(max_length=500, blank=True)
+    description = models.TextField(max_length=300, blank=True)
+    role = models.CharField(max_length=100, blank=True)
+    staff_name = models.CharField(max_length=50, blank=True)
+    web_address = models.CharField(max_length=100, blank=True)
+    address = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return self.user.username

@@ -2,15 +2,23 @@
 
 {% load static %}
 
+{% block stylesheet %}
+<style>
+  button {
+    cursor: pointer;
+  }
+</style>
+
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid mt-4">
   <!-- BUTTON TO TRIGGER THE ACTION -->
-  <a class="btn btn-primary btn-sm js-create-group ml-4" href="#" data-url="{% url 'group_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
-      New Group
-  </a>
-  <a class="ml-2" href="{% url 'sms_contact_list' %}" role="button" aria-haspopup="true" aria-expanded="false">
+  <a class="js-create-group" href="#" data-url="{% url 'group_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
+    <div class="ml-4" style="font-size:1em;"><i class="fas fa-plus-circle"></i> Create a new group of contacts</div></a>
+  <!-- <a class="ml-2" href="{% url 'sms_contact_list' %}" role="button" aria-haspopup="true" aria-expanded="false">
     Add Contact
-  </a>
+  </a> -->
 </div>
 
 <div class="container-fluid mt-4">
@@ -23,7 +31,7 @@
   </div>
 </div>
 
-  <!-- THE MODAL WE WILL BE USING -->
+  <!-- GROUP MODAL -->
   <div class="modal fade" id="modal-group">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -31,9 +39,18 @@
     </div>
   </div>
 
+  <!-- CONTACTS MODAL -->
+  <div class="modal fade" id="modal-contact">
+      <div class="modal-dialog">
+          <div class="modal-content">
+          </div>
+      </div>
+  </div>
+
 </div>
 {% endblock %}
 
 {% block javascript %}
   <script src="{% static 'contacts/js/contacts.js' %}"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
 {% endblock %}

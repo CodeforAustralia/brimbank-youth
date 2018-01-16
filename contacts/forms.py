@@ -1,4 +1,6 @@
 from django import forms
+from django.utils.translation import ugettext_lazy as _
+
 from .models import SMSMember, ContactGroup, EmailGroup, EmailMember
 
 class ContactGroupForm(forms.ModelForm):
@@ -6,6 +8,9 @@ class ContactGroupForm(forms.ModelForm):
     class Meta:
         model = ContactGroup
         fields = ('name', 'description', )
+        labels = {
+            'name': _('Group Name'),
+        }
 
 class SMSMemberForm(forms.ModelForm):
     group = forms.ModelChoiceField(queryset=ContactGroup.objects.all())

@@ -36,6 +36,11 @@
       -webkit-box-align: center;
       align-items: center;
     }
+
+    button {
+      cursor: pointer;
+    }
+
   </style>
 	{% block stylesheet %}{% endblock %}  <!-- ADD CUSTOMISED STYLESHEET for PARTICULAR PAGES -->
   </head>
@@ -82,8 +87,8 @@
         {% if not user.is_authenticated %}
         <form class="form-inline ml-auto">
           <a href="{% url 'login' %}" class="btn btn-outline-success">Log in</a>
-          <a href="{% url 'signup' %}" class="btn btn-success ml-2" >Sign up</a>
-          <!-- <a href="#" class="btn btn-success ml-2 js-signup" >Sign up</a> Sign-up AJAX form -->
+          <!-- <a href="{% url 'signup' %}" class="btn btn-success ml-2" >Sign up</a> -->
+          <a href="#" class="btn btn-success ml-2 js-signup" >Sign up</a> <!-- Sign-up AJAX -->
         </form>
         {% else %}
         <ul class="navbar-nav ml-auto mr-2">
@@ -182,6 +187,9 @@
     
 <!--    For sign-up modal form -->
   <script src="{% static 'js/signup_2.js' %}"></script>
+
+  <!--    Font Awesome -->
+  <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
 
   <!-- <script>
   $(function () {

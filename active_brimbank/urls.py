@@ -40,6 +40,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^edit_profile/$', accounts_views.EnterProfileView.as_view(), name='enter_profile'),
     url(r'^signup_ajax_form/$', accounts_views.signup_ajax_form, name='signup_ajax_form'),
+
+    url(r'^create_profile/(?P<pk>\d+)/$', accounts_views.create_profile, name='create_profile'),
     
     
     # Password management
@@ -88,7 +90,7 @@ urlpatterns = [
 
     # --- SMS contacts ---
     url(r'^sms_contacts/group/$', contacts_views.sms_contact_list, name='sms_contact_list'),
-    url(r'^sms_members/create/$', contacts_views.sms_member_create, name='sms_member_create'),
+    url(r'^sms_members/(?P<pk>\d+)/create/$', contacts_views.sms_member_create, name='sms_member_create'),
     url(r'^sms_members/(?P<pk>\d+)/update/$', contacts_views.sms_member_update, name='sms_member_update'),
     url(r'^sms_members/(?P<pk>\d+)/delete/$', contacts_views.sms_member_delete, name='sms_member_delete'),
 

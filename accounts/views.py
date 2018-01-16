@@ -30,7 +30,10 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
+            # user = form.save(commit=False)
+            user = form.save()
+            user.refresh_from_db()  # load the profile instance created by the signal
+            user.profile.phone = form.cleaned_data.get('phone')
             user.is_active = False
             user.save()
 			
@@ -51,7 +54,7 @@ def signup(request):
             # Users are logged in
             # auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.add_message(request, messages.SUCCESS, 'Please wait for the admin to confirm your registration.')
-            activities = search_logic(request, '', '')
+            activities = search_logic(request, '', '', '')
             activities = show_page_numbers(request, activities)
             user_register = True
             return render(request, 'activities/activity_search_result.html', {'activities': activities,
@@ -82,8 +85,7 @@ def activate(request, uidb64, token):
 def account_activation_sent(request):
     return render(request, 'accounts/account_activation_sent.html')
 
-# After registering, users can enter their profile
-@method_decorator(login_required, name='dispatch')
+# @method_decorator(login_required, name='dispatch')
 class EnterProfileView(UpdateView):
     model = Profile
     form_class = ProfileForm
@@ -98,28 +100,24 @@ class EnterProfileView(UpdateView):
         profile.save()
         messages.add_message(self.request, messages.SUCCESS, 'Your profile has been updated.')
         return redirect('home')
-    
-def signup_ajax_form(request):
-    data = dict()
-    
+
+def create_profile(request, pk):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        # time.sleep(1)  # You don't need this line. This is just to delay the process so you can see the progress bar testing locally.
+        form = ProfileForm(request.POST)
         if form.is_valid():
-            data['no_progress_display'] = False
-            user = form.save(commit=False)
+            user = User.objects.get(pk=pk)
+            user.profile.organisation_name = form.cleaned_data.get('organisation_name')
+            user.profile.address = form.cleaned_data.get('address')
+            user.profile.web_address = form.cleaned_data.get('web_address')
+            user.profile.staff_name = form.cleaned_data.get('staff_name')
+            user.profile.role = form.cleaned_data.get('role')
+            user.profile.phone = form.cleaned_data.get('phone')
+            user.profile.description = form.cleaned_data.get('description')
             user.is_active = False
             user.save()
-            # Users are logged in
-            # auth_login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-#            messages2 = messages.add_message(request, messages.SUCCESS, 'Please wait for the admin to confirm your registration.')
-            
-            # Send data to AJAX form
-            data['form_is_valid'] = True
 
             # Send confirmation email
             current_site = get_current_site(request)
-            # message = render_to_string('accounts/account_activation_email.html', {
             message = render_to_string('accounts/welcome.html', {
                 'user':user, 
                 'domain':current_site.domain,
@@ -128,8 +126,33 @@ def signup_ajax_form(request):
             })
             mail_subject = 'Activate your account.'
             to_email = ['dsihaloho@student.unimelb.edu.au']
-            sender = form.cleaned_data.get('email')
+            sender = user.email
             send_mail(mail_subject, message, sender, to_email, html_message=message)
+
+            return redirect('account_activation_sent')
+    else:
+        form = ProfileForm()
+    return render(request, 'accounts/enter_profile.html', {'form': form})
+
+def signup_ajax_form(request):
+    data = dict()
+    
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        # time.sleep(1)  # You don't need this line. This is just to delay the process so you can see the progress bar testing locally.
+        if form.is_valid():
+            data['no_progress_display'] = False
+            # user = form.save(commit=False)
+            user = form.save()
+            user.refresh_from_db()  # load the profile instance created by the signal
+            user.is_active = False
+            user.save()
+
+            # Send data to AJAX form
+            data['form_is_valid'] = True
+
+            data['user_pk'] = user.pk
+
         else:
             data['no_progress_display'] = True
             data['form_is_valid'] = False

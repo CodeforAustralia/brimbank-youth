@@ -166,13 +166,15 @@ def email_group_delete(request, pk):
     return JsonResponse(data)
 
 @login_required
-def save_contact_form(request, form, template_name):
+def save_contact_form(request, form, group_pk, template_name):
     data = dict()
     if request.method == 'POST':
         if form.is_valid():
             form.save()
             data['form_is_valid'] = True
-            sms_members = SMSMember.objects.all().order_by('group')
+            # sms_members = SMSMember.objects.all().order_by('group')
+            sms_members = SMSMember.objects.filter(group_id=group_pk)
+            # sms_members = SMSMember.objects.all()
             data['html_sms_member_list'] = render_to_string('contacts/includes/partial_contact_list.html', {
                 'sms_members': sms_members,
             })
@@ -180,6 +182,7 @@ def save_contact_form(request, form, template_name):
             data['form_is_valid'] = False
     context = {
         'form': form,
+        'test': group_pk, # Comment this later, just testing
     }
     data['html_form'] = render_to_string(template_name, context, request=request)
     return JsonResponse(data)
@@ -204,12 +207,12 @@ def save_email_contact_form(request, form, template_name):
     return JsonResponse(data)
 
 @login_required
-def sms_member_create(request):
+def sms_member_create(request, pk):
     if request.method == 'POST':
         form = SMSMemberForm(request.POST)
     else:
         form = SMSMemberForm()
-    return save_contact_form(request, form, 'contacts/includes/partial_contact_create.html')
+    return save_contact_form(request, form, pk, 'contacts/includes/partial_contact_create.html')
 
 @login_required
 def email_member_create(request):
@@ -237,16 +240,21 @@ def email_member_update(request, pk):
 
 def sms_member_delete(request, pk):
     sms_member = get_object_or_404(SMSMember, pk=pk)
+    group_pk = sms_member.group.pk
     data = dict()
     if request.method == 'POST':
         sms_member.delete()
         data['form_is_valid'] = True  # This is just to play along with the existing code
-        sms_members = SMSMember.objects.all()
+        # sms_members = SMSMember.objects.all()
+        sms_members = SMSMember.objects.filter(group_id=group_pk)
         data['html_sms_member_list'] = render_to_string('contacts/includes/partial_contact_list.html', {
-            'sms_members': sms_members
+            'sms_members': sms_members,
         })
     else:
-        context = {'sms_member': sms_member}
+        context = {
+            'sms_member': sms_member,
+            'test': group_pk,
+        }
         data['html_form'] = render_to_string('contacts/includes/partial_contact_delete.html',
             context,
             request=request,
