@@ -183,12 +183,35 @@ def search_logic(request, location_key, name_key, category):
 
     if category is None:
         category = ''
+
     activities = Activity.objects.filter(
         Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
-        )
+    )
     return activities
+
+def search_others(request, location_key, name_key, category):
+    other_activities = Activity.objects.filter(
+        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
+        Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)).exclude(
+        Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
+    return other_activities
+
+def search_my_activities(request, location_key, name_key, category):
+    my_activities = Activity.objects.filter(created_by=request.user)
+    my_activities = my_activities.filter(
+        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
+        Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+        Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
+    )
+    # my_activities = Activity.objects.filter(
+    #     Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
+    #     Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+    #     Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
+    #     Q(created_by=request.user.username),
+    # )
+    return my_activities
 
 def search_logic_bookmarks(request, location_key, name_key):
     activities = Activity.objects.filter(bookmarked = True, bookmarked_users = request.user)
@@ -208,6 +231,7 @@ def search_logic_drafts(request, location_key, name_key, category):
 
 def search_events(request):
     activities = search_logic(request, '', '', '')
+    other_activities = None
     if request.method == 'GET':
         location_key = request.GET.get('location') # 'location' is the name of the input field
         name_key = request.GET.get('name')
@@ -223,9 +247,14 @@ def search_events(request):
         # if search == 'search':
         #     if location_key or name_key or search_names or category:
         #         activities = search_logic(request, location_key, name_key, search_names, category)
-        # if search == 'search':
-        if location_key or name_key or search_names or category:
-            activities = search_logic(request, location_key, name_key, category)
+
+        if location_key or name_key or category:
+            other_activities = search_others(request, location_key, name_key, category)
+            if request.user.is_anonymous():
+                activities = search_logic(request, location_key, name_key, category)
+            else:
+                activities = search_my_activities(request, location_key, name_key, category)
+
         if str1 != '':
             kwargs = {'pk': str1}
             if search == 'share':
@@ -260,6 +289,8 @@ def search_events(request):
         domain = current_site.domain
 
         return render(request, 'activities/activity_search_result.html', {
+                    #   'activities': activities,
+                      'other_activities': other_activities,
                       'activities': activities,
                       'name': name_key,
                       'url': url,

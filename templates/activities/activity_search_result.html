@@ -11,128 +11,22 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials.css'%}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials-theme-flat.css'%}" />
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-    
-    <style>
-    /* li.dropdown.special {
-        position: static;
-    }
-      
-    li.dropdown.special.show .dropdown-menu.special{
-        display: table;
-        width: 100%;
-        text-align: center;
-        left: 0;
-        right: 0;
-      }
-      
-    .dropdown-menu.special > div li {
-        display: table-cell;
-        height: 20px;
-        vertical-align: middle;
-      }
-      
-    @media screen and (max-width: 767px) {
-        .dropdown-menu.special > div li {
-          display: block;
-        }
-    } */
-    .btn.active {
-        background-color:rgb(92,184,92);
-    }
-
-    .easy-autocomplete-container ul{
-        text-align: left;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .send_dialog2 {
-        border-radius: 0%;
-    }
-
-    .btn-circle {
-        border-radius: 100%;
-        z-index: 4;
-        height: 75px;
-        width: 75px;
-        border-width: 2px;
-        float:right;
-    }
-
-    .fixed {
-        position: -webkit-sticky;  /*required for Safari*/
-        position: sticky;
-    }
-
-    #id_share_text {
-        top: 60%;
-        right: 0;
-        margin-bottom: 2px;
-        margin-right:0;
-    }
-
-    #id_share_mobile {
-        top: 75%;
-        right: 0;
-        margin-top: 2px;
-    }
-
-    .card {
-        cursor: pointer;
-    }
-
-    </style>
 
 {% endblock %}
 
 {% block content %}
-<div class="jumbotron mb-6">
-  <div class="container text-center">
-      <h1 class="display-4">Youth Poster</h1>
-    <p class="lead">Search for events and activities in your area</p>
-    <hr class="my-3">
-    <form method="get" id="id_form" class="justify-content-center" novalidate>
-        
-        <div class="form-row justify-content-center">
-        <div class="form-group col-sm-4">
-            <label class="sr-only" for="id_name">Activity name</label>
-            <input type="text" name="name" placeholder="Swimming, Dance..." maxlength="150" class="form-control mr-sm-2" id="id_name" data-toggle="tooltip" data-placement="left" title="Enter the activity name" />
-        </div>
-        <div class="col-sm-4">
-            <label class="sr-only" for="id_location">Location</label>
-            <input type="text" name="location" placeholder="Sunshine, Deer Park... " maxlength="150" class="form-control mr-sm-2 mb-2" id="id_location" data-toggle="tooltip" data-placement="left" title="Enter an adress" />
-        </div>
-        <div class="col-sm-1">
-            <button type="submit" id="id_search" class="btn btn-success mr-sm-2 mb-2" name="search" value="search">Search</button>
-        </div>
-        </div>
-        
-        <div class="row">
-            <div class="lead col-sm-12">
-            <p class="lead">or search by category</p>
-            </div>
-        </div>
 
-        <div class="justify-content-center">
-            <button type="submit" name="category" value="sport" class="btn mr-2">Sport</button>
-            <button type="submit" name="category" value="fun" class="btn mr-2">Fun</button>
-            <button type="submit" name="category" value="culture" class="btn mr-2">Culture</button>
-            <button type="submit" name="category" value="career" class="btn mr-2">Career</button>
-            <button type="submit" name="category" value="learn" class="btn">Learn</button>
-        </div>
-        
-  </div>
-</div>
+{% include 'activities/includes/search_box.html' %}
 
 {% if activities %}
 {% if user.is_authenticated %}
 <div class="container-fluid row">
 <div class="container-fluid col-sm-11">
+<h3>Your activities & events</h3>
 {% else %}
 <div class="container-fluid">
 <div class="container-fluid">
+<h3>Activities & events</h3>
 {% endif %}
 <div class="row">
 {% for activity in activities %}
@@ -176,7 +70,7 @@
             <i class="fas fa-share"></i>
         </button>
     </div>
-</div>
+    </div>
     
     {% else %}
     <div class="card">
@@ -199,12 +93,12 @@
         {% endif %}
     {% endif %}
     <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
-</div>
-<div class="card-footer">
-    <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-        <i class="fas fa-share"></i>
-    </button>
-</div>
+    </div>
+    <div class="card-footer">
+        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="fas fa-share"></i>
+        </button>
+    </div>
     </div>
     {% endif %} 
     
@@ -295,6 +189,43 @@
 {% endif %}
 </form>
 
+{% if not user.is_authenticated %}
+{% if other_activities %}
+<div class="container-fluid" style="background:rgb(244, 248, 250); padding-top:1%">
+<h3 class="mb-3">Other activities and events in this area</h3>
+<div class="row">
+{% for other_activity in other_activities %}
+<div class="col-sm-4">
+<div class="card mb-4">
+    {% if other_activity.activity_img %}
+        <a href="{% url 'activity_detail' other_activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' other_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+    {% else %}
+        <a href="{% url 'activity_detail' other_activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' other_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+    {% endif %}
+    <div class="card-body" id=card_{{ other_activity.pk }}>
+        <p id="b" class="card-text small">{{ other_activity.activity_type|upper }}</p>
+        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' other_activity.pk %}">{{ other_activity.name }}</a></h3>
+        <p class="card-text small"><a href=# name="address">{{ other_activity.location }}</a></p>
+        {% if other_activity.term == 'Once' %}
+        <p id="c" class="card-text">{{ other_activity.activity_date|date:'D, d M Y'|upper }} - {{ other_activity.start_time|time:'H:i' }}</p>
+        {% else %}
+            {% if other_activity.start_date %}
+            <p id="c" class="card-text">{{ other_activity.activity_date|date:'D, d M Y'|upper }} - {{ other_activity.start_time|time:'H:i' }}</p>
+            {% endif %}
+        {% endif %}
+        <input class="selected" type="checkbox" style="display:none" id=activity_{{ other_activity.pk }} name ="checkboxes" value={{ other_activity.pk }} />
+    </div>
+</div>
+</div>
+{% endfor %}
+</div>
+</div>
+{% endif %}
+
+{% endif %}
+
 <!-- {% if not user.is_authenticated %}
 <div class="sharethis-inline-share-buttons"></div>
 {% endif %} -->
@@ -317,39 +248,6 @@
 <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
 <script src="{% static 'js/jssocials.js' %}"></script>
 <script>
-// $(function(){
-//    var options = {
-//    data: ["Swimming", "Dance", "Soccer", "Basketball", "Volleyball", ],
-//    list: {
-//         match: {
-//             enabled: true
-//         }
-//     }
-// };
-// $('#id_name').easyAutocomplete(options);
-
-// var suburbs = {
-//     data: ["Sunshine", "Deer Park", "Melbourne", "Brunswick", ],
-
-//     // url: "{% static 'js/suburbs.js' %}",
-
-//     list: {
-//         match: {
-//             enabled: true
-//         }
-//     }
-// };
-// $('#id_location').easyAutocomplete(suburbs);
-// });
-
-
-
-//Google maps		
-// function initialize() {		
-//     var input = document.getElementById('id_location');		
-//     var autocomplete = new google.maps.places.Autocomplete(input);
-// }		
-// google.maps.event.addDomListener(window, 'load', initialize);
 
 function markActivity(clicked_id) {
     var url_dest = '/activity/bookmark/'+clicked_id+'/'
@@ -393,8 +291,6 @@ function sendDialog(id) {
       link: url_final
     });
 }
-
-// $(".send_dialog").click(sendDialog);
 
 function getURL(id, value) {
     var text_input_arr = id.split("sharebutton_");
