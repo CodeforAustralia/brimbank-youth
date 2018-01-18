@@ -12,6 +12,13 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials-theme-flat.css'%}" />
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
+    <style>
+        input:checked + span {
+        background-color:#911;
+        color:#fff;
+    }
+    </style>
+
 {% endblock %}
 
 {% block content %}
@@ -30,7 +37,7 @@
 {% endif %}
 <div class="row">
 {% for activity in activities %}
-<div class="col-sm-4">
+<div class="col-sm-4 col-xs-6">
     {% if user.is_authenticated %}
     <div class="card select">
     {% if activity.activity_img %}
@@ -48,10 +55,12 @@
         <p id="c" class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
         {% else %}
             {% if activity.start_date %}
-            <p id="c" class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
+            <p id="c" class="card-text">{{ activity.start_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
             {% endif %}
         {% endif %}
-        <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
+        <input class="selected" style="display:none;" type="checkbox" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }}>
+        <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span>
+        <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span>
     </div>
     <div class="card-footer">
         <a  target="_blank" href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a>
@@ -89,7 +98,7 @@
     <p id="c" class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
     {% else %}
         {% if activity.start_date %}
-        <p id="c" class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
+        <p id="c" class="card-text">{{ activity.start_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
         {% endif %}
     {% endif %}
     <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
@@ -117,8 +126,8 @@
         </div>
         <div class="modal-body">
             <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-1 offset-md-4 mr-2">
+                <div class="row justify-content-center">
+                    <div class="col-md-1 offset-md-3 mr-2">
                     <div id="share2_{{ activity.id }}" class="mr-2"></div>
                     </div>
                     <div class="col-md-1 mr-2">
@@ -128,7 +137,7 @@
                     <div class="jssocials send_dialog">
                         <div class="jssocials-shares">
                         <div class="jssocials-share jssocials-share-messenger2">
-                            <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' activity.pk %}" class="btn btn-primary send_dialog2"><i class="fab fa-facebook-messenger"></i></button>
+                            <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' activity.pk %}" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
                         </div>
                         </div>
                     </div>
@@ -149,14 +158,14 @@
         <div class="container-fluid">
         <div class="row">
         <div class="col-sm-10">
-        <input class="form-control" readonly type="text" id="textshow_{{ activity.id }}" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
+        <input class="form-control" style="width:100%;" readonly type="text" id="textshow_{{ activity.id }}" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
         </div>
         <div class="col-sm-1">
         <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ activity.id }}"><i class="far fa-copy"></i></button>
         </div>
         </div>
         <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12 mt-1">
         <p class="small" id="input_{{ activity.id }}"></p>
         </div>
         </div>
@@ -171,9 +180,9 @@
 
 {% if user.is_authenticated %}
 {% if activities %}
-<div class="col-sm-1 mb-2">
-    <button type="submit" id="id_share_text" class="btn btn-outline-success btn-circle fixed" name="search" value="share"><div style="font-size:2em;"><i class="far fa-comment-alt"></i></div></button>
-    <button type="submit" id="id_share_mobile" class="btn btn-outline-success btn-circle fixed" name="search" value="email"><div style="font-size:2em;"><i class="far fa-envelope"></i></div></button>    
+<div class="container-fluid col-sm-1 fixed" style="height:10%;margin-top:5%;">
+    <button type="submit" id="id_share_text" class="btn btn-outline-success btn-circle" name="search" value="share"><div style="font-size:2em;"><i class="far fa-comment-alt"></i></div></button>
+    <button type="submit" id="id_share_mobile" class="btn btn-outline-success btn-circle" name="search" value="email"><div style="font-size:2em;"><i class="far fa-envelope"></i></div></button>    
 </div>
 {% endif %}
 {% endif %}
@@ -195,7 +204,7 @@
 <h3 class="mb-3">Other activities and events in this area</h3>
 <div class="row">
 {% for other_activity in other_activities %}
-<div class="col-sm-4">
+<div class="col-sm-4 col-xs-6">
 <div class="card mb-4">
     {% if other_activity.activity_img %}
         <a href="{% url 'activity_detail' other_activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
@@ -212,7 +221,7 @@
         <p id="c" class="card-text">{{ other_activity.activity_date|date:'D, d M Y'|upper }} - {{ other_activity.start_time|time:'H:i' }}</p>
         {% else %}
             {% if other_activity.start_date %}
-            <p id="c" class="card-text">{{ other_activity.activity_date|date:'D, d M Y'|upper }} - {{ other_activity.start_time|time:'H:i' }}</p>
+            <p id="c" class="card-text">{{ other_activity.start_date|date:'D, d M Y'|upper }} - {{ other_activity.start_time|time:'H:i' }}</p>
             {% endif %}
         {% endif %}
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ other_activity.pk }} name ="checkboxes" value={{ other_activity.pk }} />
@@ -223,7 +232,42 @@
 </div>
 </div>
 {% endif %}
+{% endif %}
 
+{% if user.is_authenticated %}
+{% if not_my_activities %}
+<div class="container-fluid" style="background:rgb(244, 248, 250); padding-top:1%">
+<h3 class="mb-3">Other activities and events in this area</h3>
+<div class="row">
+{% for not_my_activity in not_my_activities %}
+<div class="col-sm-4">
+<div class="card mb-4">
+    {% if not_my_activity.activity_img %}
+        <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+    {% else %}
+        <a href="{% url 'activity_detail' not_my_activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
+    {% endif %}
+    <div class="card-body" id=card_{{ not_my_activity.pk }}>
+        <p id="b" class="card-text small">{{ not_my_activity.activity_type|upper }}</p>
+        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' not_my_activity.pk %}">{{ not_my_activity.name }}</a></h3>
+        <p class="card-text small"><a href=# name="address">{{ not_my_activity.location }}</a></p>
+        {% if not_my_activity.term == 'Once' %}
+        <p id="c" class="card-text">{{ not_my_activity.activity_date|date:'D, d M Y'|upper }} - {{ not_my_activity.start_time|time:'H:i' }}</p>
+        {% else %}
+            {% if not_my_activity.start_date %}
+            <p id="c" class="card-text">{{ not_my_activity.start_date|date:'D, d M Y'|upper }} - {{ not_my_activity.start_time|time:'H:i' }}</p>
+            {% endif %}
+        {% endif %}
+        <input class="selected" type="checkbox" style="display:none" id=activity_{{ not_my_activity.pk }} name ="checkboxes" value={{ not_my_activity.pk }} />
+    </div>
+</div>
+</div>
+{% endfor %}
+</div>
+</div>
+{% endif %}
 {% endif %}
 
 <!-- {% if not user.is_authenticated %}
@@ -392,10 +436,13 @@ $( function() {
       
       //change opacity of card-img-top
       $(this).siblings(".card-img-top.select").toggleClass('on');
+      
 //      card.children(".card-img-top").toggleClass('on');
       
       //show the checklist icon
-      $(this).siblings(".selectedImg.select").toggle();
+    //   $(this).siblings(".selectedImg.select").toggle();
+      $(this).children(".tickbox").toggle();
+      $(this).children(".tickboxSelected").toggle();
 //      card.children(".selectedImg").toggle();
       
       //checked the checkbox element

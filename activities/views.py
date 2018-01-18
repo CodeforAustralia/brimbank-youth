@@ -198,20 +198,24 @@ def search_others(request, location_key, name_key, category):
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
     return other_activities
 
-def search_my_activities(request, location_key, name_key, category):
-    my_activities = Activity.objects.filter(created_by=request.user)
-    my_activities = my_activities.filter(
+def search_my_activities(request, location_key, name_key, category, mine):
+    if mine:
+        activities = Activity.objects.filter(created_by=request.user)
+        activities = activities.filter(
         Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
-    )
-    # my_activities = Activity.objects.filter(
-    #     Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
-    #     Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
-    #     Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
-    #     Q(created_by=request.user.username),
-    # )
-    return my_activities
+        )
+        activities = activities.order_by('-start_date', '-activity_date')
+    else:
+        activities = Activity.objects.exclude(created_by=request.user)
+        activities = activities.filter(
+            Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
+            Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+            Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
+        )
+        activities = activities.order_by('-start_date', '-activity_date')[0:3]
+    return activities
 
 def search_logic_bookmarks(request, location_key, name_key):
     activities = Activity.objects.filter(bookmarked = True, bookmarked_users = request.user)
@@ -232,6 +236,7 @@ def search_logic_drafts(request, location_key, name_key, category):
 def search_events(request):
     activities = search_logic(request, '', '', '')
     other_activities = None
+    not_my_activities = None
     if request.method == 'GET':
         location_key = request.GET.get('location') # 'location' is the name of the input field
         name_key = request.GET.get('name')
@@ -239,9 +244,7 @@ def search_events(request):
         str1 = '_'.join(list_of_input_ids)
 
         search_names=request.GET.getlist('search_name')
-
         category = request.GET.get('category')
-
         search = request.GET.get('search')
 
         # if search == 'search':
@@ -252,8 +255,17 @@ def search_events(request):
             other_activities = search_others(request, location_key, name_key, category)
             if request.user.is_anonymous():
                 activities = search_logic(request, location_key, name_key, category)
-            else:
-                activities = search_my_activities(request, location_key, name_key, category)
+
+        if name_key is None:
+            name_key = ''
+        if location_key is None:
+            location_key =''
+        if category is None:
+            category =''
+
+        if request.user.is_anonymous() == False:
+            activities = search_my_activities(request, location_key, name_key, category, True)
+            not_my_activities = search_my_activities(request, location_key, name_key, category, False)
 
         if str1 != '':
             kwargs = {'pk': str1}
@@ -263,15 +275,11 @@ def search_events(request):
             if search == 'email':
                 form = SendEmailForm()
                 return redirect('email_create', **kwargs)
+
         if (str1 == '' and search == 'share') or (str1 == '' and search == 'email'):
             messages.add_message(request, messages.ERROR, 'Please select at least one activity.', extra_tags='danger')
+        
         activities = show_page_numbers(request, activities)
-        if name_key is None:
-            name_key = ''
-        if location_key is None:
-            location_key =''
-        if category is None:
-            category =''
 
         # url = ''
         # if search_names:
@@ -289,8 +297,8 @@ def search_events(request):
         domain = current_site.domain
 
         return render(request, 'activities/activity_search_result.html', {
-                    #   'activities': activities,
                       'other_activities': other_activities,
+                      'not_my_activities': not_my_activities,
                       'activities': activities,
                       'name': name_key,
                       'url': url,

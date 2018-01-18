@@ -108,21 +108,11 @@
       <div class="card bg-light mb-3">
         <div class="card-body">
             {% include 'includes/base_activity_form_4.html' %}
-            <br />
             {% if not object.published %}
-            <div class="form-group row">
-                <div class="col-sm-2 offset-sm-8 col-sm-9">
-<!--                    <a id="id_prev3" class="btn btn-primary btn-lg" href="#other_info">Previous</a>-->
-                <button type="submit" class="btn btn-secondary btn-lg" id="id_publish"> &nbsp;&nbsp;Save&nbsp;&nbsp; </button>
-                <button type="submit" class="btn btn-success btn-lg" id="id_publish"> Preview </button>
-                </div>
-            </div>
+            <button type="submit" class="btn btn-success btn-lg float-right ml-2" id="id_publish"> Preview </button>
+            <button type="submit" class="btn btn-secondary btn-lg float-right" id="id_publish"> &nbsp;&nbsp;Save&nbsp;&nbsp;</button>
             {% else %}
-            <div class="form-group row">
-                <div class="col-sm-2 offset-sm-10">
-                <button type="submit" class="btn btn-success btn-lg" id="id_publish" href="general_info"> Save </button>
-                </div>
-            </div>
+            <button type="submit" class="btn btn-success btn-lg" id="id_publish" href="general_info"> Save </button>
             {% endif %}
           </div>
         </div>
@@ -138,6 +128,7 @@
 <script src="http://www.datejs.com/build/date.js" type="text/javascript"></script>
 <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
 <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-filestyle.min.js' %}"></script>
 
 
 <!-- To provide autocomplete in fields (http://easyautocomplete.com/) -->
@@ -148,7 +139,14 @@
 <script>
     
 //$( document ).ready(function() {
-$( function() {    
+$( function() {
+
+$("#id_activity_img").filestyle({buttonBefore: true, text: " Upload", 
+btnClass: "btn-dark", htmlIcon: '<span class="fas fa-camera fa-lg"></span>', placeholder: "No file"});
+
+$("#id_flyer").filestyle({buttonBefore: true, text: "&nbsp;Upload", 
+btnClass: "btn-dark", htmlIcon: '<span class="fas fa-file-pdf fa-lg"></span>', placeholder: "No file"});
+    
 var e = document.getElementById("id_term");
 var term = e.options[e.selectedIndex].value;
     if (term == "Daily"){
