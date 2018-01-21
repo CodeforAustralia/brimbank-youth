@@ -10,14 +10,19 @@ def file_size(value):
     limit = 2 * 1024 * 1024
     if value.size > limit:
         raise ValidationError('File size is too large. The size should not exceed 2MB')
-		
+
 class ActivityForm(forms.ModelForm):
-    activity_type = forms.ChoiceField(choices=ACTIVITY_TYPES, required=False, label='What type of activity are you creating ?')
+    activity_type = forms.ChoiceField(choices=ACTIVITY_TYPES, label='What type of activity are you creating ?', required=False)
     start_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS FROM', required=False)
     end_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS UNTIL', required=False)
-    activity_img = forms.ImageField(required=False, validators=[file_size], label='Add an event image')
-    flyer = forms.FileField(required=False, validators=[file_size], label='Upload an event flyer')
+    activity_img = forms.ImageField(validators=[file_size], label='Add an event image', required=False)
+    flyer = forms.FileField(validators=[file_size], label='Upload an event flyer', required=False)
     
+    def __init__(self, *args, **kwargs):
+        super(ActivityForm, self).__init__(*args, **kwargs)
+        self.fields['start_time'].required = True
+        self.fields['location'].required = True
+
     class Meta:
         model = Activity
         fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'contact_number', 'activity_img', 'flyer', 'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 'listing_privacy')
@@ -66,15 +71,30 @@ class ActivityForm(forms.ModelForm):
         cleaned_data = super().clean()
         start_date = cleaned_data.get("start_date")
         end_date = cleaned_data.get("end_date")
+        activity_date = cleaned_data.get("activity_date")
         term = cleaned_data.get("term")
+        location = cleaned_data.get("location")
+        general_error_msg = 'Please correct the errors below.'
         if term != 'Once':
-            begin_date = arrow.get(start_date, 'Australia/Melbourne')
-            finish_date = arrow.get(end_date, 'Australia/Melbourne')
-            if begin_date > finish_date:
-                msg = "Start date must be before end date."
-                self.add_error('start_date', msg)
-                self.add_error('end_date', msg)
-                raise ValidationError('Please correct the errors below.')
+            if start_date and end_date:
+                begin_date = arrow.get(start_date, 'Australia/Melbourne')
+                finish_date = arrow.get(end_date, 'Australia/Melbourne')
+                if begin_date > finish_date:
+                    msg = "Start date must be before end date."
+                    self.add_error('start_date', msg)
+                    self.add_error('end_date', msg)
+                    # raise ValidationError(general_error_msg)
+            else:
+                if not start_date:
+                    msg = "Start date must be entered."
+                    self.add_error('start_date', msg)
+                if not end_date:
+                    msg = "End date must be entered."
+                    self.add_error('end_date', msg)
+        else:
+            if not activity_date:
+                msg = "Activity date must be entered."
+                self.add_error('activity_date', msg)
 
 class ActivitySearchForm(forms.ModelForm):
     class Meta:
@@ -134,29 +154,6 @@ class ActivityDraftForm(forms.ModelForm):
                 'invalid': _("The entered date is invalid"),
             },
         }
-        
-#    def clean_name(self):
-#        name = self.cleaned_data['name']
-#        if name == 'Abc':
-#            msg = "Testing the field error."
-#            self.add_error('name', msg)
-#        return name
-            
-#    def clean_description(self):
-#        description = self.cleaned_data['description']')
-#        if description == 'Abc':
-#            msg = "Testing the field error."
-#            self.add_error('description', msg)
-#        return description
-#    
-#    def clean_activity_date(self):
-#        activity_date = self.cleaned_data['activity_date']
-#        begin_date = arrow.get(activity_date, 'Australia/Melbourne')
-#        now = arrow.now('Australia/Melbourne')
-#        if begin_date > now:
-#            msg = "Testing the field error."
-#            self.add_error('activity_date', msg)
-#        return activity_date
     
     def clean(self):
         cleaned_data = super().clean()
@@ -172,7 +169,7 @@ class ActivityDraftForm(forms.ModelForm):
                 msg = "Start date must be before end date."
                 self.add_error('start_date', msg)
                 self.add_error('end_date', msg)
-                raise ValidationError('Please correct the errors below.')
+                raise ValidationError()
             
 #    def clean(self):
 #        cleaned_data = super().clean()

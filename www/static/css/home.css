@@ -46,6 +46,12 @@ button {
     top: -10;
     right:0;
 }
+.make-sticky {
+    position: -webkit-sticky;  /*required for Safari*/
+    position: sticky;
+    top: 0;
+}
+
 #id_share_text {
     right: 0;
     /* margin-bottom: 4px;

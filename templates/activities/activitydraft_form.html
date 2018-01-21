@@ -28,6 +28,13 @@
 
 {% block content %}
 <div class="container">
+
+{% if messages %}
+{% for message in messages %}
+    <p class="set_error" style="display:none;">{{ message }}</p>
+{% endfor %}
+{% endif %}
+
 <form method="post" enctype="multipart/form-data" action="{% url 'edit_draft_activity' object.pk %}" novalidate>
 <!--Adding action attribute in form will prevent the addition of href url when submitting the form-->
     
@@ -132,7 +139,17 @@ function initialize() {
 google.maps.event.addDomListener(window, 'load', initialize);
     
 //$( document ).ready(function() {
-$( function() {    
+$( function() {
+
+if ($('.set_error').text() == 'Please enter the location.') {
+    $('#id_location').addClass('is-invalid');
+}
+
+$( "#id_space" ).hide();
+$( "#id_cost" ).hide();
+
+// $(':radio').addClass('custom-control-input');
+
 var e = document.getElementById("id_term");
 var term = e.options[e.selectedIndex].value;
     if (term == "Daily"){
@@ -170,11 +187,11 @@ var term = e.options[e.selectedIndex].value;
 });
 
     
-$( "#id_space_choice_0" ).click(function() {
+$( "#id_space_choice_1" ).click(function() {
     $( "#id_space" ).show();
 })
 
-$( "#id_space_choice_1" ).click(function() {
+$( "#id_space_choice_0" ).click(function() {
     $( "#id_space" ).hide();
 })
     

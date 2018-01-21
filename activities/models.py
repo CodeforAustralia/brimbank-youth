@@ -51,8 +51,8 @@ LISTING_PRIVACY = (
 )
 
 SPACE_OPTIONS = (
-    ('Limited', 'Limited'),
     ('Unlimited', 'Unlimited'),
+    ('Limited', 'Limited'),
 )
 
 COST_OPTIONS = (
@@ -98,7 +98,7 @@ class Activity(models.Model):
     cost = models.FloatField(blank=True, null=True)
     space = models.PositiveSmallIntegerField(blank=True, null=True, default=10000)
     cost_choice = models.CharField(max_length=50, choices=COST_OPTIONS, default='N')
-    space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Limited')
+    space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Unlimited')
     listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
     created_by = models.ForeignKey(User, related_name='activities', null=True)
     published = models.BooleanField(default=True)
@@ -149,7 +149,7 @@ class ActivityDraft(models.Model):
     gender = models.CharField(max_length=50, choices=GENDER, default='F')
     cost = models.FloatField(blank=True, null=True)
     cost_choice = models.CharField(max_length=50, choices=COST_OPTIONS, default='N')
-    space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Limited')
+    space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Unlimited')
     space = models.PositiveSmallIntegerField(blank=True, null=True, default=0)
     listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
     created_by = models.ForeignKey(User, related_name='drafts', null=True)

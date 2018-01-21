@@ -68,8 +68,8 @@ class ActivityDraftDetailView(DetailView):
 @login_required
 def submit_activity(request, pk):
     draft = ActivityDraft.objects.get(pk=pk)
-    if draft.organiser == None:
-        messages.add_message(request, messages.ERROR, 'Please enter the organiser information.', extra_tags='danger')
+    if not draft.location:
+        messages.add_message(request, messages.ERROR, 'Please enter the location.', extra_tags='danger')
         form = ActivityDraftForm(initial=model_to_dict(draft))
         kwargs = {'pk': draft.pk}
         return redirect('edit_draft_activity', **kwargs)
@@ -142,6 +142,11 @@ class ActivityUpdateView(UpdateView):
         published = True
 #        return reverse('activity_detail',args=(self.object.id,))
         return reverse('activity_detail',kwargs={'pk': self.object.id,})
+
+    def form_invalid(self, form):
+        messages.add_message(self.request, messages.ERROR, 'Please correct the highlighted fields below.', extra_tags='danger')
+        response = super().form_invalid(form)
+        return response
 
 @method_decorator(login_required, name='dispatch')
 class ActivityDeleteView(DeleteView):

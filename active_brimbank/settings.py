@@ -19,7 +19,6 @@ ALLOWED_HOSTS = ['brimbank-test.ap-southeast-2.elasticbeanstalk.com',
                 'localhost',
                 ]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -176,14 +175,14 @@ DATE_INPUT_FORMATS = ('%d %b %Y',)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 # ----- Uncomment this for production -----------
-STATIC_ROOT = os.path.join(BASE_DIR, 'www','static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'www','static')
 
 STATIC_URL = '/static/'
 
 # ----- Comment this for production -----------
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'www', 'static'),
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'www', 'static'),
+]
 
 # For social login library
 LOGIN_URL = 'login'

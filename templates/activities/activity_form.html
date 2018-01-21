@@ -146,6 +146,11 @@ btnClass: "btn-dark", htmlIcon: '<span class="fas fa-camera fa-lg"></span>', pla
 
 $("#id_flyer").filestyle({buttonBefore: true, text: "&nbsp;Upload", 
 btnClass: "btn-dark", htmlIcon: '<span class="fas fa-file-pdf fa-lg"></span>', placeholder: "No file"});
+
+$( "#id_space" ).hide();
+$( "#id_cost" ).hide();
+
+// $(':radio').addClass('custom-control-input');
     
 var e = document.getElementById("id_term");
 var term = e.options[e.selectedIndex].value;
@@ -193,11 +198,11 @@ var term = e.options[e.selectedIndex].value;
 });
 
     
-$( "#id_space_choice_0" ).click(function() {
+$( "#id_space_choice_1" ).click(function() {
     $( "#id_space" ).show();
 })
 
-$( "#id_space_choice_1" ).click(function() {
+$( "#id_space_choice_0" ).click(function() {
     $( "#id_space" ).hide();
 })
     
