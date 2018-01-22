@@ -141,8 +141,18 @@ google.maps.event.addDomListener(window, 'load', initialize);
 //$( document ).ready(function() {
 $( function() {
 
-if ($('.set_error').text() == 'Please enter the location.') {
-    $('#id_location').addClass('is-invalid');
+var error_messages = document.getElementsByClassName("set_error");
+
+for (i = 0; i < error_messages.length; i++) {
+    if (error_messages[i].innerHTML == 'Please enter the location.') {
+        $('#id_location').addClass('is-invalid');
+    } else if (error_messages[i].innerHTML == 'Please enter the activity date.') {
+        $('#id_activity_date').addClass('is-invalid');
+    } else if (error_messages[i].innerHTML == 'Please enter the start date.') {
+        $('#id_start_date').addClass('is-invalid');
+    } else if (error_messages[i].innerHTML == 'Please enter the end date.') {
+        $('#id_end_date').addClass('is-invalid');
+    }
 }
 
 $( "#id_space" ).hide();

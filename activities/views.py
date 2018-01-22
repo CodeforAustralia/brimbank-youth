@@ -68,8 +68,17 @@ class ActivityDraftDetailView(DetailView):
 @login_required
 def submit_activity(request, pk):
     draft = ActivityDraft.objects.get(pk=pk)
-    if not draft.location:
-        messages.add_message(request, messages.ERROR, 'Please enter the location.', extra_tags='danger')
+    if (not draft.location) or (draft.term == 'Once' and not draft.activity_date) or (draft.term != 'Once' and not draft.start_date or not draft.end_date):
+        if not draft.location:
+            messages.add_message(request, messages.ERROR, 'Please enter the location.', extra_tags='danger')
+        if draft.term == 'Once':
+            if not draft.activity_date:
+                messages.add_message(request, messages.ERROR, 'Please enter the activity date.', extra_tags='danger')
+        if draft.term != 'Once':
+            if not draft.start_date:
+                messages.add_message(request, messages.ERROR, 'Please enter the start date.', extra_tags='danger')
+            if not draft.end_date:
+                messages.add_message(request, messages.ERROR, 'Please enter the end date.', extra_tags='danger')
         form = ActivityDraftForm(initial=model_to_dict(draft))
         kwargs = {'pk': draft.pk}
         return redirect('edit_draft_activity', **kwargs)
@@ -103,6 +112,7 @@ def submit_activity(request, pk):
                            )
         activity.save()
         draft.delete()
+        messages.add_message(request, messages.SUCCESS, 'The activity has been published.')
         return render(request, 'activities/activity_detail.html', {
             'pk': pk,
             'activity': activity,

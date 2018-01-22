@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="jumbotron mb-6">
     <div class="container text-center">
         <h1 class="display-4">Youth Poster</h1>
@@ -17,19 +19,50 @@
               <button type="submit" id="id_search" class="btn btn-success mr-sm-2 mb-2" name="search" value="search">Search</button>
           </div>
           </div>
-          
-          <div class="row">
-              <div class="lead col-sm-12">
-              <p class="lead">or search by category</p>
-              </div>
-          </div>
-  
-          <div class="justify-content-center">
-              <button type="submit" name="category" value="sport" class="btn mr-2 mb-2">Sport</button>
-              <button type="submit" name="category" value="fun" class="btn mr-2 mb-2">Fun</button>
-              <button type="submit" name="category" value="culture" class="btn mr-2 mb-2">Culture</button>
-              <button type="submit" name="category" value="career" class="btn mr-2 mb-2">Career</button>
-              <button type="submit" name="category" value="learn" class="btn mb-2">Learn</button>
-          </div>
     </div>
   </div>
+<div class="container-fluid">
+    <div class="row justify-content-center mb-2">
+        <p class="lead">or search by category</p>
+    </div>
+    <div class="row justify-content-center mb-2">
+    <!-- <div class="btn-group" role="group" aria-label="Categories"> -->
+        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
+        <button type="submit" name="category" value="sport" class="btn mr-4 mb-2 transparent-background" style="text-align:center;">
+            <span><img src="{% static 'img/activities/sports.png' %}" class="mt-2"></span>
+            <p class="lead mt-3">SPORT</p>
+        </button>
+        </div>
+        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
+        <button type="submit" name="category" value="fun" class="btn mr-4 mb-2 transparent-background">
+            <span><img src="{% static 'img/activities/pan.png' %}" class="mt-2"></span>
+            <p class="lead mt-3">FUN</p>
+        </button>
+        </div>
+        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
+        <button type="submit" name="category" value="culture" class="btn mr-4 mb-2 transparent-background">
+            <img src="{% static 'img/activities/drum.png' %}" class="mt-2"><br />
+            <p class="lead mt-3">CULTURE</p>
+        </button>
+        </div>
+        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
+        <button type="submit" name="category" value="career" class="btn mr-4 mb-2 transparent-background">
+            <img src="{% static 'img/activities/engineer.png' %}" class="mt-2"><br />
+            <p class="lead mt-3">CAREER</p>
+        </button>
+        </div>
+        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
+        <button type="submit" name="category" value="learn" class="btn mr-4 mb-2 transparent-background">
+            <img src="{% static 'img/activities/tent.png' %}" class="mt-2"><br />
+            <p class="lead mt-3">LEARN</p>
+        </button>
+        </div>
+        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
+        <button type="submit" name="category" value="" class="btn mr-4 mb-2 transparent-background">
+            <img src="{% static 'img/activities/note.png' %}" class="mt-2"><br />
+            <p class="lead mt-3">ALL</p>
+        </button>
+        </div>
+    <!-- </div> -->
+    </div>
+</div>

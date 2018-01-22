@@ -163,13 +163,14 @@ class ActivityDraftForm(forms.ModelForm):
         end_date = cleaned_data.get("end_date")
         term = cleaned_data.get("term")
         if term != 'Once':
-            begin_date = arrow.get(start_date, 'Australia/Melbourne')
-            finish_date = arrow.get(end_date, 'Australia/Melbourne')
-            if begin_date > finish_date:
-                msg = "Start date must be before end date."
-                self.add_error('start_date', msg)
-                self.add_error('end_date', msg)
-                raise ValidationError()
+            if start_date and end_date:
+                begin_date = arrow.get(start_date, 'Australia/Melbourne')
+                finish_date = arrow.get(end_date, 'Australia/Melbourne')
+                if begin_date > finish_date:
+                    msg = "Start date must be before end date."
+                    self.add_error('start_date', msg)
+                    self.add_error('end_date', msg)
+                    raise ValidationError()
             
 #    def clean(self):
 #        cleaned_data = super().clean()
