@@ -112,7 +112,7 @@
             <button type="submit" class="btn btn-success btn-lg float-right ml-2" id="id_publish"> Preview </button>
             <button type="submit" class="btn btn-secondary btn-lg float-right" id="id_publish"> &nbsp;&nbsp;Save&nbsp;&nbsp;</button>
             {% else %}
-            <button type="submit" class="btn btn-success btn-lg" id="id_publish" href="general_info"> Save </button>
+            <button type="submit" class="btn btn-success btn-lg float-right" id="id_publish" href="general_info"> Save </button>
             {% endif %}
           </div>
         </div>
@@ -147,8 +147,8 @@ btnClass: "btn-dark", htmlIcon: '<span class="fas fa-camera fa-lg"></span>', pla
 $("#id_flyer").filestyle({buttonBefore: true, text: "&nbsp;Upload", 
 btnClass: "btn-dark", htmlIcon: '<span class="fas fa-file-pdf fa-lg"></span>', placeholder: "No file"});
 
-$( "#id_space" ).hide();
-$( "#id_cost" ).hide();
+// $( "#id_space" ).hide();
+// $( "#id_cost" ).hide();
 
 // $(':radio').addClass('custom-control-input');
     
@@ -163,7 +163,7 @@ var term = e.options[e.selectedIndex].value;
         $( "#label_activity_date" ).hide();
         $( "#id_activity_day" ).hide();
         $( "#label_activity_day" ).hide();
-    }   
+    }
     
     if (term == "Once"){
         $( "#id_start_date" ).hide();
@@ -190,9 +190,14 @@ var term = e.options[e.selectedIndex].value;
 
     if ($( "#id_cost_choice_1" ).checked) {
         $( "#id_cost" ).show();
-    }
-    if (!$( "#id_cost_choice_1" ).checked) {
+    } else {
         $( "#id_cost" ).hide();
+    }
+
+    if ($( "#id_space_choice_1" ).checked) {
+        $( "#id_space" ).show();
+    } else {
+        $( "#id_space" ).hide();
     }
 
 });

@@ -38,6 +38,15 @@
   .btn.active {
     background-color:rgb(92,184,92);
   }
+  .js-bookmark-article {
+    background: transparent;
+    border-color: grey;
+  }
+  #edit_btn {
+    background: lightgrey;
+    color: grey;
+    border-color: transparent;
+  }
 </style>
 {% endblock %}
 
@@ -66,19 +75,20 @@
       {% if activity.term == 'Daily' %}
       <!-- <h4 class="strong"><b> -->
         <!-- {{ activity.start_date|date:'M'|upper }} {{ activity.start_date|date:'d, Y' }} to {{ activity.start_date|date:'M'|upper }}  {{ activity.start_date|date:'d, Y' }}</b></h4> -->
-      <h4 class="strong"><b>EVERY DAY</b></h4>
+      
+      <h4 class="strong ml-2"><b>EVERY DAY</b></h4>
       {% else %}
-      <h4 class="strong"><b>EVERY {{ activity.activity_day|upper }}</b></h4>
+      <h4 class="strong ml-2"><b>EVERY {{ activity.activity_day|upper }}</b></h4>
       {% endif %}
       {% endif %}
 
-      <h4 class="mt-5"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name|upper }}</a></h4>
-      <p>By: {{ activity.created_by.profile.organisation_name }}</p>
+      <h4 class="mt-5 ml-2"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name|upper }}</a></h4>
+      <p class="ml-2">By: {{ activity.created_by.profile.organisation_name }}</p>
       {% if activity.cost_choice == 'N' %}
-        <h6 class="strong mt-5">FREE!</h6>
+        <h6 class="strong mt-5 ml-2">FREE!</h6>
       {% endif %}
       {% if activity.cost_choice == 'Y' %}
-        <h6 class="strong mt-5">Cost: AUD {{ activity.cost }}</h6>
+        <h6 class="strong mt-5 ml-2">Cost: AUD {{ activity.cost }}</h6>
       {% endif %}
     </div>
     </div>
@@ -88,15 +98,20 @@
     <div class="row" >
       <div class="col-md-7 mt-4 mb-4">
         <a href="#" class="btn btn-outline-primary ml-4 mr-2 js-share-url"><i class="fas fa-share"></i> Share</a>
+        <!-- Bookmark button -->
         {% if activity.bookmarked %}
-        <button onclick="markActivity(this.id)" id="{{ activity.pk }}" type="button" class="btn js-bookmark-article mr-2 active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-          <i class="far fa-bookmark"></i>
-        </button>
-        {% else %}
-        <button onclick="markActivity(this.id)" id={{ activity.pk }} type="button" class="btn js-bookmark-article mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-          <i class="far fa-bookmark"></i>
+        {% for bookmark_user in activity.bookmarked_users.all %}
+        {% if bookmark_user.username == user.username %}
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article active mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="far fa-bookmark"></i>
         </button>
         {% endif %}
+        {% endfor %}
+        {% endif %}
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article remove mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="far fa-bookmark"></i>
+        </button>
+        <!-- End of bookmark button -->
         <!-- <a href="#" id="id_bookmark" class="btn btn-outline-primary mr-2"><i class="far fa-bookmark"></i> Save</a> -->
         {% if activity.flyer  %}
         <a href="{{ activity.flyer.url }}" class="btn btn-outline-primary"><i class="fas fa-print"></i> Print flyer</a>
@@ -148,7 +163,7 @@
         <p class="card-text" style="margin-bottom:5%;">Living in Australia for {{ activity.living_duration|lower }} than 5 years </p>      
         {% endif %}
 
-        <h6 class="card-title">OTHER INFO</h6>
+        <h6 class="card-title mt-4">OTHER INFO</h6>
         <!--      Number of available spaces-->
         {% if activity.space_choice == 'Limited' %}
         <p class="card-text">Maximum space: {{ activity.space }} people</p>
@@ -195,8 +210,10 @@
         <p class="card-text small"><i>Organiser contact hasn't been specified</i></p>
         {% endif %}
 
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and activity.created_by == user %}
         <a href="{% url 'edit_activity' activity.pk %}" class="btn btn-block btn-success btn-lg mt-4">EDIT</a>
+        {% else %}
+        <a id="edit_btn" href="#" class="btn btn-block btn-success btn-lg mt-4" data-toggle="tooltip" data-placement="left" title="Only modifiable by activity organiser">EDIT</a>
         {% endif %}
 
       </div>
@@ -486,7 +503,7 @@ function markActivity(clicked_id) {
             // alert(url_dest);
         },
         success: function(){
-            // alert(url_dest);
+          $(this).toggleClass('active');
         }
     });
 };
@@ -495,8 +512,46 @@ $(function() {
   $('.multiple-items').slick({
     infinite: true,
     slidesToShow: 3,
-    slidesToScroll: 1
+    slidesToScroll: 1,
+    focusOnSelect: true,
+    mobileFirst: true,
+    responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        infinite: true
+        // dots: true
+      }
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1
+      }
+    },
+    {
+      breakpoint: 300,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }
+    // You can unslick at a given breakpoint now by adding:
+    // settings: "unslick"
+    // instead of a settings object
+    ],
+    prevArrow: "<button type=\"button\" class=\"slick-prev\"><i class=\"fas fa-arrow-left\"></i></button>"
   });
+
+  // Change apperance of bookmark button when clicked
+  $( ".active" ).each(function() {
+    $( this ).siblings('.remove').css( "display", "none" );
+  });
+
+  $('#edit_btn').tooltip();
 
   var isMobile = window.matchMedia("only screen and (max-width: 760px)");
 

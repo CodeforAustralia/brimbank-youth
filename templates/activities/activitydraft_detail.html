@@ -167,14 +167,16 @@
 </div>
 {% endif %}
 
+{% if user.is_authenticated and activitydraft.created_by == user %}
 <div class="container-fluid mt-2">
 <div class="row mt-4">
-  <div class="col-sm-3 offset-sm-9">
+<div class="col-sm-3 offset-sm-9">
   <a href="{% url 'submit_activity' activitydraft.pk %}" class="btn btn-success btn-lg float-right ml-2">PUBLISH</a>
   <a href="{% url 'edit_draft_activity' activitydraft.pk %}" class="btn btn-lg float-right">EDIT</a>
 </div>
 </div>
 </div>
+{% endif %}
 
 {% endblock %}
 

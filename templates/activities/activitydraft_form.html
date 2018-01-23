@@ -123,7 +123,7 @@
 <script src="http://www.datejs.com/build/date.js" type="text/javascript"></script>
 <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
 <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
-
+<script src="{% static 'js/bootstrap-filestyle.min.js' %}"></script>
 
 <!-- To provide autocomplete in fields (http://easyautocomplete.com/) -->
 <!--<script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>-->
@@ -141,6 +141,11 @@ google.maps.event.addDomListener(window, 'load', initialize);
 //$( document ).ready(function() {
 $( function() {
 
+$("#id_activity_img").filestyle({buttonBefore: true, text: " Upload", 
+btnClass: "btn-dark", htmlIcon: '<span class="fas fa-camera fa-lg"></span>', placeholder: "No file"});
+
+$("#id_flyer").filestyle({buttonBefore: true, text: "&nbsp;Upload", 
+btnClass: "btn-dark", htmlIcon: '<span class="fas fa-file-pdf fa-lg"></span>', placeholder: "No file"});
 var error_messages = document.getElementsByClassName("set_error");
 
 for (i = 0; i < error_messages.length; i++) {
@@ -155,8 +160,8 @@ for (i = 0; i < error_messages.length; i++) {
     }
 }
 
-$( "#id_space" ).hide();
-$( "#id_cost" ).hide();
+// $( "#id_space" ).hide();
+// $( "#id_cost" ).hide();
 
 // $(':radio').addClass('custom-control-input');
 
@@ -194,8 +199,21 @@ var term = e.options[e.selectedIndex].value;
         $( "#id_activity_date" ).hide();
         $( "#label_activity_date" ).hide();
     }
+
+    if ($( "#id_cost_choice_1" ).checked) {
+        $( "#id_cost" ).show();
+    } else {
+        $( "#id_cost" ).hide();
+    }
+
+    if ($( "#id_space_choice_1" ).checked) {
+        $( "#id_space" ).show();
+    } else {
+        $( "#id_space" ).hide();
+    }
 });
 
+$("#id_activity_img").filestyle({buttonBefore: true, text: " Upload", btnClass: "btn-dark", htmlIcon: '<span class="fas fa-camera fa-lg"></span>', placeholder: "No file"});
     
 $( "#id_space_choice_1" ).click(function() {
     $( "#id_space" ).show();

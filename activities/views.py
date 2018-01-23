@@ -68,17 +68,20 @@ class ActivityDraftDetailView(DetailView):
 @login_required
 def submit_activity(request, pk):
     draft = ActivityDraft.objects.get(pk=pk)
-    if (not draft.location) or (draft.term == 'Once' and not draft.activity_date) or (draft.term != 'Once' and not draft.start_date or not draft.end_date):
-        if not draft.location:
-            messages.add_message(request, messages.ERROR, 'Please enter the location.', extra_tags='danger')
-        if draft.term == 'Once':
-            if not draft.activity_date:
-                messages.add_message(request, messages.ERROR, 'Please enter the activity date.', extra_tags='danger')
-        if draft.term != 'Once':
-            if not draft.start_date:
-                messages.add_message(request, messages.ERROR, 'Please enter the start date.', extra_tags='danger')
-            if not draft.end_date:
-                messages.add_message(request, messages.ERROR, 'Please enter the end date.', extra_tags='danger')
+    error = False
+    if not draft.location:
+        messages.add_message(request, messages.ERROR, 'Please enter the location.', extra_tags='danger')
+        error = True
+    if draft.term == 'Once' and not draft.activity_date:
+        messages.add_message(request, messages.ERROR, 'Please enter the activity date.', extra_tags='danger')
+        error = True
+    if draft.term != 'Once' and not draft.start_date:
+        messages.add_message(request, messages.ERROR, 'Please enter the start date.', extra_tags='danger')
+        error = True
+    if draft.term != 'Once' and not draft.end_date:
+        messages.add_message(request, messages.ERROR, 'Please enter the end date.', extra_tags='danger')
+        error = True
+    if error:
         form = ActivityDraftForm(initial=model_to_dict(draft))
         kwargs = {'pk': draft.pk}
         return redirect('edit_draft_activity', **kwargs)
@@ -109,7 +112,7 @@ def submit_activity(request, pk):
                             listing_privacy = draft.listing_privacy,
                             created_by = draft.created_by,
                             published = True,
-                           )
+                            )
         activity.save()
         draft.delete()
         messages.add_message(request, messages.SUCCESS, 'The activity has been published.')
@@ -164,38 +167,6 @@ class ActivityDeleteView(DeleteView):
     success_url = reverse_lazy('home')
 
 def search_logic(request, location_key, name_key, category):
-    # i = 0
-    # if search_names:
-    #     name_checkboxes = Q()
-    #     for i in range(0,len(search_names)):
-    #         name_checkboxes.add(
-    #         Q(name__istartswith=search_names[i]) | Q(name__iendswith=search_names[i]) | Q(name__icontains=search_names[i]), 
-    #         Q.OR)
-        
-    #     if name_key:
-    #         name_checkboxes.add(
-    #         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key), 
-    #         Q.OR)
-        
-    #     activities = Activity.objects.filter(
-    #     Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key),
-    #     name_checkboxes)
-
-    # if category:
-    #     name_query = Q()
-    #     name_query.add(
-    #         Q(name__istartswith=category) | Q(name__iendswith=category) | Q(name__icontains=category), 
-    #         Q.OR)
-    #     activities = Activity.objects.filter(
-    #     Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key),
-    #     name_query)
-
-    # else:
-    #     activities = Activity.objects.filter(
-    #     Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
-    #     Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
-    #     )
-
     if category is None:
         category = ''
 
@@ -207,6 +178,9 @@ def search_logic(request, location_key, name_key, category):
     return activities
 
 def search_others(request, location_key, name_key, category):
+    if category is None:
+        category = ''
+        
     other_activities = Activity.objects.filter(
         Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)).exclude(
@@ -266,10 +240,10 @@ def search_events(request):
         #     if location_key or name_key or search_names or category:
         #         activities = search_logic(request, location_key, name_key, search_names, category)
 
-        if location_key or name_key or category:
-            other_activities = search_others(request, location_key, name_key, category)
-            if request.user.is_anonymous():
-                activities = search_logic(request, location_key, name_key, category)
+        # if location_key or name_key or category:
+        #     other_activities = search_others(request, location_key, name_key, category)
+        #     if request.user.is_anonymous():
+        #         activities = search_logic(request, location_key, name_key, category)
 
         if name_key is None:
             name_key = ''
@@ -278,7 +252,12 @@ def search_events(request):
         if category is None:
             category =''
 
-        if request.user.is_anonymous() == False:
+        if request.user.is_anonymous():
+            activities = search_logic(request, location_key, name_key, category)
+            other_activities = search_others(request, location_key, name_key, category)
+
+        # if request.user.is_anonymous() == False:
+        else:
             activities = search_my_activities(request, location_key, name_key, category, True)
             not_my_activities = search_my_activities(request, location_key, name_key, category, False)
 
