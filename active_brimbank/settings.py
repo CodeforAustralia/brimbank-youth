@@ -170,7 +170,6 @@ DATE_FORMAT = ('%d %b %Y')
 
 DATE_INPUT_FORMATS = ('%d %b %Y',)
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 

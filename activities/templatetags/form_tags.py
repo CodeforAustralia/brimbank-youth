@@ -20,6 +20,6 @@ def input_class(bound_field):
 
         if bound_field.errors:
             css_class = 'is-invalid'
-        elif field_type(bound_field) != 'PasswordInput': #becayse password field data never be returned to client
+        elif field_type(bound_field) != 'PasswordInput': #because password field data never be returned to client
             css_class = 'is-valid'
     return 'form-control {}'.format(css_class)

@@ -12,66 +12,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials-theme-flat.css'%}" />
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
-    <style>
-        input:checked + span {
-            background-color:#911;
-            color:#fff;
-        }
-        .transparent-background {
-            background: transparent;
-        }
-        
-        /* Floating Social Media Bar Style Starts Here */
-        .fl-fl {
-        background: green;
-        /* text-transform: uppercase; */
-        letter-spacing: 3px;
-        /* padding: 4px; */
-        width: 160px;
-        position: fixed;
-        right: -140px;
-        z-index: 1000;
-        font: normal normal 10px Arial;
-        -webkit-transition: all .25s ease;
-        -moz-transition: all .25s ease;
-        -ms-transition: all .25s ease;
-        -o-transition: all .25s ease;
-        transition: all .25s ease;
-        border-radius: 20%;
-        }
-
-        /* .fa {
-        font-size: 20px;
-        color: #fff;
-        padding: 10px 0;
-        width: 40px;
-        margin-left: 8px;
-        } */
-
-        .fl-fl:hover {
-        right: 0;
-        background: transparent;
-        }
-
-        .fl-fl a {
-        /* color: #fff !important; */
-        text-decoration: none;
-        text-align: center;
-        line-height: 72px!important;
-        vertical-align: center!important;
-        }
-
-        .float-fb {
-        top: 200px;
-        }
-
-        .float-tw {
-        top: 300px;
-        }
-        /* Floating Social Media Bar Style Ends Here */
-
-    </style>
-
 {% endblock %}
 
 {% block content %}
@@ -81,18 +21,18 @@
 {% if activities %}
 {% if user.is_authenticated %}
 
-<!-- Floating Social Media bar Starts -->
+<!-- Floating sharing button starts -->
 <div class="float-sm">
-    <div class="fl-fl float-fb">
+    <div class="fl-fl float-sms">
         <!-- <button type="submit" id="id_share_text" class="btn btn-success btn-circle" name="search" value="share"><div style="font-size: 2em;"><i class="far fa-comment-alt"></i></div></button> -->
-        <a id="share-text" class="btn btn-success btn-circle" target="_blank" href="#"><i class="far fa-comment-alt fa-2x"></i></a>
+        <a id="share-text" class="btn btn-success btn-circle" target="_blank" href="#"><img src="{% static 'img/icons/sms.png' %}" style="width:55px;"></a>
     </div>
-    <div class="fl-fl float-tw">
+    <div class="fl-fl float-email">
         <!-- <button type="submit" id="id_share_mobile" class="btn btn-success btn-circle" name="search" value="email"><div style="font-size: 2em;"><i class="far fa-envelope"></i></div></button> -->
-        <a id="share-email" class="btn btn-success btn-circle" target="_blank" href="#"><i class="far fa-envelope fa-2x"></i></a>
+        <a id="share-email" class="btn btn-success btn-circle" target="_blank" href="#"><img src="{% static 'img/icons/envelope.png' %}" style="width:50px;"></a>
     </div>
 </div>
-<!-- Floating Social Media bar Ends -->
+<!-- Floating sharing button ends -->
 
 
 <div class="container-fluid">
@@ -118,13 +58,24 @@
         <p id="b" class="card-text small">{{ activity.activity_type|upper }}</p>
         <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
         <p class="card-text small"><a href=# name="address">{{ activity.location }}</a></p>
+
+
+        <!--    Activities that only occur once -->
         {% if activity.term == 'Once' %}
-        <p id="c" class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
-        {% else %}
-            {% if activity.start_date %}
-            <p id="c" class="card-text">{{ activity.start_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
-            {% endif %}
+        {% if activity.activity_date %}
+        <p class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'g:i A' }}</p>
         {% endif %}
+        {% endif %}
+
+        <!--      Daily, weekly, fortnightly, monthly activities-->
+        {% if activity.term != 'Once' %}
+        {% if activity.term != 'Daily' %}
+        <p class="card-text">Every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+        {% else %}
+        <p class="card-text">Every day from {{ activity.start_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+        {% endif %}
+        {% endif %}
+
         <input class="selected" style="display:none;" type="checkbox" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }}>
         <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span>
         <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span>
@@ -167,12 +118,20 @@
     <p id="b" class="card-text small">{{ activity.activity_type|upper }}</p>
     <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
     <p class="card-text small"><a href=# name="address">{{ activity.location }}</a></p>
+    <!--    Activities that only occur once -->
     {% if activity.term == 'Once' %}
-    <p id="c" class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
+    {% if activity.activity_date %}
+    <p class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'g:i A' }}</p>
+    {% endif %}
+    {% endif %}
+
+    <!--      Daily, weekly, fortnightly, monthly activities-->
+    {% if activity.term != 'Once' %}
+    {% if activity.term != 'Daily' %}
+    <p class="card-text">Every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
     {% else %}
-        {% if activity.start_date %}
-        <p id="c" class="card-text">{{ activity.start_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'H:i' }}</p>
-        {% endif %}
+    <p class="card-text">Every day from {{ activity.start_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+    {% endif %}
     {% endif %}
     <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
     </div>
@@ -282,7 +241,7 @@
 <div class="col-sm-4">
 <div class="card mb-4">
     {% if other_activity.activity_img %}
-        <a href="{% url 'activity_detail' other_activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' other_activity.pk %}"><img class="card-img-top" src="{{ other_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
         <a href="{% url 'activity_detail' other_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% else %}
         <a href="{% url 'activity_detail' other_activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
@@ -292,13 +251,23 @@
         <p id="b" class="card-text small">{{ other_activity.activity_type|upper }}</p>
         <h3 id="a" class="card-title"><a href="{% url 'activity_detail' other_activity.pk %}">{{ other_activity.name }}</a></h3>
         <p class="card-text small"><a href=# name="address">{{ other_activity.location }}</a></p>
+
+        <!--    Activities that only occur once -->
         {% if other_activity.term == 'Once' %}
-        <p id="c" class="card-text">{{ other_activity.activity_date|date:'D, d M Y'|upper }} - {{ other_activity.start_time|time:'H:i' }}</p>
-        {% else %}
-            {% if other_activity.start_date %}
-            <p id="c" class="card-text">{{ other_activity.start_date|date:'D, d M Y'|upper }} - {{ other_activity.start_time|time:'H:i' }}</p>
-            {% endif %}
+        {% if other_activity.activity_date %}
+        <p class="card-text">{{ other_activity.activity_date|date:'D, d M Y'|upper }} - {{ other_activity.start_time|time:'g:i A' }}</p>
         {% endif %}
+        {% endif %}
+
+        <!--      Daily, weekly, fortnightly, monthly activities-->
+        {% if other_activity.term != 'Once' %}
+        {% if other_activity.term != 'Daily' %}
+        <p class="card-text">Every {{ other_activity.activity_day }} from {{ other_activity.start_date|date:'D, d M Y' }} - {{ other_activity.start_time|time:'g:i A' }}</p>
+        {% else %}
+        <p class="card-text">Every day from {{ other_activity.start_date|date:'D, d M Y' }} - {{ other_activity.start_time|time:'g:i A' }}</p>
+        {% endif %}
+        {% endif %}
+
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ other_activity.pk }} name ="checkboxes" value={{ other_activity.pk }} />
     </div>
     <div class="card-footer">
@@ -382,7 +351,7 @@
 <div class="col-sm-4">
 <div class="card select mb-4">
     {% if not_my_activity.activity_img %}
-        <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="card-img-top" src="{{ not_my_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
         <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% else %}
         <a href="{% url 'activity_detail' not_my_activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
@@ -392,12 +361,20 @@
         <p id="b" class="card-text small">{{ not_my_activity.activity_type|upper }}</p>
         <h3 id="a" class="card-title"><a href="{% url 'activity_detail' not_my_activity.pk %}">{{ not_my_activity.name }}</a></h3>
         <p class="card-text small"><a href=# name="address">{{ not_my_activity.location }}</a></p>
+        <!--    Activities that only occur once -->
         {% if not_my_activity.term == 'Once' %}
-        <p id="c" class="card-text">{{ not_my_activity.activity_date|date:'D, d M Y'|upper }} - {{ not_my_activity.start_time|time:'H:i' }}</p>
+        {% if not_my_activity.activity_date %}
+        <p class="card-text">{{ not_my_activity.activity_date|date:'D, d M Y'|upper }} - {{ not_my_activity.start_time|time:'g:i A' }}</p>
+        {% endif %}
+        {% endif %}
+
+        <!--      Daily, weekly, fortnightly, monthly activities-->
+        {% if not_my_activity.term != 'Once' %}
+        {% if not_my_activity.term != 'Daily' %}
+        <p class="card-text">Every {{ not_my_activity.activity_day }} from {{ not_my_activity.start_date|date:'D, d M Y' }} - {{ not_my_activity.start_time|time:'g:i A' }}</p>
         {% else %}
-            {% if not_my_activity.start_date %}
-            <p id="c" class="card-text">{{ not_my_activity.start_date|date:'D, d M Y'|upper }} - {{ not_my_activity.start_time|time:'H:i' }}</p>
-            {% endif %}
+        <p class="card-text">Every day from {{ not_my_activity.start_date|date:'D, d M Y' }} - {{ not_my_activity.start_time|time:'g:i A' }}</p>
+        {% endif %}
         {% endif %}
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ not_my_activity.pk }} name ="checkboxes" value={{ not_my_activity.pk }} />
         <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span>

@@ -203,7 +203,7 @@ def search_my_activities(request, location_key, name_key, category, mine):
             Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
             Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
         )
-        activities = activities.order_by('-start_date', '-activity_date')[0:3]
+        activities = activities.order_by('-start_date', '-activity_date')[0:6]
     return activities
 
 def search_logic_bookmarks(request, location_key, name_key):

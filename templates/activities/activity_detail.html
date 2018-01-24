@@ -99,6 +99,7 @@
       <div class="col-md-7 mt-4 mb-4">
         <a href="#" class="btn btn-outline-primary ml-4 mr-2 js-share-url"><i class="fas fa-share"></i> Share</a>
         <!-- Bookmark button -->
+        {% if user.is_authenticated %}
         {% if activity.bookmarked %}
         {% for bookmark_user in activity.bookmarked_users.all %}
         {% if bookmark_user.username == user.username %}
@@ -111,6 +112,7 @@
         <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article remove mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="far fa-bookmark"></i>
         </button>
+        {% endif %}
         <!-- End of bookmark button -->
         <!-- <a href="#" id="id_bookmark" class="btn btn-outline-primary mr-2"><i class="far fa-bookmark"></i> Save</a> -->
         {% if activity.flyer  %}
@@ -210,11 +212,14 @@
         <p class="card-text small"><i>Organiser contact hasn't been specified</i></p>
         {% endif %}
 
-        {% if user.is_authenticated and activity.created_by == user %}
+        {% if user.is_authenticated %}
+        {% if activity.created_by == user %}
         <a href="{% url 'edit_activity' activity.pk %}" class="btn btn-block btn-success btn-lg mt-4">EDIT</a>
         {% else %}
         <a id="edit_btn" href="#" class="btn btn-block btn-success btn-lg mt-4" data-toggle="tooltip" data-placement="left" title="Only modifiable by activity organiser">EDIT</a>
         {% endif %}
+        {% endif %}
+
 
       </div>
 
@@ -284,7 +289,7 @@
 {% if recommended_activities %}
 <!-- Other events and activities you may like -->
 <div id="id_others" class="container-fluid mt-4 mb-0">
-<h3 class="text-center" style="margin-top:10%;margin-bottom:2%;">Other events and activities you may like</h3>
+<h3 class="text-center" style="margin-top:2%;margin-bottom:2%;">Other events and activities you may like</h3>
 <div class="container-fluid mt-4">
 <div class="multiple-items">
   {% for recommended_activity in recommended_activities %}
@@ -331,52 +336,26 @@
         <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-        <div class="container-fluid">
-        <div class="row justify-content-center">
-          <div class="col-md-1 offset-md-3 mr-2">
-            <div id="share2" class="mr-2"></div>
-          </div>
-          <div class="col-md-1 mr-2">
-            <div id="share3"></div>
-          </div>
-          <div class="col-md-1 ml-2 mr-2">
-            <div id="id_send_dialog" class="jssocials">
-              <div class="jssocials-shares">
-                <div class="jssocials-share jssocials-share-messenger2">
-                  <a href="#" target="_self" id="fb_desktop" class="btn btn-primary" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></a>
-                </div>
-              </div>
+      <div id="div_desktop" class="row mt-2" style="align-content:center;">
+        <div id="share2" class="offset-md-3 mr-2"></div>
+        <div id="share3" class="float-left mr-2"></div>
+        <div class="jssocials send_dialog float-left mr-2">
+            <div class="jssocials-shares">
+            <div class="jssocials-share jssocials-share-messenger2">
+                <button type="button" onclick="sendDialog(this.id)" target="_self" id="id_send_dialog" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
             </div>
-          </div>
-          <div class="col-md-1 offset-md-3 mr-2">
-            <div id="share4" class="mr-2"></div>
-          </div>
-          <div class="col-md-1 mr-2">
-            <div id="share5" class="mr-2"></div>
-          </div>
-          <div class="col-md-1">
-            <div id="share"></div>
-          </div>
-      </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <div class="container-fluid">
-      <div class="row">
-      <div class="col-sm-10">
-      <input class="form-control" style="width:100%;" readonly id="id_share_url" type="text" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
-      </div>
-      <div class="col-sm-1">
-      <button class="btn btn-outline-success float-left" onclick="copyURL()"><i class="far fa-copy"></i></button>
-      </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12 mt-1">
-        <p class="small" id="id_url_text"></p>
+            </div>
         </div>
+        <div id="share4" class="mr-2 share4 float-left"></div>
+        <div id="share5" class="mr-2 share5 float-left"></div>
+        <div id="share" class="mr-2 share float-left"></div>
       </div>
-      </div>
+    <div class="row mt-2 ml-3 mr-1">
+    <input style="width:85%;" class="form-control mr-2" readonly type="text" id="id_share_url" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
+    <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn"><i class="far fa-copy"></i></button>
+    </div>
+    <div class="row ml-3 mt-1">
+    <p class="small" id="id_url_text"></p>
     </div>
     </div>
   </div>
@@ -476,7 +455,7 @@
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 
-   $("#id_send_dialog").click(sendDialog);
+  //  $("#id_send_dialog").click(sendDialog);
 
   function sendDialog() {
     FB.ui({
@@ -489,7 +468,6 @@ function copyURL() {
   var copyText = document.getElementById("id_share_url");
   copyText.select();
   document.execCommand("Copy");
-  // $("#id_url_text").show();
   $("#id_url_text").html("Link has been copied!");
 }
 
@@ -556,7 +534,7 @@ $(function() {
   var isMobile = window.matchMedia("only screen and (max-width: 760px)");
 
   if (isMobile.matches) {
-    $("#id_send_dialog").hide();
+    $(".send_dialog").hide();
   }
   else{
     $("#share").hide();
