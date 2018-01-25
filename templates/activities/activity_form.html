@@ -151,6 +151,18 @@ btnClass: "btn-dark", htmlIcon: '<span class="fas fa-file-pdf fa-lg"></span>', p
 // $( "#id_cost" ).hide();
 
 // $(':radio').addClass('custom-control-input');
+
+if (document.getElementById('id_space_choice_1').checked) {
+    $( "#id_space" ).show();
+} else {
+    $( "#id_space" ).hide();
+}
+
+if (document.getElementById('id_cost_choice_1').checked) {
+        $( "#id_cost" ).show();
+} else {
+    $( "#id_cost" ).hide();
+}
     
 var e = document.getElementById("id_term");
 var term = e.options[e.selectedIndex].value;
@@ -186,18 +198,6 @@ var term = e.options[e.selectedIndex].value;
         $( "#label_activity_day" ).show();
         $( "#id_activity_date" ).hide();
         $( "#label_activity_date" ).hide();
-    }
-
-    if ($( "#id_cost_choice_1" ).checked) {
-        $( "#id_cost" ).show();
-    } else {
-        $( "#id_cost" ).hide();
-    }
-
-    if ($( "#id_space_choice_1" ).checked) {
-        $( "#id_space" ).show();
-    } else {
-        $( "#id_space" ).hide();
     }
 
 });

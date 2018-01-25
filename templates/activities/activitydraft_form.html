@@ -148,6 +148,18 @@ $("#id_flyer").filestyle({buttonBefore: true, text: "&nbsp;Upload",
 btnClass: "btn-dark", htmlIcon: '<span class="fas fa-file-pdf fa-lg"></span>', placeholder: "No file"});
 var error_messages = document.getElementsByClassName("set_error");
 
+if (document.getElementById('id_space_choice_1').checked) {
+    $( "#id_space" ).show();
+} else {
+    $( "#id_space" ).hide();
+}
+
+if (document.getElementById('id_cost_choice_1').checked) {
+        $( "#id_cost" ).show();
+} else {
+    $( "#id_cost" ).hide();
+}
+
 for (i = 0; i < error_messages.length; i++) {
     if (error_messages[i].innerHTML == 'Please enter the location.') {
         $('#id_location').addClass('is-invalid');
@@ -199,21 +211,7 @@ var term = e.options[e.selectedIndex].value;
         $( "#id_activity_date" ).hide();
         $( "#label_activity_date" ).hide();
     }
-
-    if ($( "#id_cost_choice_1" ).checked) {
-        $( "#id_cost" ).show();
-    } else {
-        $( "#id_cost" ).hide();
-    }
-
-    if ($( "#id_space_choice_1" ).checked) {
-        $( "#id_space" ).show();
-    } else {
-        $( "#id_space" ).hide();
-    }
 });
-
-$("#id_activity_img").filestyle({buttonBefore: true, text: " Upload", btnClass: "btn-dark", htmlIcon: '<span class="fas fa-camera fa-lg"></span>', placeholder: "No file"});
     
 $( "#id_space_choice_1" ).click(function() {
     $( "#id_space" ).show();

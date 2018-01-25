@@ -158,6 +158,8 @@
 
 <br/>
 
+<div id="create_activity_URL" style="display:none;" href="{% url 'create_activity' %}"></div>
+
 <!-- Google Maps -->
 {% if activitydraft.location %}
 <div class="container">
@@ -172,7 +174,7 @@
 <div class="row mt-4">
 <div class="col-sm-3 offset-sm-9">
   <a href="{% url 'submit_activity' activitydraft.pk %}" class="btn btn-success btn-lg float-right ml-2">PUBLISH</a>
-  <a href="{% url 'edit_draft_activity' activitydraft.pk %}" class="btn btn-lg float-right">EDIT</a>
+  <a href="{% url 'edit_draft_activity' activitydraft.pk %}" id="edit_btn" class="btn btn-lg float-right">EDIT</a>
 </div>
 </div>
 </div>
@@ -210,8 +212,6 @@ setTimeout(function initMap() {
 
 function geocodeAddress(geocoder, resultsMap) {
   var address = $('#address').text();
-  // var address = 'Southern Cross Station';
-  // alert(address);
   geocoder.geocode({'address': address}, function(results, status) {
     if (status === 'OK') {
       resultsMap.setCenter(results[0].geometry.location);
@@ -220,12 +220,36 @@ function geocodeAddress(geocoder, resultsMap) {
         map: resultsMap,
         position: results[0].geometry.location
       });
-    } 
-    // else {
-    //   alert('Geocode was not successful for the following reason: ' + status);
-    // }
+    }
   });
 }
+
+// When user clicks the Back button, it will open the link to Update activity draft page
+history.pushState(null, document.title, location.href);
+window.addEventListener('popstate', function (event)
+{
+  // history.pushState(null, document.title, location.href); // preventing from pressing the back button
+  var old_URL = document.referrer; // document.referrer = previous URL
+  var edit_draft_URL = document.getElementById("edit_btn").getAttribute("href");
+  var create_draft_URL = document.getElementById("create_activity_URL").getAttribute("href");
+  var hostname = window.location.hostname;
+  var dest_create_url;
+  var dest_edit_url;
+
+  if (hostname == 'localhost') {
+    dest_create_url = "http://" + hostname + ":8000" + create_draft_URL;
+    dest_edit_url = "http://" + hostname + ":8000" + edit_draft_URL;
+  } else {
+    dest_create_url = "http://" + hostname + create_draft_URL;
+    dest_edit_url = "http://" + hostname + edit_draft_URL;
+  }
+
+  console.log(window.location.hostname);
+  if ( old_URL == dest_create_url || old_URL == dest_edit_url) { // Check if previous URL is editing the activity draft
+    window.location.href = dest_edit_url;
+  }
+});
+
 </script>
 
 {% endblock %}

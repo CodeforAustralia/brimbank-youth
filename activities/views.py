@@ -116,10 +116,11 @@ def submit_activity(request, pk):
         activity.save()
         draft.delete()
         messages.add_message(request, messages.SUCCESS, 'The activity has been published.')
-        return render(request, 'activities/activity_detail.html', {
-            'pk': pk,
-            'activity': activity,
-        })
+        # return render(request, 'activities/activity_detail.html', {
+        #     'pk': pk,
+        #     'activity': activity,
+        # })
+        return redirect('home')
 
 class ActivityDetailView(DetailView):
     model = Activity

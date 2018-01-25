@@ -214,7 +214,7 @@
 
         {% if user.is_authenticated %}
         {% if activity.created_by == user %}
-        <a href="{% url 'edit_activity' activity.pk %}" class="btn btn-block btn-success btn-lg mt-4">EDIT</a>
+        <a id="edit_btn_url" href="{% url 'edit_activity' activity.pk %}" class="btn btn-block btn-success btn-lg mt-4">EDIT</a>
         {% else %}
         <a id="edit_btn" href="#" class="btn btn-block btn-success btn-lg mt-4" data-toggle="tooltip" data-placement="left" title="Only modifiable by activity organiser">EDIT</a>
         {% endif %}
@@ -485,6 +485,28 @@ function markActivity(clicked_id) {
         }
     });
 };
+
+// When user clicks the Back button, it will open the link to Update activity draft page
+history.pushState(null, document.title, location.href);
+window.addEventListener('popstate', function (event)
+{
+  // history.pushState(null, document.title, location.href); // preventing from pressing the back button
+  var old_URL = document.referrer; // document.referrer = previous URL
+  var edit_activity_URL = document.getElementById("edit_btn_url").getAttribute("href");
+  var hostname = window.location.hostname;
+  var dest_edit_url;
+
+  if (hostname == 'localhost') {
+    dest_edit_url = "http://" + hostname + ":8000" + edit_activity_URL;
+  } else {
+    dest_edit_url = "http://" + hostname + edit_activity_URL;
+  }
+
+  if ( old_URL == dest_edit_url ) { // Check if previous URL is editing the activity draft
+    window.location.href = dest_edit_url;
+    console.log("test");
+  }
+});
 
 $(function() {
   $('.multiple-items').slick({
