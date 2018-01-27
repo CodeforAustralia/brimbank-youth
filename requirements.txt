@@ -2,6 +2,7 @@ arrow==0.12.0
 boto3==1.4.8
 botocore==1.8.1
 Django==1.11.7
+django-background-tasks==1.1.13
 django-filter==1.1.0
 django-mathfilters==0.4.0
 django-social-share==1.1.2

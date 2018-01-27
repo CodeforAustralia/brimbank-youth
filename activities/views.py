@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
 from django.contrib.sites.shortcuts import get_current_site
 
+import datetime
+
 from .models import Activity, ActivityDraft
 from .forms import ActivityForm, ActivitySearchForm, ActivityDraftForm, ShareURLForm
 from sendsms.forms import SendSMSForm, SendEmailForm
@@ -38,6 +40,8 @@ class ActivityCreateView(CreateView):
         object = form.save(commit=False)
         object.created_by = self.request.user
         object.published = False
+        if (object.term == 'Once' and object.activity_date): # set start_date the same as activity_date (for sorting purpose)
+            object.start_date = object.activity_date
         object.save()
         return super(ActivityCreateView, self).form_valid(form)
     
@@ -50,6 +54,13 @@ class ActivityCreateView(CreateView):
 class ActivityDraftUpdateView(UpdateView):
     model = ActivityDraft
     form_class = ActivityDraftForm
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if (self.object.created_by != self.request.user):
+            messages.add_message(self.request, messages.ERROR, 'Activity can only be modified by the organiser', extra_tags='danger')
+            return redirect('activity_publish', self.object.id )
+        return super(ActivityDraftUpdateView, self).get(request, *args, **kwargs)
     
     def get_success_url(self):
         messages.info(self.request, 'The activity has been updated. You can review the activity before it is published.')
@@ -58,6 +69,8 @@ class ActivityDraftUpdateView(UpdateView):
     def form_valid(self, form):
         object = form.save(commit=False)
         object.published = False
+        if (object.term == 'Once' and object.activity_date): # set start_date the same as activity_date (for sorting purpose)
+            object.start_date = object.activity_date
         object.save()
         return super(ActivityDraftUpdateView, self).form_valid(form)
 
@@ -114,6 +127,9 @@ def submit_activity(request, pk):
                             published = True,
                             )
         activity.save()
+        if (activity.term == 'Once' and activity.activity_date): # set start_date the same as activity_date (for sorting purpose)
+            activity.start_date = draft.activity_date
+            activity.save()
         draft.delete()
         messages.add_message(request, messages.SUCCESS, 'The activity has been published.')
         # return render(request, 'activities/activity_detail.html', {
@@ -151,6 +167,13 @@ class ActivityUpdateView(UpdateView):
     model = Activity
     form_class = ActivityForm
     template_name = 'activities/activity_form.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if (self.object.created_by != self.request.user):
+            messages.add_message(self.request, messages.ERROR, 'Activity can only be modified by the organiser', extra_tags='danger')
+            return redirect('activity_detail', self.object.id )
+        return super(ActivityUpdateView, self).get(request, *args, **kwargs)
     
     def get_success_url(self):
         published = True
@@ -162,10 +185,24 @@ class ActivityUpdateView(UpdateView):
         response = super().form_invalid(form)
         return response
 
+    def form_valid(self, form):
+        object = form.save(commit=False)
+        if (object.term == 'Once' and object.activity_date): # set start_date the same as activity_date (for sorting purpose)
+            object.start_date = object.activity_date
+        object.save()
+        return super(ActivityUpdateView, self).form_valid(form)
+
 @method_decorator(login_required, name='dispatch')
 class ActivityDeleteView(DeleteView):
     model = Activity
     success_url = reverse_lazy('home')
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if (self.object.created_by != self.request.user):
+            messages.add_message(self.request, messages.ERROR, 'Activity can only be deleted by the organiser', extra_tags='danger')
+            return redirect('activity_detail', self.object.id )
+        return super(ActivityDeleteView, self).get(request, *args, **kwargs)
 
 def search_logic(request, location_key, name_key, category):
     if category is None:
@@ -176,6 +213,8 @@ def search_logic(request, location_key, name_key, category):
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
     )
+    activities = activities.filter(start_date__gte=datetime.date.today())
+    activities = activities.order_by('start_date')
     return activities
 
 def search_others(request, location_key, name_key, category):
@@ -186,6 +225,8 @@ def search_others(request, location_key, name_key, category):
         Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)).exclude(
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
+    other_activities = other_activities.filter(start_date__gte=datetime.date.today())
+    other_activities = other_activities.order_by('start_date')
     return other_activities
 
 def search_my_activities(request, location_key, name_key, category, mine):
@@ -196,7 +237,8 @@ def search_my_activities(request, location_key, name_key, category, mine):
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
         )
-        activities = activities.order_by('-start_date', '-activity_date')
+        activities = activities.filter(start_date__gte=datetime.date.today()) # filter activities that occur today or later than today
+        activities = activities.order_by('start_date')
     else:
         activities = Activity.objects.exclude(created_by=request.user)
         activities = activities.filter(
@@ -204,7 +246,8 @@ def search_my_activities(request, location_key, name_key, category, mine):
             Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
             Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
         )
-        activities = activities.order_by('-start_date', '-activity_date')[0:6]
+        activities = activities.filter(start_date__gte=datetime.date.today())
+        activities = activities.order_by('start_date')[0:6]
     return activities
 
 def search_logic_bookmarks(request, location_key, name_key):
@@ -275,15 +318,6 @@ def search_events(request):
             messages.add_message(request, messages.ERROR, 'Please select at least one activity.', extra_tags='danger')
         
         activities = show_page_numbers(request, activities)
-
-        # url = ''
-        # if search_names:
-        #     url = "&name=" + name_key + "&location=" + location_key
-        #     for i in range(0,len(search_names)):
-        #         url = url + "&search_name=" + search_names[i]
-        #     url = url + "&search=search"
-        # else:
-            # url = "&name=" + name_key + "&location=" + location_key + "&search=search"
 
         url = "&name=" + name_key + "&location=" + location_key + "&category=" + category + "&search=search"
 

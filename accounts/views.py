@@ -15,16 +15,22 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.http import urlsafe_base64_decode
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from .forms import SignUpForm, ProfileForm
 from .tokens import account_activation_token
 from .models import Profile
 
+from .tasks import print_something
+
 from activities.views import search_logic, show_page_numbers
 
 def test(request):
     return render(request, "accounts/account_activation_email.html")
+
+def testing(request):
+    print_something()
+    return HttpResponse("task will be executed in 5 seconds")
 
 def signup(request):
     if request.method == 'POST':

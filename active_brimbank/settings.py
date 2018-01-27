@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'timezone_field',
     'tagging',
     'django_social_share',
+    'background_task', # For asynchronous tasks
 ]
 
 MIDDLEWARE = [

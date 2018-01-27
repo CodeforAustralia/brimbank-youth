@@ -111,6 +111,9 @@ urlpatterns = [
     url(r'^email_members/create/$', contacts_views.email_member_create, name='email_member_create'),
     url(r'^email_members/(?P<pk>\d+)/update/$', contacts_views.email_member_update, name='email_member_update'),
     url(r'^email_members/(?P<pk>\d+)/delete/$', contacts_views.email_member_delete, name='email_member_delete'),
+
+    # Background tasks
+    url(r'^testing/$', accounts_views.testing, name='background_test'),
 ]   
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
