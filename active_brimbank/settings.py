@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'activities',
     'accounts',
     'contacts',
+    'booking',
     
     'mathfilters',
     'social_django',

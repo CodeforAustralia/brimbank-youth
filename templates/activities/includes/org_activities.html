@@ -1,0 +1,36 @@
+<!-- More activities from the same organisation -->
+<div class="container-fluid mt-4">
+    <h3 class="text-center" style="margin-bottom:2%;">More activities and events from this organiser</h3>
+    <div class="container-fluid mt-4">
+        <div class="multiple-items">
+        {% for org_activity in org_activities %}
+        <div class="card mr-2">
+            {% if org_activity.activity_img %}
+            <img class="card-img-top" src="{{ org_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;height:200px;display:inline;">
+            {% else %}
+            <img class="card-img-top" src="http://via.placeholder.com/350x200?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:200px;">
+            {% endif %}
+            <div class="card-body">
+            <p class="lead"><a href="{% url 'activity_detail' org_activity.pk %}">{{ org_activity.name }}</a></p>
+            {% if org_activity.location %}<p class="card-text"> {{ org_activity.location }} </p>{% endif %}
+            <!--    Activities that only occur once -->
+            {% if org_activity.term == 'Once' %}
+            {% if org_activity.activity_date %}
+            <p class="card-text">{{ org_activity.activity_date|date:'D, d M Y'|upper }} - {{ org_activity.start_time|time:'g:i A' }}</p>
+            {% endif %}
+            {% endif %}
+    
+            <!--      Daily, weekly, fortnightly, monthly activities-->
+            {% if org_activity.term != 'Once' %}
+            {% if org_activity.term != 'Daily' %}
+            <p class="card-text">Every {{ org_activity.activity_day }} - {{ org_activity.start_time|time:'g:i A' }}</p>
+            {% else %}
+            <p class="card-text">Every day - {{ org_activity.start_time|time:'g:i A' }}</p>
+            {% endif %}
+            {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>

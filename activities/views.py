@@ -32,7 +32,7 @@ class ActivityCreateView(CreateView):
     template_name = 'activities/activity_form.html'
 
     def get_success_url(self):
-        messages.info(self.request, 'The activity has been saved. You can review the activity before it is published.')
+        messages.info(self.request, 'This is how your activity will appear on YouthPoster. Please check it all carefully before publishing it.')
         return reverse('activity_publish',args=(self.object.id,))
         # self.object.id = pk that is used in ActivityDetailView
         
@@ -270,6 +270,7 @@ def search_events(request):
     activities = search_logic(request, '', '', '')
     other_activities = None
     not_my_activities = None
+    latest_activity = None
     if request.method == 'GET':
         location_key = request.GET.get('location') # 'location' is the name of the input field
         name_key = request.GET.get('name')
@@ -279,15 +280,6 @@ def search_events(request):
         search_names=request.GET.getlist('search_name')
         category = request.GET.get('category')
         search = request.GET.get('search')
-
-        # if search == 'search':
-        #     if location_key or name_key or search_names or category:
-        #         activities = search_logic(request, location_key, name_key, search_names, category)
-
-        # if location_key or name_key or category:
-        #     other_activities = search_others(request, location_key, name_key, category)
-        #     if request.user.is_anonymous():
-        #         activities = search_logic(request, location_key, name_key, category)
 
         if name_key is None:
             name_key = ''
@@ -301,9 +293,13 @@ def search_events(request):
             other_activities = search_others(request, location_key, name_key, category)
 
         # if request.user.is_anonymous() == False:
-        else:
+        if not request.user.is_anonymous():
             activities = search_my_activities(request, location_key, name_key, category, True)
             not_my_activities = search_my_activities(request, location_key, name_key, category, False)
+            # Display the latest_activity (for the most recent published activity)
+            staff_activities = Activity.objects.filter(created_by=request.user)
+            if staff_activities:
+                latest_activity = staff_activities.filter(created_time__isnull=False).latest('created_time')
 
         if str1 != '':
             kwargs = {'pk': str1}
@@ -329,6 +325,7 @@ def search_events(request):
                       'other_activities': other_activities,
                       'not_my_activities': not_my_activities,
                       'activities': activities,
+                      'latest_activity': latest_activity,
                       'name': name_key,
                       'url': url,
                       'domain': domain

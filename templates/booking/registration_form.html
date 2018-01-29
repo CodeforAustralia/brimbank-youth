@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} Register{% endblock title %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+  <div class="row">
+    <div class="col-md-8">
+        <div class="card h-100">
+            <div class="card-body">
+                <h4 class="card-title">{{ activity.start_date|date:'M.'|upper }}</h4>
+                <h4 class="card-title">{{ activity.start_date|date:'d' }}</h4>
+                <h5 class="card-text strong mt-4">{{ activity.name|upper }}</h5>
+                <h5 class="card-text strong">{{ activity.location }}</h5>
+                <!-- SCHEDULE -->
+                <!--    Activities that only occur once -->
+                {% if activity.term == 'Once' %}
+                {% if activity.activity_date %}
+                <p class="card-text">{{ activity.activity_date|date:'d/m/y' }} from {{ activity.start_time|time:'g:i A' }} - {{ activity.end_time|time:'g:i A' }}</p>
+                {% endif %}
+                {% endif %}
+                <!--      Daily, weekly, fortnightly, monthly activities-->
+                {% if activity.term != 'Once' %}
+                {% if activity.term != 'Daily' %}
+                <p class="card-text">Every {{ activity.activity_day }} from {{ activity.start_date|date:'d/m/y' }} from {{ activity.start_time|time:'g:i A' }} - {{ activity.end_time|time:'g:i A' }}</p>
+                {% else %}
+                <p class="card-text">Every day from {{ activity.start_date|date:'d/m/y' }} from {{ activity.start_time|time:'g:i A' }} - {{ activity.end_time|time:'g:i A' }}</p>
+                {% endif %}
+                {% endif %}
+                
+                <p>By {{ activity.created_by.profile.organisation_name }}</p>
+                {% if activity.cost_choice == 'N' %}
+                    <p class="card-text">FREE!</p>
+                {% endif %}
+                {% if activity.cost_choice == 'Y' %}
+                <p class="card-text">AUD {{ activity.cost }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mr-2 h-100">
+        {% if activity.activity_img %}
+        <img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:400px;display:inline;">
+        {% else %}
+        <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:400px;">
+        {% endif %}
+        </div>
+    </div>
+  </div>
+  
+
+  <div class="row mt-4">
+    <div class="col-md-8">
+      <div class="card h-100">
+        <div class="card-body">
+          <h3 class="card-title">REGISTRATION INFORMATION</h3>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {% include 'includes/form.html' %}
+            <button type="submit" class="btn btn-lg btn-success float-right">REGISTER ME</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card row mr-2">
+            <div class="card-body">
+            <!-- SCHEDULE --> 
+            <h4 class="card-title">DATE AND TIME</h4>
+            <!--    Activities that only occur once -->
+            {% if activity.term == 'Once' %}
+            {% if activity.activity_date %}
+            <p class="card-text">{{ activity.activity_date|date:'D, d M Y' }}</p>
+            <p class="card-text">{{ activity.start_time|time:'g:i A' }} - {{ activity.end_time|time:'g:i A' }}</p>
+            {% endif %}
+            {% endif %}
+
+            <!--      Daily, weekly, fortnightly, monthly activities-->
+            {% if activity.term != 'Once' %}
+            {% if activity.term != 'Daily' %}
+            <p class="card-text">Every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d M Y' }}</p>
+            <p class="card-text">{{ activity.start_time|time:'g:i A' }}</p>
+            {% else %}
+            <p class="card-text">Every day from {{ activity.start_date|date:'D, d M Y' }}</p>
+            <p class="card-text">{{ activity.start_time|time:'g:i A' }}</p>
+            {% endif %}
+            {% endif %}
+
+            <h4 class="card-title" style="margin-top:30px;">LOCATION</h4>
+            {% if activity.location %}
+            <p class="card-text" id="address">{{ activity.location }}</p>
+            <p class="card-text"><a href=# id="address2">Open in Google Maps</a></p>
+            {% else %}
+            <p class="card-text"><i>Location hasn't been specified</i></p>
+            {% endif %}
+            </div>
+        </div>
+        <div class="card row mt-2 mr-2">
+            <div class="card-body">
+            <h4 class="card-title">{{ activity.created_by.profile.organisation_name }}</h4>
+            <p class="card-text">{{ activity.created_by.profile.description }}</p>
+            <h5 class="card-title" style="margin-top:30px;">CONTACT ORGANISER</h5>
+            <p class="card-text">{{ activity.organiser }}&nbsp;&nbsp;{{ activity.contact_number }}</p>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+
+<script>
+$( function(){
+    // Populate addresses from GMaps on address input
+    var address = $('#address').text();
+
+    // Populate GMaps URL on the address link
+    var map_url = "https://www.google.com/maps/search/?api=1&query=";
+    var full_url = map_url + address;
+    $("#address2").attr("href", full_url);
+});
+    
+
+</script>
+{% endblock %}

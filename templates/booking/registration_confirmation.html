@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Successful Registration{% endblock title %}
+
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/social-share-kit.css'%}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/slick.css'%}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/slick-theme.css'%}"/>
+<style>
+    .jssocials-share-link { border-radius: 80%; }
+    .jssocials-share-facebook { 
+        margin-left: 0; 
+    }
+    .ssk-sms {
+        background: yellow;
+        width: 46px;
+        height: 46px;
+        bottom: 0;
+    }
+    .ssk-sms:hover {
+        background: rgb(218, 170, 13);
+    }
+    .ssk-twitter .ssk-icon {
+        color: #0c85d0;
+    }
+    .no-border {
+        border: none;
+    }
+    #map {
+        height: 500px;
+        width: 100%;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class=" col-md-7 mb-3">
+            <div class="card h-100 no-border">
+                <div class="card-body">
+                    <h4 class="card-title">YOU'RE GOING TO {{ registration.activity.name|upper }}</h4>
+                    <h5 class="card-title mt-4">{{ registration.activity.location }}</h5>
+                    <!-- SCHEDULE -->
+                    <!--    Activities that only occur once -->
+                    {% if registration.activity.term == 'Once' %}
+                    {% if registration.activity.activity_date %}
+                    <p class="card-text">{{ registration.activity.activity_date|date:'d/m/y' }} from {{ registration.activity.start_time|time:'g:i A' }} - {{ registration.activity.end_time|time:'g:i A' }}</p>
+                    {% endif %}
+                    {% endif %}
+                    <!--      Daily, weekly, fortnightly, monthly activities-->
+                    {% if registration.activity.term != 'Once' %}
+                    {% if registration.activity.term != 'Daily' %}
+                    <p class="card-text">Every {{ registration.activity.activity_day }} from {{ registration.activity.start_date|date:'d/m/y' }} at {{ registration.activity.start_time|time:'g:i A' }} - {{ registration.activity.end_time|time:'g:i A' }}</p>
+                    {% else %}
+                    <p class="card-text">Every day from {{ registration.activity.start_date|date:'d/m/y' }} from {{ registration.activity.start_time|time:'g:i A' }} - {{ registration.activity.end_time|time:'g:i A' }}</p>
+                    {% endif %}
+                    {% endif %}
+                    <i class="far fa-calendar-alt fa-lg"></i><a href="#">&nbsp;ADD TO CALENDAR</a>
+                    <h5 class="card-title mt-4">SHARE WITH FRIENDS</h5>
+                    <div class="ssk-group ssk-round ssk-lg">
+                        <a href="" class="ssk ssk-facebook mr-2"></a>
+                        <a href="" class="ssk ssk-email mr-2"></a>
+                        <a href="" id="share_WA" class="ssk ssk-whatsapp mr-2" style="display:none;"></a>
+                        <a href="" id="share_text" class="ssk ssk-sms" style="display:none;"><span class="far fa-comment-alt fa-lg mb-0"></span></a>
+                    </div>
+                    {% if registration.activity.location %}
+                    <p class="card-text" id="address" style="display:none;">{{ registration.activity.location }}</p>
+                    <div class="card-text mt-2"><a href=# id="address2">Open in Google Maps</a></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card h-90">
+            {% if registration.activity.activity_img %}
+            <img class="card-img-top" src="{{ registration.activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:350px;display:inline;">
+            {% else %}
+            <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:350px;">
+            {% endif %}
+            </div>
+        </div>      
+    </div>
+
+    <div class="row mt-4 justify-content-center">
+        <div class="card" style="width: 95%;">
+            <div class="card-body">
+            <h4 class="card-title text-center">{{ registration.activity.created_by.profile.organisation_name }}</h4>
+            <h5 class="card-text text-center">Organiser of {{ registration.activity.name }}</h5>
+            <p class="card-text text-center">{{ registration.activity.created_by.profile.description }}</p>
+            <h4 class="card-title text-center" style="margin-top:30px;color:grey;">CONTACT ORGANISER</h4>
+            <p class="card-text text-center">{{ registration.activity.organiser }}&nbsp;&nbsp;{{ registration.activity.contact_number }}</p>
+        </div>
+        </div>
+    </div>
+</div>
+
+{% if org_activities %}
+{% include 'activities/includes/org_activities.html' %}
+{% endif %}
+
+<!-- Google Maps -->
+{% if registration.activity.location %}
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div id="map" style="margin-top:2%;"></div>
+  </div>
+</div>
+{% endif %}
+
+<div class="container-fluid mt-4">
+<div class="row justify-content-center">
+    <div class="card" style="width: 95%;">
+        <div class="card-body">
+        <h4 class="card-title text-center">{{ registration.activity.name }}</h4>
+        <h4 class="card-title text-center">At</h4>
+        <h5 class="card-text text-center" style="color:grey;">{{ registration.activity.location }}</h5>
+    </div>
+    </div>
+</div>
+</div>
+
+<a id="registration_url" href="{% url 'register_activity' registration.activity.pk %}" style="display:none"></a>
+
+{% if recommended_activities %}
+{% include 'activities/includes/recommended_activities.html' %}
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&region=AU&callback=initMap">
+</script>
+<script src="{% static 'js/jssocials.js' %}"></script>
+<script src="{% static 'js/social-share-kit.js' %}"></script>
+<script src="{% static 'js/slick.js' %}"></script>
+<script type="text/javascript">
+    SocialShareKit.init();
+</script>
+
+<script>
+function geocodeAddress(geocoder, resultsMap) {
+    var address = $('#address').text();
+    // var address = 'Southern Cross Station';
+    // alert(address);
+    geocoder.geocode({'address': address}, function(results, status) {
+      if (status === 'OK') {
+        resultsMap.setCenter(results[0].geometry.location);
+        resultsMap.setZoom(14);
+        var marker = new google.maps.Marker({
+          map: resultsMap,
+          position: results[0].geometry.location
+        });
+      }
+    });
+}
+// Show the map
+setTimeout (function initMap() {
+    var geocoder = new google.maps.Geocoder();
+    var map = new google.maps.Map(document.getElementById('map'));
+    
+    // Populate addresses from GMaps on address input
+    var address = $('#address').text();
+    geocodeAddress(geocoder, map);
+
+    // Populate GMaps URL on the address link
+    var map_url = "https://www.google.com/maps/search/?api=1&query=";
+    var full_url = map_url + address;
+    $("#address2").attr("href", full_url);
+}, 1000);
+
+// When user clicks the Back button, it will open the link to Update activity draft page
+history.pushState(null, document.title, location.href);
+window.addEventListener('popstate', function (event)
+{
+  // history.pushState(null, document.title, location.href); // preventing from pressing the back button
+  var old_URL = document.referrer; // document.referrer = previous URL
+  var registration_url = document.getElementById("registration_url").getAttribute("href");
+  var hostname = window.location.hostname;
+  var dest_registration_url;
+
+  if (hostname == 'localhost') {
+    dest_registration_url = "http://" + hostname + ":8000" + registration_url;
+  } else {
+    dest_registration_url = "http://" + hostname + registration_url;
+  }
+
+  if ( old_URL == dest_registration_url ) { // Check if previous URL is editing the activity draft
+    window.location.href = dest_registration_url;
+  }
+});
+
+$(function() {
+    $('.multiple-items').slick({
+    infinite: true,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    focusOnSelect: true,
+    mobileFirst: true,
+    responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        infinite: true
+        // dots: true
+      }
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 2,
+        slidesToScroll: 1
+      }
+    },
+    {
+      breakpoint: 300,
+      settings: {
+        slidesToShow: 1,
+        slidesToScroll: 1
+      }
+    }
+    ],
+    prevArrow: "<button type=\"button\" class=\"slick-prev\"><i class=\"fas fa-arrow-left\"></i></button>"
+    });
+
+
+    var isMobile = window.matchMedia("only screen and (max-width: 760px)");
+
+    if (isMobile.matches) {
+        $("#share_WA").show();
+        $("#share_text").show();
+    }
+});
+</script>
+
+{% endblock %}

@@ -130,9 +130,9 @@
       </div>
       <div class="col-md-3 mt-2 mb-2">
         {% if user.is_authenticated %}
-        <button class="btn btn-lg disabled" style="width:95%;height:100%;">ATTEND</button>
+        <button class="btn btn-lg disabled" style="width:95%;height:100%;">I'M COMING!</button>
         {% else %}
-        <button class="btn btn-success btn-lg" style="width:95%;height:100%;">I'M COMING!</button>
+        <a href="{% url 'register_activity' activity.pk %}" class="btn btn-success btn-lg mt-2" style="width:95%;vertical-align:middle;display: inline-block;">I'M COMING!</a>
         {% endif %}
       </div>
     </div>
@@ -376,7 +376,6 @@
 <script src="{% static 'js/jssocials.js' %}"></script>
 <script src="{% static 'js/slick.js' %}"></script>
 
-<!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.min.js"></script> -->
 <script>
   // Show the map
   setTimeout(function initMap() {

@@ -16,7 +16,7 @@ class ActivityForm(forms.ModelForm):
     start_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS FROM', required=False)
     end_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS UNTIL', required=False)
     activity_img = forms.ImageField(validators=[file_size], label='Add an event image', required=False)
-    flyer = forms.FileField(validators=[file_size], label='Upload an event flyer', required=False)
+    flyer = forms.FileField(validators=[file_size], label='Upload a printable event flyer', required=False)
     
     def __init__(self, *args, **kwargs):
         super(ActivityForm, self).__init__(*args, **kwargs)
@@ -109,7 +109,7 @@ class ActivityDraftForm(forms.ModelForm):
     start_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS FROM', required=False)
     end_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS UNTIL', required=False)
     activity_img = forms.ImageField(required=False, validators=[file_size], label='Add an event image')
-    flyer = forms.FileField(required=False, validators=[file_size], label='Upload an event flyer')
+    flyer = forms.FileField(required=False, validators=[file_size], label='Upload a printable event flyer')
                             
     class Meta:
         model = ActivityDraft

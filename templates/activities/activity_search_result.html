@@ -12,9 +12,41 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials-theme-flat.css'%}" />
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
+    <style>
+        .jumbotron {
+            position: relative;
+            background-color: transparent !important;
+            height: 400px;
+        }
+        .jumbotron .img {
+            position: absolute;
+            left:0; top:0;
+            background-size: cover;
+            min-height: 400px;
+            width: 100%;
+            filter: alpha(opacity=80); /* IE 8 and 9 */
+            -moz-opacity:0.8; /* Older than Firefox 0.9 */
+            -khtml-opacity: 0.8; /* Safari 1.x (pre WebKit!) */
+            opacity: 0.8;
+            background-image: url("https://d26uhratvi024l.cloudfront.net/gsc/1KQ6PZ/4d/46/d9/4d46d9554c1843668a672f87a5db51a2/images/3rd_it__youth_worker_logged_in___home_page_b_-__ic/u1395.png?token=5b4cee98f7639d827421370987aacfb7");
+            z-index: -1;
+        }
+        .search-box {
+            background-color: rgba(255,255,255,0.3);
+            color: rgb(255,255,255);
+            text-shadow: 1px 1px white;
+        }
+    </style>
+
 {% endblock %}
 
 {% block content %}
+
+{% if messages %}
+{% for message in messages %}
+    <p class="published_message" style="display:none;">{{ message }}</p>
+{% endfor %}
+{% endif %}
 
 {% include 'activities/includes/search_box.html' %}
 
@@ -43,8 +75,70 @@
 <h3>Activities & events</h3>
 {% endif %}
 <div class="row justify-content-center">
+{% if latest_activity and user.is_authenticated %}
+<div class="col-sm-4" id="latest_activity" style="display:none; background:mistyrose;">
+    <div class="latest_activity_{{ latest_activity.id }}" id="latest_activity_val" style="display:none;"> </div>
+    <div class="card select">
+    {% if latest_activity.activity_img %}
+        <img class="card-img-top select" src="{{ latest_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
+        <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
+    {% else %}
+        <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
+        <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
+    {% endif %}
+    <div class="card-body select" id=card_{{ latest_activity.pk }} value="{{ latest_activity.pk }}">
+        <p id="b" class="card-text small">{{ latest_activity.activity_type|upper }}</p>
+        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' latest_activity.pk %}">{{ latest_activity.name }}</a></h3>
+        <p class="card-text small"><a href=# name="address">{{ latest_activity.location }}</a></p>
+
+        <!--    Activities that only occur once -->
+        {% if latest_activity.term == 'Once' %}
+        {% if latest_activity.activity_date %}
+        <p class="card-text">{{ latest_activity.activity_date|date:'D, d M Y'|upper }} - {{ latest_activity.start_time|time:'g:i A' }}</p>
+        {% endif %}
+        {% endif %}
+
+        <!--      Daily, weekly, fortnightly, monthly activities-->
+        {% if latest_activity.term != 'Once' %}
+        {% if latest_activity.term != 'Daily' %}
+        <p class="card-text">Every {{ latest_activity.activity_day }} from {{ latest_activity.start_date|date:'D, d M Y' }} - {{ latest_activity.start_time|time:'g:i A' }}</p>
+        {% else %}
+        <p class="card-text">Every day from {{ latest_activity.start_date|date:'D, d M Y' }} - {{ latest_activity.start_time|time:'g:i A' }}</p>
+        {% endif %}
+        {% endif %}
+
+        <input class="selected" style="display:none;" type="checkbox" id=activity_{{ latest_activity.pk }} name ="checkboxes" value={{ latest_activity.pk }}>
+        <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span>
+        <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span>
+    </div>
+    <div class="card-footer">
+        <a target="_blank" href="{% url 'sms_create' latest_activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a>
+        <a target="_blank" href="{% url 'email_create' latest_activity.pk %}" class="btn btn-outline-primary float-right mr-2 share_btn"><i class="far fa-envelope"></i></a>
+        
+        <!-- Bookmark button -->
+        {% if latest_activity.bookmarked %}
+        {% for bookmark_user in latest_activity.bookmarked_users.all %}
+        {% if bookmark_user.username == user.username %}
+        <button onclick="markActivity(this.id)" id={{ latest_activity.id }} type="button" class="btn js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="far fa-bookmark"></i>
+        </button>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <button onclick="markActivity(this.id)" id={{ latest_activity.id }} type="button" class="btn js-bookmark-article remove" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="far fa-bookmark"></i>
+        </button>
+        <!-- End of bookmark button -->
+        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ latest_activity.id }}" value="{% url 'activity_detail' latest_activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="fas fa-share"></i>
+        </button>
+    </div>
+    </div>
+</div>
+{% endif %}
+
 {% for activity in activities %}
-<div class="col-sm-4">
+<div class="col-sm-4 activity" id="activity_{{ activity.id }}">
     {% if user.is_authenticated %}
     <div class="card select">
     {% if activity.activity_img %}
@@ -58,7 +152,6 @@
         <p id="b" class="card-text small">{{ activity.activity_type|upper }}</p>
         <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
         <p class="card-text small"><a href=# name="address">{{ activity.location }}</a></p>
-
 
         <!--    Activities that only occur once -->
         {% if activity.term == 'Once' %}
@@ -612,6 +705,27 @@ $( function() {
         $( this ).siblings('.remove').css( "display", "none" );
     });
 
+    var messages = document.getElementsByClassName("published_message");
+
+    for (i = 0; i < messages.length; i++) {
+        if (messages[i].innerHTML == 'The activity has been published.') {
+            $('#latest_activity').show();
+
+            var id_latest = document.getElementById("latest_activity_val").getAttribute("class");
+            var latest_activity_id = id_latest.split("latest_activity_")[1];
+
+            var activities = document.getElementsByClassName("activity");
+
+            for (i = 0; i < activities.length; i++) {
+                var id = activities[i].getAttribute("id").split("activity_")[1];
+                if (id == latest_activity_id ) {
+                    activities[i].style.display = "none";
+                    break;
+                }
+            }
+        }
+    }
+
    var isMobile = window.matchMedia("only screen and (max-width: 760px)");
 
     if (isMobile.matches) {
@@ -691,21 +805,21 @@ $( function() {
       //alert($(this).parent(".selected").attr("class"));
   })
     
-  $('.card-img-top.select').click( function() {
-      //Change the background colour of card-body
-      $(this).siblings(".card-body.select").toggleClass('on');
+//   $('.card-img-top.select').click( function() {
+//       //Change the background colour of card-body
+//       $(this).siblings(".card-body.select").toggleClass('on');
       
-      //change opacity of card-img-top
-      $(this).toggleClass('on');
+//       //change opacity of card-img-top
+//       $(this).toggleClass('on');
       
-      //show the checklist icon
-      $(this).siblings(".selectedImg.select").toggle();
+//       //show the checklist icon
+//     //   $(this).siblings(".selectedImg.select").toggle();
       
-      //checked the checkbox element
-      var card_body = $(this).siblings(".card-body.select");
-      var checkbox = card_body.children(".selected");
-      checkbox.prop("checked", !checkbox.prop("checked"));
-  })
+//       //checked the checkbox element
+//       var card_body = $(this).siblings(".card-body.select");
+//       var checkbox = card_body.children(".selected");
+//       checkbox.prop("checked", !checkbox.prop("checked"));
+//   })
 
   var id_form = document.getElementById("id_form");
     $('#id_share_text').click(function(){

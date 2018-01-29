@@ -105,9 +105,8 @@ class Activity(models.Model):
     bookmarked = models.BooleanField(default=False)
     bookmarked_users = models.ManyToManyField(User, related_name='bookmarked_activities')
 #    time_zone = TimeZoneField(default='Australia/Melbourne')
-
     # Additional fields not visible to users
-    # created_time = models.DateTimeField(auto_now_add=True, null=True)
+    created_time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

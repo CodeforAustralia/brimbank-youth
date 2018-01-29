@@ -1,9 +1,11 @@
 {% load static %}
 
 <div class="jumbotron mb-6">
-    <div class="container text-center">
-        <h1 class="display-4">Youth Poster</h1>
-      <p class="lead">Search for events and activities in your area</p>
+    <div class="img"></div>
+    <div class="container text-center search-box" style="padding-top:2px; margin-top:40px;">
+    <div id="search-box">
+        <!-- <h1 class="display-4">Youth Poster</h1> -->
+      <h1 class="mt-2">Search for activities and events in your area</h1>
       <hr class="my-3">
       <form method="get" id="id_form" class="justify-content-center" novalidate>
           <div class="form-row justify-content-center">
@@ -20,12 +22,13 @@
           </div>
           </div>
     </div>
+    </div>
   </div>
 <div class="container-fluid">
     <div class="row justify-content-center mb-2">
-        <p class="lead">or search by category</p>
+        <!-- <p class="lead">or search by category</p> -->
     </div>
-    <div class="row justify-content-center mb-2">
+    <div class="row justify-content-center mb-2 mt-4">
     <!-- <div class="btn-group" role="group" aria-label="Categories"> -->
         <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
         <button type="submit" name="category" value="sport" class="btn mr-4 mb-2 transparent-background" style="text-align:center;">
