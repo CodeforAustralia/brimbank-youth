@@ -66,7 +66,7 @@
       <!--    Activities that only occur once -->
       {% if activity.term == 'Once' %}
       {% if activity.activity_date %}
-      <h4 class="strong"><b>{{ activity.activity_date|date:'M'|upper }} {{ activity.activity_date|date:'d, Y' }}</b></h4>
+      <h4 class="strong ml-2"><b>{{ activity.activity_date|date:'M'|upper }} {{ activity.activity_date|date:'d, Y' }}</b></h4>
       {% endif %}
       {% endif %}
 
@@ -96,36 +96,43 @@
 
   <row style="border-bottom:solid 0.5px LightGray;border-bottom:solid 0.5px LightGray;">
     <div class="row" >
-      <div class="col-md-7 mt-4 mb-4">
-        <a href="#" class="btn btn-outline-primary ml-4 mr-2 js-share-url"><i class="fas fa-share"></i> Share</a>
+      <div class="col-md-7">
+        <div class="row mt-3" style="margin-left:1%;">
+        <div class="col-md-4">
+        <div class="sharethis-inline-share-buttons"></div>
+        </div>
+        <!-- <a href="#" class="btn btn-outline-primary ml-4 mr-2 js-share-url"><i class="fas fa-share"></i> Share</a> -->
+        <!-- <div class="col-md-4" style="background:yellow;"> -->
+        <div class="col-md-8">
+        {% if user.is_authenticated %}
+        <a href="{% url 'sms_create' activity.pk %}" target="_blank" class="btn btn-outline-primary mt-1 mr-2"><i class="fas fa-mobile-alt"></i> SMS</a>
+        <a href="{% url 'email_create' activity.pk %}" target="_blank" class="btn btn-outline-primary mt-1 mr-2"><i class="far fa-envelope"></i> Email</a>
+        {% endif %}
         <!-- Bookmark button -->
         {% if user.is_authenticated %}
         {% if activity.bookmarked %}
         {% for bookmark_user in activity.bookmarked_users.all %}
         {% if bookmark_user.username == user.username %}
-        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article active mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article active mt-1" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="far fa-bookmark"></i>
         </button>
         {% endif %}
         {% endfor %}
         {% endif %}
-        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article remove mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article remove mt-1" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="far fa-bookmark"></i>
         </button>
         {% endif %}
         <!-- End of bookmark button -->
-        <!-- <a href="#" id="id_bookmark" class="btn btn-outline-primary mr-2"><i class="far fa-bookmark"></i> Save</a> -->
+        </div>
+      </div>
+      </div>
+      <div class="col-md-2 mt-3 mb-3">
         {% if activity.flyer  %}
-        <a href="{{ activity.flyer.url }}" class="btn btn-outline-primary"><i class="fas fa-print"></i> Print flyer</a>
+        <a href="{{ activity.flyer.url }}" class="btn btn-outline-primary float-right"><i class="fas fa-print"></i> Print flyer</a>
         {% endif %}
         {% if not activity.flyer %}
-        <a href="#" class="btn btn-outline-primary disabled"><i class="fas fa-print"></i> Print flyer</a>
-        {% endif %}
-      </div>
-      <div class="col-md-2 mt-4 mb-4">
-        {% if user.is_authenticated %}
-        <a href="{% url 'sms_create' activity.pk %}" target="_blank" class="btn btn-outline-primary float-right"><i class="fas fa-mobile-alt"></i></a>
-        <a href="{% url 'email_create' activity.pk %}" target="_blank" class="btn btn-outline-primary float-right mr-2"><i class="far fa-envelope"></i></a>
+        <a href="#" class="btn btn-outline-primary disabled float-right"><i class="fas fa-print"></i> Print flyer</a>
         {% endif %}
       </div>
       <div class="col-md-3 mt-2 mb-2">
@@ -336,7 +343,7 @@
         <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div id="div_desktop" class="row mt-2" style="align-content:center;">
+      <!-- <div id="div_desktop" class="row mt-2" style="align-content:center;">
         <div id="share2" class="offset-md-3 mr-2"></div>
         <div id="share3" class="float-left mr-2"></div>
         <div class="jssocials send_dialog float-left mr-2">
@@ -349,7 +356,11 @@
         <div id="share4" class="mr-2 share4 float-left"></div>
         <div id="share5" class="mr-2 share5 float-left"></div>
         <div id="share" class="mr-2 share float-left"></div>
-      </div>
+      </div> -->
+    <!-- <div class="row justify-content-center mt-3"> -->
+        <!-- <div class="addthis_inline_share_toolbox"></div> -->
+        <!-- <div class="sharethis-inline-share-buttons"></div> -->
+    <!-- </div> -->
     <div class="row mt-2 ml-3 mr-1">
     <input style="width:85%;" class="form-control mr-2" readonly type="text" id="id_share_url" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
     <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn"><i class="far fa-copy"></i></button>
@@ -367,7 +378,7 @@
 <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&region=AU&callback=initMap">
 </script>
-<!-- <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script> -->
+<script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
 
 <!-- Go to www.addthis.com/dashboard to customize your tools -->
 <!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script> -->

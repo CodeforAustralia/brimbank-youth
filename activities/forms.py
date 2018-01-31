@@ -72,9 +72,8 @@ class ActivityForm(forms.ModelForm):
         start_date = cleaned_data.get("start_date")
         end_date = cleaned_data.get("end_date")
         activity_date = cleaned_data.get("activity_date")
+        activity_day = cleaned_data.get("activity_day")
         term = cleaned_data.get("term")
-        location = cleaned_data.get("location")
-        general_error_msg = 'Please correct the errors below.'
         if term != 'Once':
             if start_date and end_date:
                 begin_date = arrow.get(start_date, 'Australia/Melbourne')
@@ -83,7 +82,10 @@ class ActivityForm(forms.ModelForm):
                     msg = "Start date must be before end date."
                     self.add_error('start_date', msg)
                     self.add_error('end_date', msg)
-                    # raise ValidationError(general_error_msg)
+                if activity_day != begin_date.format('dddd'):
+                    msg = "Activity must occur at the same day as the start date."
+                    self.add_error('start_date', msg)
+                    self.add_error('activity_day', msg)
             else:
                 if not start_date:
                     msg = "Start date must be entered."
@@ -110,7 +112,7 @@ class ActivityDraftForm(forms.ModelForm):
     end_date = forms.DateField(input_formats=['%d %b %Y'], label='OCCURS UNTIL', required=False)
     activity_img = forms.ImageField(required=False, validators=[file_size], label='Add an event image')
     flyer = forms.FileField(required=False, validators=[file_size], label='Upload a printable event flyer')
-                            
+                           
     class Meta:
         model = ActivityDraft
         fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'contact_number', 'activity_img', 'flyer', 'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 'listing_privacy')
@@ -157,21 +159,25 @@ class ActivityDraftForm(forms.ModelForm):
     
     def clean(self):
         cleaned_data = super().clean()
-        
-        # Validation: start_date must be before end_date
         start_date = cleaned_data.get("start_date")
         end_date = cleaned_data.get("end_date")
         term = cleaned_data.get("term")
+        activity_day = cleaned_data.get("activity_day")
         if term != 'Once':
             if start_date and end_date:
                 begin_date = arrow.get(start_date, 'Australia/Melbourne')
+                print(begin_date.format('dddd'))
                 finish_date = arrow.get(end_date, 'Australia/Melbourne')
+                # Validation: start_date must be before end_date
                 if begin_date > finish_date:
                     msg = "Start date must be before end date."
                     self.add_error('start_date', msg)
                     self.add_error('end_date', msg)
-                    raise ValidationError()
-            
+                if activity_day != begin_date.format('dddd'):
+                    msg = "Activity must occur at the same day as the start date."
+                    self.add_error('start_date', msg)
+                    self.add_error('activity_day', msg)  
+
 #    def clean(self):
 #        cleaned_data = super().clean()
 #        start_date = cleaned_data.get("start_date")

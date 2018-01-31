@@ -257,7 +257,7 @@ var SocialShareKit = (function () {
                 break;
             // Add for SMS
             case 'sms':
-                url = 'sms:?&body={url}' + paramsObj.shareUrlEncoded() +
+                url = 'sms:?&body=' + paramsObj.shareUrlEncoded() +
                     '&text=' + encodeURIComponent(text);
                 break;
         }

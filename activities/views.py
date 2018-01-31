@@ -33,14 +33,14 @@ class ActivityCreateView(CreateView):
 
     def get_success_url(self):
         messages.info(self.request, 'This is how your activity will appear on YouthPoster. Please check it all carefully before publishing it.')
-        return reverse('activity_publish',args=(self.object.id,))
-        # self.object.id = pk that is used in ActivityDetailView
+        return reverse('activity_publish',args=(self.object.id,)) # self.object.id = pk that is used in ActivityDetailView
         
     def form_valid(self, form):
         object = form.save(commit=False)
         object.created_by = self.request.user
         object.published = False
         if (object.term == 'Once' and object.activity_date): # set start_date the same as activity_date (for sorting purpose)
+            object.end_date = object.activity_date
             object.start_date = object.activity_date
         object.save()
         return super(ActivityCreateView, self).form_valid(form)
@@ -70,6 +70,7 @@ class ActivityDraftUpdateView(UpdateView):
         object = form.save(commit=False)
         object.published = False
         if (object.term == 'Once' and object.activity_date): # set start_date the same as activity_date (for sorting purpose)
+            object.end_date = object.activity_date
             object.start_date = object.activity_date
         object.save()
         return super(ActivityDraftUpdateView, self).form_valid(form)
@@ -128,6 +129,7 @@ def submit_activity(request, pk):
                             )
         activity.save()
         if (activity.term == 'Once' and activity.activity_date): # set start_date the same as activity_date (for sorting purpose)
+            activity.end_date = draft.activity_date
             activity.start_date = draft.activity_date
             activity.save()
         draft.delete()
@@ -188,6 +190,7 @@ class ActivityUpdateView(UpdateView):
     def form_valid(self, form):
         object = form.save(commit=False)
         if (object.term == 'Once' and object.activity_date): # set start_date the same as activity_date (for sorting purpose)
+            object.end_date = object.activity_date
             object.start_date = object.activity_date
         object.save()
         return super(ActivityUpdateView, self).form_valid(form)
@@ -213,8 +216,8 @@ def search_logic(request, location_key, name_key, category):
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
     )
-    activities = activities.filter(start_date__gte=datetime.date.today())
-    activities = activities.order_by('start_date')
+    activities = activities.filter(end_date__gte=datetime.date.today())
+    activities = activities.order_by('end_date')
     return activities
 
 def search_others(request, location_key, name_key, category):
@@ -226,7 +229,7 @@ def search_others(request, location_key, name_key, category):
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)).exclude(
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
     other_activities = other_activities.filter(start_date__gte=datetime.date.today())
-    other_activities = other_activities.order_by('start_date')
+    other_activities = other_activities.order_by('end_date')
     return other_activities
 
 def search_my_activities(request, location_key, name_key, category, mine):
@@ -238,7 +241,7 @@ def search_my_activities(request, location_key, name_key, category, mine):
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
         )
         activities = activities.filter(start_date__gte=datetime.date.today()) # filter activities that occur today or later than today
-        activities = activities.order_by('start_date')
+        activities = activities.order_by('end_date')
     else:
         activities = Activity.objects.exclude(created_by=request.user)
         activities = activities.filter(
@@ -247,7 +250,7 @@ def search_my_activities(request, location_key, name_key, category, mine):
             Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
         )
         activities = activities.filter(start_date__gte=datetime.date.today())
-        activities = activities.order_by('start_date')[0:6]
+        activities = activities.order_by('end_date')[0:6]
     return activities
 
 def search_logic_bookmarks(request, location_key, name_key):

@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Successful Registration{% endblock title %}
+{% block title %}{{ registration.activity.name }}{% endblock title %}
 
 {% block stylesheet %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/social-share-kit.css'%}" />
@@ -59,14 +59,38 @@
                     <p class="card-text">Every day from {{ registration.activity.start_date|date:'d/m/y' }} from {{ registration.activity.start_time|time:'g:i A' }} - {{ registration.activity.end_time|time:'g:i A' }}</p>
                     {% endif %}
                     {% endif %}
-                    <i class="far fa-calendar-alt fa-lg"></i><a href="#">&nbsp;ADD TO CALENDAR</a>
+                    <!-- <i class="far fa-calendar-alt fa-lg"></i><a href="#">&nbsp;ADD TO CALENDAR</a> -->
+                    <div title="Add to Calendar" class="addeventatc">
+                        Add to Calendar
+                        <span class="start">{{ registration.activity.start_date|date:'d-m-Y' }} {{ registration.activity.start_time|time:'g:i A' }}</span>
+                        {% if registration.activity.term == 'Once' %}
+                        <span class="end">{{ registration.activity.start_date|date:'d-m-Y' }} {{ registration.activity.end_time|time:'g:i A' }}</span>
+                        {% elif registration.activity.term == 'Daily' %}
+                        <span class="recurring">FREQ=DAILY</span>
+                        <span class="end">{{ registration.activity.start_date|date:'d-m-Y' }} {{ registration.activity.end_time|time:'g:i A' }}</span>
+                        {% elif registration.activity.term == 'Weekly' %}
+                        <span class="recurring">FREQ=WEEKLY</span>
+                        <span class="end">{{ registration.activity.start_date|date:'d-m-Y' }} {{ registration.activity.end_time|time:'g:i A' }}</span>
+                        {% elif registration.activity.term == 'Monthly' %}
+                        <span class="recurring">FREQ=MONTHLY</span>
+                        <span class="end">{{ registration.activity.start_date|date:'d-m-Y' }} {{ registration.activity.end_time|time:'g:i A' }}</span>
+                        {% else %}
+                        <span class="end">{{ registration.activity.start_date|date:'d-m-Y' }} {{ registration.activity.end_time|time:'g:i A' }}</span>
+                        {% endif %}
+                        <span class="title">{{ registration.activity.name }}</span>
+                        <span class="description">{{ registration.activity.description }}</span>
+                        <span class="location">{{ registration.activity.location }}</span>
+                        <span class="calname">use-title</span>
+                    </div>
                     <h5 class="card-title mt-4">SHARE WITH FRIENDS</h5>
-                    <div class="ssk-group ssk-round ssk-lg">
+                    <!-- <div class="ssk-group ssk-round ssk-lg">
                         <a href="" class="ssk ssk-facebook mr-2"></a>
                         <a href="" class="ssk ssk-email mr-2"></a>
                         <a href="" id="share_WA" class="ssk ssk-whatsapp mr-2" style="display:none;"></a>
                         <a href="" id="share_text" class="ssk ssk-sms" style="display:none;"><span class="far fa-comment-alt fa-lg mb-0"></span></a>
-                    </div>
+                    </div> -->
+                    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                    <div class="addthis_inline_share_toolbox"></div>
                     {% if registration.activity.location %}
                     <p class="card-text" id="address" style="display:none;">{{ registration.activity.location }}</p>
                     <div class="card-text mt-2"><a href=# id="address2">Open in Google Maps</a></div>
@@ -135,6 +159,9 @@
 <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&region=AU&callback=initMap">
 </script>
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script>
+<script type="text/javascript" src="https://addevent.com/libs/atc/1.6.1/atc.min.js" async defer></script>
 <script src="{% static 'js/jssocials.js' %}"></script>
 <script src="{% static 'js/social-share-kit.js' %}"></script>
 <script src="{% static 'js/slick.js' %}"></script>

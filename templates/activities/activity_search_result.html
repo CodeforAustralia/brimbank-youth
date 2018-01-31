@@ -28,7 +28,7 @@
             -moz-opacity:0.8; /* Older than Firefox 0.9 */
             -khtml-opacity: 0.8; /* Safari 1.x (pre WebKit!) */
             opacity: 0.8;
-            background-image: url("https://d26uhratvi024l.cloudfront.net/gsc/1KQ6PZ/4d/46/d9/4d46d9554c1843668a672f87a5db51a2/images/3rd_it__youth_worker_logged_in___home_page_b_-__ic/u1395.png?token=5b4cee98f7639d827421370987aacfb7");
+            background-image: url("/static/img/cover_search.png");
             z-index: -1;
         }
         .search-box {
@@ -101,9 +101,9 @@
         <!--      Daily, weekly, fortnightly, monthly activities-->
         {% if latest_activity.term != 'Once' %}
         {% if latest_activity.term != 'Daily' %}
-        <p class="card-text">Every {{ latest_activity.activity_day }} from {{ latest_activity.start_date|date:'D, d M Y' }} - {{ latest_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text">Every {{ latest_activity.activity_day }} until {{ latest_activity.end_date|date:'D, d M Y' }} - {{ latest_activity.start_time|time:'g:i A' }}</p>
         {% else %}
-        <p class="card-text">Every day from {{ latest_activity.start_date|date:'D, d M Y' }} - {{ latest_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text">Every day until {{ latest_activity.end_date|date:'D, d M Y' }} - {{ latest_activity.start_time|time:'g:i A' }}</p>
         {% endif %}
         {% endif %}
 
@@ -163,9 +163,9 @@
         <!--      Daily, weekly, fortnightly, monthly activities-->
         {% if activity.term != 'Once' %}
         {% if activity.term != 'Daily' %}
-        <p class="card-text">Every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text">Every {{ activity.activity_day }} until {{ activity.end_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
         {% else %}
-        <p class="card-text">Every day from {{ activity.start_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text">Every day until {{ activity.end_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
         {% endif %}
         {% endif %}
 
@@ -221,9 +221,9 @@
     <!--      Daily, weekly, fortnightly, monthly activities-->
     {% if activity.term != 'Once' %}
     {% if activity.term != 'Daily' %}
-    <p class="card-text">Every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+    <p class="card-text">Every {{ activity.activity_day }} until {{ activity.end_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
     {% else %}
-    <p class="card-text">Every day from {{ activity.start_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+    <p class="card-text">Every day until {{ activity.end_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
     {% endif %}
     {% endif %}
     <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
@@ -249,43 +249,26 @@
         <span aria-hidden="true">&times;</span>
         </button>
         </div>
-        <!-- <div class="modal-body"> -->
-            <!-- <div class="container"> -->
-                <div id="div_desktop" class="row mt-2" style="align-content:center;">
-                    <div id="share2_{{ activity.id }}" class="offset-md-3 mr-2"></div>
-                    <!-- <div class="col-md-1 mr-2"> -->
-                    <div id="share3_{{ activity.id }}" class="float-left mr-2"></div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1 ml-2 mr-2"> -->
-                    <div class="jssocials send_dialog float-left mr-2">
-                        <div class="jssocials-shares">
-                        <div class="jssocials-share jssocials-share-messenger2">
-                            <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' activity.pk %}" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
-                        </div>
-                        </div>
+            <!-- <div id="div_desktop" class="row mt-2" style="align-content:center;">
+                <div id="share2_{{ activity.id }}" class="offset-md-3 mr-2"></div>
+                <div id="share3_{{ activity.id }}" class="float-left mr-2"></div>
+                <div class="jssocials send_dialog float-left mr-2">
+                    <div class="jssocials-shares">
+                    <div class="jssocials-share jssocials-share-messenger2">
+                        <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' activity.pk %}" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
                     </div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1 offset-md-3 mr-2"> -->
-                    <div id="share4_{{ activity.id }}" class="mr-2 share4 float-left"></div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1 mr-2"> -->
-                    <div id="share5_{{ activity.id }}" class="mr-2 share5 float-left"></div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1"> -->
-                    <div id="share_{{ activity.id }}" class="mr-2 share float-left"></div>
-                    <!-- </div> -->
+                    </div>
                 </div>
-            <!-- </div> -->
-        <!-- </div> -->
-    <!-- <div class="modal-footer"> -->
-        <!-- <div class="container-fluid"> -->
+                <div id="share4_{{ activity.id }}" class="mr-2 share4 float-left"></div>
+                <div id="share5_{{ activity.id }}" class="mr-2 share5 float-left"></div>
+                <div id="share_{{ activity.id }}" class="mr-2 share float-left"></div>
+            </div> -->
+        <div class="row justify-content-center mt-3">
+            <div class="addthis_inline_share_toolbox" data-url="http://{{ domain }}{% url 'activity_detail' activity.pk %}"></div>
+        </div>
         <div class="row mt-2 ml-3 mr-1">
-        <!-- <div class="col-sm-2"> -->
         <input style="width:85%;" class="form-control mr-2" readonly type="text" id="textshow_{{ activity.id }}" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
-        <!-- </div> -->
-        <!-- <div class="col-sm-1"> -->
         <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ activity.id }}"><i class="far fa-copy"></i></button>
-        <!-- </div> -->
         </div>
         <div class="row ml-3 mt-1">
         <p class="small" id="input_{{ activity.id }}"></p>
@@ -298,16 +281,6 @@
 <!-- </div> -->
 {% endfor %}
 </div>
-<!-- </div> -->
-
-<!-- {% if user.is_authenticated %} -->
-<!-- {% if activities %} -->
-<!-- <div id="yw_share_desktop" class="container-fluid col-sm-1 mr-0" style="height:10%;margin-top:5%;">
-    <button type="submit" id="id_share_text" class="btn btn-outline-success btn-circle" name="search" value="share"><div style="font-size:2em;"><i class="far fa-comment-alt"></i></div></button>
-    <button type="submit" id="id_share_mobile" class="btn btn-outline-success btn-circle" name="search" value="email"><div style="font-size:2em;"><i class="far fa-envelope"></i></div></button>
-</div> -->
-<!-- {% endif %} -->
-<!-- {% endif %} -->
 
 </div>
 
@@ -355,9 +328,9 @@
         <!--      Daily, weekly, fortnightly, monthly activities-->
         {% if other_activity.term != 'Once' %}
         {% if other_activity.term != 'Daily' %}
-        <p class="card-text">Every {{ other_activity.activity_day }} from {{ other_activity.start_date|date:'D, d M Y' }} - {{ other_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text">Every {{ other_activity.activity_day }} until {{ other_activity.end_date|date:'D, d M Y' }} - {{ other_activity.start_time|time:'g:i A' }}</p>
         {% else %}
-        <p class="card-text">Every day from {{ other_activity.start_date|date:'D, d M Y' }} - {{ other_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text">Every day until {{ other_activity.end_date|date:'D, d M Y' }} - {{ other_activity.start_time|time:'g:i A' }}</p>
         {% endif %}
         {% endif %}
 
@@ -381,49 +354,30 @@
         <span aria-hidden="true">&times;</span>
         </button>
         </div>
-        <!-- <div class="modal-body"> -->
-            <!-- <div class="container"> -->
-                <div id="div_desktop" class="row mt-2" style="align-content:center;">
-                    <div id="share2_{{ other_activity.id }}" class="offset-md-3 mr-2"></div>
-                    <!-- <div class="col-md-1 mr-2"> -->
-                    <div id="share3_{{ other_activity.id }}" class="float-left mr-2"></div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1 ml-2 mr-2"> -->
-                    <div class="jssocials send_dialog float-left mr-2">
-                        <div class="jssocials-shares">
-                        <div class="jssocials-share jssocials-share-messenger2">
-                            <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' other_activity.pk %}" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
-                        </div>
-                        </div>
+            <!-- <div id="div_desktop" class="row mt-2" style="align-content:center;">
+                <div id="share2_{{ other_activity.id }}" class="offset-md-3 mr-2"></div>
+                <div id="share3_{{ other_activity.id }}" class="float-left mr-2"></div>
+                <div class="jssocials send_dialog float-left mr-2">
+                    <div class="jssocials-shares">
+                    <div class="jssocials-share jssocials-share-messenger2">
+                        <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' other_activity.pk %}" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
                     </div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1 offset-md-3 mr-2"> -->
-                    <div id="share4_{{ other_activity.id }}" class="mr-2 share4 float-left"></div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1 mr-2"> -->
-                    <div id="share5_{{ other_activity.id }}" class="mr-2 share5 float-left"></div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1"> -->
-                    <div id="share_{{ other_activity.id }}" class="mr-2 share float-left"></div>
-                    <!-- </div> -->
+                    </div>
                 </div>
-            <!-- </div> -->
-        <!-- </div> -->
-    <!-- <div class="modal-footer"> -->
-        <!-- <div class="container-fluid"> -->
+                <div id="share4_{{ other_activity.id }}" class="mr-2 share4 float-left"></div>
+                <div id="share5_{{ other_activity.id }}" class="mr-2 share5 float-left"></div>
+                <div id="share_{{ other_activity.id }}" class="mr-2 share float-left"></div>
+            </div> -->
+        <div class="row justify-content-center mt-3">
+            <div class="addthis_inline_share_toolbox"></div>
+        </div>
         <div class="row mt-2 ml-3 mr-1">
-        <!-- <div class="col-sm-2"> -->
         <input style="width:85%;" class="form-control mr-2" readonly type="text" id="textshow_{{ other_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' other_activity.pk %}">
-        <!-- </div> -->
-        <!-- <div class="col-sm-1"> -->
         <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ other_activity.id }}"><i class="far fa-copy"></i></button>
-        <!-- </div> -->
         </div>
         <div class="row ml-3 mt-1">
         <p class="small" id="input_{{ other_activity.id }}"></p>
         </div>
-        <!-- </div> -->
-    <!-- </div> -->
     </div>
     </div>
 </div>
@@ -464,9 +418,9 @@
         <!--      Daily, weekly, fortnightly, monthly activities-->
         {% if not_my_activity.term != 'Once' %}
         {% if not_my_activity.term != 'Daily' %}
-        <p class="card-text">Every {{ not_my_activity.activity_day }} from {{ not_my_activity.start_date|date:'D, d M Y' }} - {{ not_my_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text">Every {{ not_my_activity.activity_day }} until {{ not_my_activity.end_date|date:'D, d M Y' }} - {{ not_my_activity.start_time|time:'g:i A' }}</p>
         {% else %}
-        <p class="card-text">Every day from {{ not_my_activity.start_date|date:'D, d M Y' }} - {{ not_my_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text">Every day until {{ not_my_activity.end_date|date:'D, d M Y' }} - {{ not_my_activity.start_time|time:'g:i A' }}</p>
         {% endif %}
         {% endif %}
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ not_my_activity.pk }} name ="checkboxes" value={{ not_my_activity.pk }} />
@@ -496,7 +450,6 @@
 </div>
 </div>
 <!-- THE MODAL FOR SHARING URL -->
-<!-- <div class="container-fluid"> -->
 <div class="modal fade" id="modal_{{ not_my_activity.id }}">
     <div class="modal-dialog">
     <div class="modal-content">
@@ -506,49 +459,27 @@
         <span aria-hidden="true">&times;</span>
         </button>
         </div>
-        <!-- <div class="modal-body"> -->
-            <!-- <div class="container"> -->
-                <div id="div_desktop" class="row mt-2" style="align-content:center;">
-                    <div id="share2_{{ not_my_activity.id }}" class="offset-md-3 mr-2"></div>
-                    <!-- <div class="col-md-1 mr-2"> -->
-                    <div id="share3_{{ not_my_activity.id }}" class="float-left mr-2"></div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1 ml-2 mr-2"> -->
-                    <div class="jssocials send_dialog float-left mr-2">
-                        <div class="jssocials-shares">
-                        <div class="jssocials-share jssocials-share-messenger2">
-                            <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' not_my_activity.pk %}" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
-                        </div>
-                        </div>
+            <div id="div_desktop" class="row mt-2" style="align-content:center;">
+                <div id="share2_{{ not_my_activity.id }}" class="offset-md-3 mr-2"></div>
+                <div id="share3_{{ not_my_activity.id }}" class="float-left mr-2"></div>
+                <div class="jssocials send_dialog float-left mr-2">
+                    <div class="jssocials-shares">
+                    <div class="jssocials-share jssocials-share-messenger2">
+                        <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' not_my_activity.pk %}" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
                     </div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1 offset-md-3 mr-2"> -->
-                    <div id="share4_{{ not_my_activity.id }}" class="mr-2 share4 float-left"></div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1 mr-2"> -->
-                    <div id="share5_{{ not_my_activity.id }}" class="mr-2 share5 float-left"></div>
-                    <!-- </div> -->
-                    <!-- <div class="col-md-1"> -->
-                    <div id="share_{{ not_my_activity.id }}" class="mr-2 share float-left"></div>
-                    <!-- </div> -->
+                    </div>
                 </div>
-            <!-- </div> -->
-        <!-- </div> -->
-    <!-- <div class="modal-footer"> -->
-        <!-- <div class="container-fluid"> -->
+                <div id="share4_{{ not_my_activity.id }}" class="mr-2 share4 float-left"></div>
+                <div id="share5_{{ not_my_activity.id }}" class="mr-2 share5 float-left"></div>
+                <div id="share_{{ not_my_activity.id }}" class="mr-2 share float-left"></div>
+            </div>
         <div class="row mt-2 ml-3 mr-1">
-        <!-- <div class="col-sm-2"> -->
         <input style="width:85%;" class="form-control mr-2" readonly type="text" id="textshow_{{ not_my_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}">
-        <!-- </div> -->
-        <!-- <div class="col-sm-1"> -->
         <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ not_my_activity.id }}"><i class="far fa-copy"></i></button>
-        <!-- </div> -->
         </div>
         <div class="row ml-3 mt-1">
         <p class="small" id="input_{{ not_my_activity.id }}"></p>
         </div>
-        <!-- </div> -->
-    <!-- </div> -->
     </div>
     </div>
     </div>
@@ -558,23 +489,13 @@
 {% endif %}
 {% endif %}
 
-<!-- {% if not user.is_authenticated %}
-<div class="sharethis-inline-share-buttons"></div>
-{% endif %} -->
-
 {% endblock %}
 
 {% block javascript %}
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script>
 <script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script src="{% static 'activities/js/bookmarks.js' %}"></script>
-
-<!-- <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script> -->
-
-<!-- <script type="text/javascript" data-cfasync="false" src="//dsms0mj1bbhn4.cloudfront.net/assets/pub/shareaholic.js" data-shr-siteid="c363c07f4215a1d47d25f47dadb72b05" async="async"></script> -->
-
-<!-- Go to www.addthis.com/dashboard to customize your tools -->
-<!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script> -->
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>

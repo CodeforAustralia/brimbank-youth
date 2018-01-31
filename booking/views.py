@@ -11,8 +11,10 @@ from .forms import RegistrationForm
 # Create your views here.
 def register(request, pk):
     activity = Activity.objects.get(pk=pk)
+    activity_pk = pk
+    pk = {'activity_pk': activity_pk}
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
+        form = RegistrationForm(request.POST, **pk)
         if form.is_valid():
             registration = form.save(commit=False)
             registration.activity = activity
@@ -21,7 +23,7 @@ def register(request, pk):
             registration_pk = registration.pk
             return redirect('registration_detail', pk=registration_pk)
     else:
-        form = RegistrationForm()
+        form = RegistrationForm(**pk)
     return render(request, 'booking/registration_form.html', {
         'form': form,
         'activity': activity,
