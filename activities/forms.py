@@ -82,7 +82,7 @@ class ActivityForm(forms.ModelForm):
                     msg = "Start date must be before end date."
                     self.add_error('start_date', msg)
                     self.add_error('end_date', msg)
-                if activity_day != begin_date.format('dddd'):
+                if activity_day != begin_date.format('dddd') and term != 'Daily':
                     msg = "Activity must occur at the same day as the start date."
                     self.add_error('start_date', msg)
                     self.add_error('activity_day', msg)
@@ -173,7 +173,7 @@ class ActivityDraftForm(forms.ModelForm):
                     msg = "Start date must be before end date."
                     self.add_error('start_date', msg)
                     self.add_error('end_date', msg)
-                if activity_day != begin_date.format('dddd'):
+                if activity_day != begin_date.format('dddd') and term != 'Daily':
                     msg = "Activity must occur at the same day as the start date."
                     self.add_error('start_date', msg)
                     self.add_error('activity_day', msg)  

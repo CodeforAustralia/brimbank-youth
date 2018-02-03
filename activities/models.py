@@ -96,7 +96,7 @@ class Activity(models.Model):
     living_duration = models.CharField(max_length=50, choices=LIVING_DURATION, blank=True, default='Less')
     gender = models.CharField(max_length=50, choices=GENDER, blank=True, default='F')
     cost = models.FloatField(blank=True, null=True)
-    space = models.PositiveSmallIntegerField(blank=True, null=True, default=10000)
+    space = models.PositiveSmallIntegerField(blank=True, null=True, default=10)
     cost_choice = models.CharField(max_length=50, choices=COST_OPTIONS, default='N')
     space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Unlimited')
     listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
@@ -107,6 +107,7 @@ class Activity(models.Model):
 #    time_zone = TimeZoneField(default='Australia/Melbourne')
     # Additional fields not visible to users
     created_time = models.DateTimeField(auto_now_add=True)
+    reminder_sent = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -129,7 +130,6 @@ class ActivityDraft(models.Model):
     activity_type = models.CharField(max_length=100, choices=ACTIVITY_TYPES, blank=True, default='Sports')
     term = models.CharField(max_length=50, choices=TERMS, blank=True, default='Once')
     location = models.CharField(max_length=150, blank=True, null=True)
-    organiser = models.CharField(max_length=150, blank=True, null=True)
     organiser = models.CharField(max_length=150, blank=True, null=True)
     contact_number = models.CharField(max_length=15, blank=True, null=True)
     description = models.TextField(max_length=500, blank=True, null=True)

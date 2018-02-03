@@ -35,7 +35,7 @@
   .btn.focus {
     outline-color: transparent;
   }
-  .btn.active {
+  .js-bookmark-article.active {
     background-color:rgb(92,184,92);
   }
   .js-bookmark-article {
@@ -46,6 +46,9 @@
     background: lightgrey;
     color: grey;
     border-color: transparent;
+  }
+  tr:hover {
+    background-color: white;
   }
 </style>
 {% endblock %}
@@ -94,8 +97,8 @@
     </div>
   </row>
 
-  <row style="border-bottom:solid 0.5px LightGray;border-bottom:solid 0.5px LightGray;">
-    <div class="row" >
+  <row style="border-bottom:solid 0.5px LightGray;">
+    <div class="row">
       <div class="col-md-7">
         <div class="row mt-3" style="margin-left:1%;">
         <div class="col-md-4">
@@ -107,7 +110,6 @@
         {% if user.is_authenticated %}
         <a href="{% url 'sms_create' activity.pk %}" target="_blank" class="btn btn-outline-primary mt-1 mr-2"><i class="fas fa-mobile-alt"></i> SMS</a>
         <a href="{% url 'email_create' activity.pk %}" target="_blank" class="btn btn-outline-primary mt-1 mr-2"><i class="far fa-envelope"></i> Email</a>
-        {% endif %}
         <!-- Bookmark button -->
         {% if user.is_authenticated %}
         {% if activity.bookmarked %}
@@ -124,6 +126,52 @@
         </button>
         {% endif %}
         <!-- End of bookmark button -->
+        {% if activity.created_by == user %}
+        <a href="#collapseExample" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn mt-1 mr-2"><i class="fas fa-angle-double-down"></i>  {{ attendees_no }} coming so far</a>
+        <div class="collapse bg-light" id="collapseExample" style="z-index:1;position:absolute;">
+            <div class="mt-2 mb-2" style="overflow-x:auto;">
+            <table class="table" id="contact-table">
+              <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                  <th>M or F</th>
+                  <th>Age</th>
+                  <th>Background</th>
+              </tr>
+              </thead>
+              <tbody>
+                <a href="#" data-url="#" role="button" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-plus-circle"></i> Add new attendee</a>
+                {% if not available and not activity.reminder_sent %}
+                <!-- <a id="{{ activity.id }}" class="btn btn-primary reminder float-right mb-2 mr-2 mt-2" href="#" data-url="#" role="button" aria-haspopup="true" aria-expanded="false">
+                Send reminder</a> -->
+                <button id="send-reminder" onclick="sendReminder(this.value)" value="{{ activity.id }}" type="button" class="btn btn-outline-success float-right mb-2 mr-2 mt-2" data-toggle="button" aria-pressed="false" autocomplete="off">
+                  Send reminder
+                </button>
+                <div id="reminder-message" class="float-right mr-2" style="display:none;color:green;">Reminder has been sent!</div>
+                {% endif %}
+                {% if not available and activity.reminder_sent %}
+                <div id="reminder-message" class="float-right mr-2" style="color:green;">Reminder has been sent for this event.</div>
+                {% endif %}
+                {% for attendee in attendees %}
+                <tr>
+                  <td>{{ attendee.first_name }} {{ attendee.surname }}</td>
+                  <td>{{ attendee.mobile_number }}</td>
+                  <td>{{ attendee.email }}</td>
+                  <td>{{ attendee.gender }}</td>
+                  <td>{% if attendee.age  %}{{ attendee.age }}{% endif %}</td>
+                  <td>{{ attendee.language }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            </div>
+          <!-- </div> -->
+        </div>
+        {% endif %}
+        {% endif %}
         </div>
       </div>
       </div>
@@ -137,9 +185,13 @@
       </div>
       <div class="col-md-3 mt-2 mb-2">
         {% if user.is_authenticated %}
-        <button class="btn btn-lg disabled" style="width:95%;height:100%;">I'M COMING!</button>
+        <button class="btn btn-lg disabled" style="width:95%;">I'M COMING!</button>
         {% else %}
+        {% if available %}
         <a href="{% url 'register_activity' activity.pk %}" class="btn btn-success btn-lg mt-2" style="width:95%;vertical-align:middle;display: inline-block;">I'M COMING!</a>
+        {% else %}
+        <button class="btn btn-lg disabled" style="width:95%;">Fully booked</button>
+        {% endif %}
         {% endif %}
       </div>
     </div>
@@ -147,7 +199,7 @@
 
   <div class="card-body mt-4 ml-5">
     <div class="row">
-      <div class="col-md-9 mt-4 mb-4">
+      <div class="col-md-9 mt-2 mb-4">
         <h6 class="card-title">DESCRIPTION</h6>
         <p class="card-text" style="margin-bottom:5%;">{{ activity.description }}</p>
         <h6 class="card-title">ELIGIBILITY</h6>
@@ -175,7 +227,7 @@
         <h6 class="card-title mt-4">OTHER INFO</h6>
         <!--      Number of available spaces-->
         {% if activity.space_choice == 'Limited' %}
-        <p class="card-text">Maximum space: {{ activity.space }} people</p>
+        <p class="card-text">Available space: {{ activity.space }} people</p>
         {% endif %}
         <!--      Activity cost-->
         {% if activity.cost_choice == 'N' %}Free of charge
@@ -226,8 +278,6 @@
         <a id="edit_btn" href="#" class="btn btn-block btn-success btn-lg mt-4" data-toggle="tooltip" data-placement="left" title="Only modifiable by activity organiser">EDIT</a>
         {% endif %}
         {% endif %}
-
-
       </div>
 
     </div>
@@ -482,7 +532,7 @@ function copyURL() {
 }
 
 function markActivity(clicked_id) {
-    var url_dest = '/activity/bookmark/'+clicked_id+'/'
+    var url_dest = '/activity/bookmark/'+clicked_id+'/';
     $.ajax({
         url: url_dest,
         type: 'get',
@@ -494,6 +544,22 @@ function markActivity(clicked_id) {
           $(this).toggleClass('active');
         }
     });
+};
+
+function sendReminder(clicked_id) {
+  var url_dest = '/activity/'+clicked_id+'/reminder';
+  $.ajax({
+      url: url_dest,
+      type: 'get',
+      dataType: 'json',
+      beforeSend: function () {
+        // $('#send-reminder').hide();
+      },
+      success: function(){
+      }
+  });
+  $('#send-reminder').hide();
+  $('#reminder-message').show();
 };
 
 // When user clicks the Back button, it will open the link to Update activity draft page

@@ -21,7 +21,7 @@ from django.contrib.auth import views as auth_views
 
 from events import views
 from sendsms.views import send_sms, SMSCreateView, EmailCreateView
-from activities.views import share_url, bookmark_list, bookmark_activity, ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDraftDetailView, ActivityDeleteView, ActivityDraftUpdateView, search_events, submit_activity, view_activity_drafts
+from activities.views import send_reminder, share_url, bookmark_list, bookmark_activity, ActivityCreateView, ActivityDetailView, ActivityListView, ActivityUpdateView, ActivityDraftDetailView, ActivityDeleteView, ActivityDraftUpdateView, search_events, submit_activity, view_activity_drafts
 from accounts import views as accounts_views
 from contacts import views as contacts_views
 from booking import views as booking_views
@@ -84,8 +84,12 @@ urlpatterns = [
 
     url(r'^activity/drafts/$', view_activity_drafts, name='view_activity_drafts'),
 
+    # Bookmark activity
     url(r'^activity/bookmark/(?P<pk>\d+)/$', bookmark_activity, name='bookmark_activity'),
     url(r'^activity/bookmarks/$', bookmark_list, name='bookmark_list'),
+
+    # Send reminder
+    url(r'^activity/(?P<pk>\d+)/reminder/$', send_reminder, name='send_reminder'),
 
     # Registration
     url(r'^activity/(?P<pk>\d+)/register/$', booking_views.register, name='register_activity'),

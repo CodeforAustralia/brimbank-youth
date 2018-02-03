@@ -5,21 +5,31 @@
 {% block title %} Send Email {% endblock title %}
 
 {% block stylesheet %}
+<link rel="stylesheet" href="{% static 'css/loading-page.css' %}">
 <style>
     .invalid-feedback {display: inline;}
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="loading" style="display:none;">Loading&#8230;</div>
+
 <div class="container-fluid mt-4" style="width:100%;">
   <div class="row justify-content-center">
     <div class="card" style="width: 75%;">
       <div class="card-body">
         <h3 class="card-title">Send email</h3>
-        <form method="post" novalidate>
+        <form method="post" id="email-form" action="{% url 'email_create' pk_list %}" novalidate>
         {% csrf_token %}
+        <div class="main-alert alert alert-danger alert-dismissible" role="alert" style="display:none;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <p class="mb-0">Either recipients or recipient group must be entered.</p>
+        </div>
+        <div class="message-alert alert alert-danger alert-dismissible" role="alert" style="display:none;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <p class="mb-0">Message field is required.</p>
+        </div>
         {% include 'includes/form.html' %}
-        {{ pk }}
         <div class="form-group row">
           <div class="col-sm-offset-2 col-sm-10">
             <a href="{% url 'home' %}" class="btn btn-outline-primary">Cancel</a>
@@ -31,5 +41,61 @@
       </div>
   </div>
 </div>
+{% endblock %}
 
+{% block javascript %}
+<script>
+  // $("#test").on("submit", function() {
+  $("#email-form").on("submit", function() {
+    var form = $(this);
+    $.ajax({ 
+      url: form.attr("action"),
+      type: form.attr("method"),
+      data: form.serialize(),
+      dataType: 'json',
+      beforeSend: function () {
+        // window.location = form.attr("action");
+        // Show loading indicator / modal box
+        // $('.loading').appendTo('body');
+        $('.loading').show();
+        // $('#overlay').show();
+      },
+      success: function(data) {
+        console.log(data);
+        window.location = window.location.href;
+      },
+      error: function(data, textStatus) {
+        // Close loading indicator
+        $('.loading').hide();
+        // $('#overlay').hide();
+
+        // $('#loading').hide();
+        // $('#loading').modal("toggle");
+        if (data.responseText) {
+          var errors = $.parseJSON(data.responseText);
+        }
+        if (errors.__all__) {
+          console.log(errors.__all__);
+          $(".main-alert").show();
+          $("#id_recipients").addClass("is-invalid");
+          $("#id_recipient_group").addClass("is-invalid");
+        } else {
+          $(".main-alert").hide();
+          $("#id_recipients").removeClass("is-invalid");
+          $("#id_recipient_group").removeClass("is-invalid");
+        }
+
+        if (errors.message) {
+          console.log(errors.message);
+          $(".message-alert").show();
+          $("#id_message").addClass("is-invalid");
+        } else {
+          $(".message-alert").hide();
+          $("#id_message").removeClass("is-invalid");
+        }
+      }
+    });
+    return false;
+    });
+</script>
 {% endblock %}

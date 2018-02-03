@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.conf import settings
 from django.urls import reverse
 from django.views.generic import CreateView
@@ -7,16 +7,26 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from django.contrib.messages import constants as messages_const
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.models import User
+from django.http import JsonResponse
 
 from .models import SendSMS, SendEmail
-from activities.models import Activity
 from .forms import SendSMSForm, SendEmailForm
+from activities.models import Activity
+from accounts.models import Profile
 
 from twilio.rest import Client
 
 class SMSCreateView(CreateView):
     model = SendSMS
     form_class = SendSMSForm
+
+    def get(self, request, *args, **kwargs):
+        profile = Profile.objects.get(user=self.request.user)
+        if (profile.sms_limit == 0):
+            messages.add_message(self.request, messages.ERROR, 'You have exceeded your monthly limit for sending SMS.', extra_tags='danger')
+            return redirect('home')
+        return super(SMSCreateView, self).get(request, *args, **kwargs)
     
     def get_success_url(self):
         text_msg = str(self.object.message + '\n' + self.object.activity_list)
@@ -34,6 +44,11 @@ class SMSCreateView(CreateView):
         # send_sms(text_msg, self.object.recipient_no)
         # send_sms(self.object.message, self.object.recipient_no)
         messages.add_message(self.request, messages.SUCCESS, 'Your text has been sent')
+
+        # Decrease the limit of text message by 1
+        profile = Profile.objects.get(user=self.request.user)
+        profile.sms_limit -= 1
+        profile.save()
         return reverse('search_activity')
     
     def get_initial(self):
@@ -57,12 +72,53 @@ class SMSCreateView(CreateView):
             else:
                 activity_url = str(activity_url_temp)
         initial['activity_list'] = activity_url
+        profile = Profile.objects.get(user=self.request.user)
         return initial
+
+class AjaxableResponseMixin:
+    """
+    Mixin to add AJAX support to a form.
+    Must be used with an object-based FormView (e.g. CreateView)
+    """
+    def render_to_json_response(self, context, **response_kwargs):
+        """Render a json response of the context."""
+        data = json.dumps(context)
+        response_kwargs['content_type'] = 'application/json'
+        return HttpResponse(data, **response_kwargs)
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+            # return JsonResponse(form.errors)
+        else:
+            return response
+
+    def form_valid(self, form):
+        # We make sure to call the parent's form_valid() method because
+        # it might do some processing (in the case of CreateView, it will
+        # call form.save() for example).
+        response = super().form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                'pk': self.object.pk,
+            }
+            return JsonResponse(data)
+        else:
+            return response
     
-class EmailCreateView(CreateView):
+class EmailCreateView(AjaxableResponseMixin, CreateView):
     model = SendEmail
     form_class = SendEmailForm
     template_name = 'sendsms/sendemail_form.html'
+
+    def get(self, request, *args, **kwargs):
+        if not self.request.user.is_anonymous():
+            profile = Profile.objects.get(user=self.request.user)
+            if (profile.email_limit == 0):
+                messages.add_message(self.request, messages.ERROR, 'You have exceeded your monthly limit for sending email.', extra_tags='danger')
+                return redirect('home')
+        return super(EmailCreateView, self).get(request, *args, **kwargs)
     
     def get_success_url(self):
         pk_list = self.kwargs['pk']
@@ -74,6 +130,11 @@ class EmailCreateView(CreateView):
                    'domain':current_site.domain,
                    })
 
+        if self.object.sender:
+            sender = self.object.sender
+        else:
+            sender = 'noreply@youthposter.com'
+
         if self.object.recipient_group is not None:
             recipient_email_group = self.object.recipient_group.email_members.all()
             if recipient_email_group:
@@ -81,19 +142,23 @@ class EmailCreateView(CreateView):
                     send_email(self.request, 
                                self.object.subject, 
                                self.object.message, 
-                               self.object.sender,
+                               sender,
                                member.email.split(','),
                                msg_html)
 
         if self.object.recipients != '':
             send_email(self.request, 
                    self.object.subject, 
-                   self.object.message, 
-                   self.object.sender,
+                   self.object.message,
+                   sender,
                    self.object.recipients.split(','),
                    msg_html)
 
         messages.add_message(self.request, messages.SUCCESS, 'Your email has been sent')
+        # Decrease the limit of email by 1
+        profile = Profile.objects.get(user=self.request.user)
+        profile.email_limit -= 1
+        profile.save()
         return reverse('search_activity')
     
     def get_initial(self):
@@ -115,7 +180,15 @@ class EmailCreateView(CreateView):
                 activity_url = str(activity_url_temp)
         initial['activity_list'] = activity_url
         initial['subject'] = 'Activities of the month!!'
+        profile = Profile.objects.get(user=self.request.user)
         return initial
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        pk_list = self.kwargs['pk']
+        context['pk_list'] = pk_list
+        return context
     
 def convert_number(number):
     number_temp = ''

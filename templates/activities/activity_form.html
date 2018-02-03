@@ -225,14 +225,22 @@ $( "#id_cost_choice_0" ).click(function() {
 //    
 //$('#id_location').easyAutocomplete(options);
     
-var currentTime = new Date();
+var defaultDate = new Date();
+defaultDate.setYear(defaultDate.getFullYear() - 1);
+console.log(defaultDate);
+
+var id_start_date = document.getElementById("id_start_date");
+var id_end_date = document.getElementById("id_end_date");
+var default_end_date = id_end_date.addEventListener("click", function(e) {
+    return id_start_date.value;
+});
     
 $('#id_start_date').datepicker({
     format: 'dd M yyyy',
     autoclose: true,
     assumeNearbyYear: true,
     clearBtn: true,
-    startDate: currentTime,
+    startDate: defaultDate,
     todayHighlight: true,
 //        todayBtn: true,
 });    
@@ -242,7 +250,7 @@ $('#id_end_date').datepicker({
     autoclose: true,
     assumeNearbyYear: true,
     clearBtn: true,
-    startDate: currentTime,
+    startDate: defaultDate,
     todayHighlight: true,
 });
     
@@ -251,7 +259,7 @@ $('#id_activity_date').datepicker({
     autoclose: true,
     assumeNearbyYear: true,
     clearBtn: true,
-    startDate: currentTime,
+    startDate: defaultDate,
     todayHighlight: true,
 });
     

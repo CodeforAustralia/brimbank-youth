@@ -11,12 +11,18 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
 from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
 
-import datetime
+from django.contrib.auth.models import User
+from accounts.models import Profile
+
+import datetime, arrow
 
 from .models import Activity, ActivityDraft
 from .forms import ActivityForm, ActivitySearchForm, ActivityDraftForm, ShareURLForm
 from sendsms.forms import SendSMSForm, SendEmailForm
+from sendsms.views import send_email
+from booking.models import Registration
 
 activities = []
 
@@ -156,6 +162,14 @@ class ActivityDetailView(DetailView):
         current_site = get_current_site(self.request)
         domain = current_site.domain
         context['domain'] = domain
+        attendees = Registration.objects.filter(activity = self.object)
+        context['attendees'] = attendees
+        attendees_no = self.object.bookings.count()
+        available = True
+        if self.object.space <= attendees_no and self.object.space_choice == 'Limited':
+            available = False
+        context['available'] = available
+        context['attendees_no'] = attendees_no
         return context
     
 class ActivityListView(ListView):
@@ -271,6 +285,47 @@ def search_logic_drafts(request, location_key, name_key, category):
 
 def search_events(request):
     activities = search_logic(request, '', '', '')
+
+    # Recharge sms_limit & email_limit on the 1st day of each month
+    if not request.user.is_anonymous():
+        today = arrow.now('Australia/Melbourne')
+
+        # remove later
+        # users = User.objects.all()
+        # for user in users:
+        #     profile = Profile.objects.filter(user=user)[:0]
+        #     if profile:
+        #         profile.last_recharged = today
+        #         profile.save()
+        # end of remove later
+
+        profile = Profile.objects.get(user=request.user)
+        if today.format('D') == '1':
+            if not profile.recharged: # On every 1st of the month, will be recharged on login
+                profile.sms_limit = 30
+                profile.email_limit = 30
+                profile.recharged = True # so won't be recharged more than once on the 1st
+                profile.last_recharged = today
+                profile.save()
+        else: # current date is not 1
+            last_recharged_month = arrow.get(profile.last_recharged).format('M')
+            last_recharged_year = arrow.get(profile.last_recharged).format('YYYY')
+            if last_recharged_year == today.format('YYYY') and int(last_recharged_month) < int(today.format('M')): # haven't been recharged this month
+                profile.sms_limit = 30
+                profile.email_limit = 30
+                profile.recharged = True
+                profile.last_recharged = today
+                profile.save()
+            if int(last_recharged_year) < int(today.format('YYYY')): # the last recharge date was last year
+                profile.sms_limit = 30
+                profile.email_limit = 30
+                profile.recharged = True
+                profile.last_recharged = today
+                profile.save()
+            else:
+                profile.recharged = False
+                profile.save()
+
     other_activities = None
     not_my_activities = None
     latest_activity = None
@@ -368,6 +423,7 @@ def view_activity_drafts(request):
                 'bookmarks': bookmarks,
                 })
 
+@login_required
 def bookmark_activity(request, pk):
     activity = Activity.objects.get(pk=pk)
     if (activity.bookmarked):
@@ -414,3 +470,23 @@ def share_url(request):
     }
     data['html_form'] = render_to_string('activities/includes/partial_share_url.html', context, request=request)
     return JsonResponse(data)
+
+@login_required
+def send_reminder(request, pk): 
+    activity = Activity.objects.get(pk=pk)
+    if not activity.reminder_sent:
+        attendees = Registration.objects.filter(activity=activity)
+        current_site = get_current_site(request)
+        domain = current_site.domain
+
+        # Send reminder email
+        for attendee in attendees:
+            msg_html = render_to_string('booking/confirmation_email.html',
+            {'activity': activity,
+            'domain': domain,
+            })
+            send_email(request, str('Confirmation to '+activity.name), '', 'noreply@youthposter.com', [attendee.email], msg_html)
+
+        activity.reminder_sent = True
+        activity.save()
+    return HttpResponse('Reminder sent')

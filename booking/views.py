@@ -3,8 +3,10 @@ from django.contrib import messages
 from django.views.generic import DetailView
 from django.urls import reverse
 from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
 
 from activities.models import Activity
+from sendsms.views import send_email
 from .models import Registration
 from .forms import RegistrationForm
 
@@ -21,9 +23,24 @@ def register(request, pk):
             registration.save()
             registration = Registration.objects.get(pk=registration.pk)
             registration_pk = registration.pk
+            if activity.space_choice == 'Limited':
+                activity.space -= 1
+                activity.save()
+            # Send confirmation email
+            current_site = get_current_site(request)
+            domain = current_site.domain
+            msg_html = render_to_string('booking/confirmation_email.html',
+            {'activity': activity,
+            'domain': domain,
+            })
+            send_email(request, str('Confirmation to '+activity.name), '', 'noreply@youthposter.com', [registration.email], msg_html)
             return redirect('registration_detail', pk=registration_pk)
     else:
-        form = RegistrationForm(**pk)
+        if activity.space_choice == 'Limited' and activity.space <= activity.bookings.count():
+            messages.info(request, 'Sorry, this activity is fully booked.')
+            return redirect('activity_detail', pk=activity_pk)
+        else:
+            form = RegistrationForm(**pk)
     return render(request, 'booking/registration_form.html', {
         'form': form,
         'activity': activity,

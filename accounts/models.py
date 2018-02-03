@@ -20,6 +20,10 @@ class Profile(models.Model):
     staff_name = models.CharField(max_length=50, blank=True)
     web_address = models.CharField(max_length=100, blank=True)
     address = models.CharField(max_length=100, blank=True)
+    sms_limit = models.PositiveSmallIntegerField(default=30)
+    email_limit = models.PositiveSmallIntegerField(default=30)
+    recharged = models.BooleanField(default=True)
+    last_recharged = models.DateField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.user.username
