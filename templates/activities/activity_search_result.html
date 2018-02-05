@@ -36,6 +36,9 @@
             color: rgb(255,255,255);
             text-shadow: 1px 1px white;
         }
+        .card {
+            border: transparent;
+        }
     </style>
 
 {% endblock %}
@@ -87,7 +90,10 @@
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
     {% endif %}
     <div class="card-body select" id=card_{{ latest_activity.pk }} value="{{ latest_activity.pk }}">
-        <p id="b" class="card-text small">{{ latest_activity.activity_type|upper }}</p>
+        <p id="b" class="card-text small">{{ latest_activity.activity_type|upper }}
+            <span style="color:black;" class="far fa-heart fa-2x float-right tickbox"></span>
+            <span style="display:none;color:black;" class="fas fa-heart fa-2x float-right tickboxSelected"></span>
+        </p>
         <h3 id="a" class="card-title"><a href="{% url 'activity_detail' latest_activity.pk %}">{{ latest_activity.name }}</a></h3>
         <p class="card-text small"><a href=# name="address">{{ latest_activity.location }}</a></p>
 
@@ -108,8 +114,8 @@
         {% endif %}
 
         <input class="selected" style="display:none;" type="checkbox" id=activity_{{ latest_activity.pk }} name ="checkboxes" value={{ latest_activity.pk }}>
-        <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span>
-        <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span>
+        <!-- <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span>
+        <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span> -->
     </div>
     <div class="card-footer">
         <a target="_blank" href="{% url 'sms_create' latest_activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a>
@@ -149,7 +155,10 @@
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
     {% endif %}
     <div class="card-body select" id=card_{{ activity.pk }} value="{{ activity.pk }}">
-        <p id="b" class="card-text small">{{ activity.activity_type|upper }}</p>
+        <p id="b" class="card-text small">{{ activity.activity_type|upper }} 
+            <span style="color:black;" class="far fa-heart fa-2x float-right tickbox"></span>
+            <span style="display:none;color:black;" class="fas fa-heart fa-2x float-right tickboxSelected"></span>
+        </p>
         <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
         <p class="card-text small"><a href=# name="address">{{ activity.location }}</a></p>
 
@@ -170,8 +179,8 @@
         {% endif %}
 
         <input class="selected" style="display:none;" type="checkbox" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }}>
-        <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span>
-        <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span>
+        <!-- <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span> -->
+        <!-- <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span> -->
     </div>
     <div class="card-footer">
         <a target="_blank" href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a>
@@ -405,7 +414,10 @@
         <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% endif %}
     <div class="card-body select" id=card_{{ not_my_activity.pk }} value="{{ not_my_activity.pk }}">
-        <p id="b" class="card-text small">{{ not_my_activity.activity_type|upper }}</p>
+        <p id="b" class="card-text small">{{ not_my_activity.activity_type|upper }}
+            <span style="color:black;" class="far fa-heart fa-2x float-right tickbox"></span>
+            <span style="display:none;color:black;" class="fas fa-heart fa-2x float-right tickboxSelected"></span>
+        </p>
         <h3 id="a" class="card-title"><a href="{% url 'activity_detail' not_my_activity.pk %}">{{ not_my_activity.name }}</a></h3>
         <p class="card-text small"><a href=# name="address">{{ not_my_activity.location }}</a></p>
         <!--    Activities that only occur once -->
@@ -424,8 +436,8 @@
         {% endif %}
         {% endif %}
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ not_my_activity.pk }} name ="checkboxes" value={{ not_my_activity.pk }} />
-        <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span>
-        <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span>
+        <!-- <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span> -->
+        <!-- <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span> -->
     </div>
     <div class="card-footer">
         <a target="_blank" href="{% url 'sms_create' not_my_activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a>
@@ -715,8 +727,10 @@ $( function() {
       
       //show the checklist icon
     //   $(this).siblings(".selectedImg.select").toggle();
-      $(this).children(".tickbox").toggle();
-      $(this).children(".tickboxSelected").toggle();
+    //   $(this).children(".tickbox").toggle();
+    //   $(this).children(".tickboxSelected").toggle();
+      $(this).children(".card-text.small").children(".tickbox").toggle();
+      $(this).children(".card-text.small").children(".tickboxSelected").toggle();
 //      card.children(".selectedImg").toggle();
       
       //checked the checkbox element

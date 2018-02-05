@@ -94,6 +94,10 @@ urlpatterns = [
     # Registration
     url(r'^activity/(?P<pk>\d+)/register/$', booking_views.register, name='register_activity'),
     url(r'^registration/detail/(?P<pk>\d+)/$', booking_views.RegistrationDetailView.as_view(), name='registration_detail'),
+    url(r'^activity/(?P<pk>\d+)/add_new_attendee/$', booking_views.register_client, name='register_client'),
+
+    # Print attendee list
+    url(r'^activity/(?P<pk>\d+)/attendee_list/$', booking_views.print_attendee_list, name='print_attendee_list'),
 
     # SMS & Email Groups
 

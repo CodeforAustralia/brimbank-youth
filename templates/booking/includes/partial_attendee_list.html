@@ -1,0 +1,49 @@
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Mobile</th>
+        <th>Email</th>
+        <th>M or F</th>
+        <th>Age</th>
+        <th>Background</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% if available or activity.space_choice == 'Unlimited' %}
+        <a class="js-register-client" href="#" data-url="{% url 'register_client' activity.pk %}" role="button" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-plus-circle"></i> Add new attendee</a>
+        {% else %}
+        <a class="ml-2" role="button">
+        This activity is full</a>
+        {% endif %}
+        {% if not available and not activity.reminder_sent %}
+        <button id="send-reminder" onclick="sendReminder(this.value)" value="{{ activity.id }}" type="button" class="btn btn-outline-success float-right mb-2 mr-2 mt-2" data-toggle="button" aria-pressed="false" autocomplete="off" data-toggle="tooltip" data-placement="right" title="Warning: Reminder can only be sent once.">
+        Send reminder
+        </button>
+        <div id="reminder-message" class="float-right mr-2" style="display:none;color:green;">Reminder has been sent!</div>
+        {% endif %}
+        {% if not available and activity.reminder_sent %}
+        <div id="reminder-message" class="float-right mr-2" style="color:green;">Reminder has been sent for this event.</div>
+        {% endif %}
+
+        {% if activity.space_choice == 'Unlimited' and not activity.reminder_sent %}
+        <button id="send-reminder" onclick="sendReminder(this.value)" value="{{ activity.id }}" type="button" class="btn btn-outline-success float-right mb-2 mr-2 mt-2" data-toggle="button" aria-pressed="false" autocomplete="off" data-toggle="tooltip" data-placement="right" title="Warning: Reminder can only be sent once.">
+        Send reminder
+        </button>
+        <div id="reminder-message" class="float-right mr-2" style="display:none;color:green;">Reminder has been sent!</div>
+        {% endif %}
+        {% if activity.space_choice == 'Unlimited' and activity.reminder_sent %}
+        <div id="reminder-message" class="float-right mr-2" style="color:green;">Reminder has been sent for this event.</div>
+        {% endif %}
+
+        {% for attendee in attendees %}
+        <tr>
+        <td>{{ attendee.first_name }} {{ attendee.surname }}</td>
+        <td>{{ attendee.mobile_number }}</td>
+        <td>{{ attendee.email }}</td>
+        <td>{{ attendee.gender }}</td>
+        <td>{% if attendee.age  %}{{ attendee.age }}{% endif %}</td>
+        <td>{{ attendee.language }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>

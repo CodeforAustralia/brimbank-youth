@@ -228,7 +228,7 @@ def sms_member_update(request, pk):
         form = SMSMemberForm(request.POST, instance=sms_member)
     else:
         form = SMSMemberForm(instance=sms_member)
-    return save_contact_form(request, form, 'contacts/includes/partial_contact_update.html')
+    return save_contact_form(request, form, pk, 'contacts/includes/partial_contact_update.html')
 
 def email_member_update(request, pk):
     email_member = get_object_or_404(EmailMember, pk=pk)

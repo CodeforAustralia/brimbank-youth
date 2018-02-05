@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
+from django.http import JsonResponse
 
 from django.contrib.auth.models import User
 from accounts.models import Profile
@@ -165,9 +166,14 @@ class ActivityDetailView(DetailView):
         attendees = Registration.objects.filter(activity = self.object)
         context['attendees'] = attendees
         attendees_no = self.object.bookings.count()
-        available = True
-        if self.object.space <= attendees_no and self.object.space_choice == 'Limited':
-            available = False
+        if self.object.space_choice == 'Unlimited':
+            available = True
+        else:
+            if self.object.space <= attendees_no:
+                available = False
+            else:
+                available = True
+        print("available? ", available)
         context['available'] = available
         context['attendees_no'] = attendees_no
         return context
@@ -408,7 +414,7 @@ def view_activity_drafts(request):
     if request.method == 'GET':
         location_key = request.GET.get('location') # 'location' is the name of the input field
         name_key = request.GET.get('name')
-        list_of_input_ids=request.GET.getlist('checkboxes')
+        list_of_input_ids = request.GET.getlist('checkboxes')
         category = request.GET.get('category')
         # str1 = '_'.join(list_of_input_ids)
         if location_key or name_key or category:
@@ -474,19 +480,20 @@ def share_url(request):
 @login_required
 def send_reminder(request, pk): 
     activity = Activity.objects.get(pk=pk)
-    if not activity.reminder_sent:
-        attendees = Registration.objects.filter(activity=activity)
-        current_site = get_current_site(request)
-        domain = current_site.domain
+    if activity.created_by == request.user:
+        if not activity.reminder_sent:
+            attendees = Registration.objects.filter(activity=activity)
+            current_site = get_current_site(request)
+            domain = current_site.domain
 
-        # Send reminder email
-        for attendee in attendees:
-            msg_html = render_to_string('booking/confirmation_email.html',
-            {'activity': activity,
-            'domain': domain,
-            })
-            send_email(request, str('Confirmation to '+activity.name), '', 'noreply@youthposter.com', [attendee.email], msg_html)
+            # Send reminder email
+            for attendee in attendees:
+                msg_html = render_to_string('booking/confirmation_email.html',
+                {'activity': activity,
+                'domain': domain,
+                })
+                send_email(request, str('Confirmation to '+activity.name), '', 'noreply@youthposter.com', [attendee.email], msg_html)
 
-        activity.reminder_sent = True
-        activity.save()
+            activity.reminder_sent = True
+            activity.save()
     return HttpResponse('Reminder sent')

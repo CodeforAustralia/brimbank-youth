@@ -50,6 +50,11 @@
   tr:hover {
     background-color: white;
   }
+  .tooltip-inner
+  { background-color:red;}
+
+  .tooltip.bs-tooltip-auto[x-placement^=left] .arrow::before, .tooltip.bs-tooltip-left .arrow::before 
+  { border-left-color: red;}
 </style>
 {% endblock %}
 
@@ -98,18 +103,19 @@
   </row>
 
   <row style="border-bottom:solid 0.5px LightGray;">
-    <div class="row">
-      <div class="col-md-7">
+    <div class="row" style="background:yelow;">
+      <div class="col-md-4">
         <div class="row mt-3" style="margin-left:1%;">
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
         <div class="sharethis-inline-share-buttons"></div>
-        </div>
-        <!-- <a href="#" class="btn btn-outline-primary ml-4 mr-2 js-share-url"><i class="fas fa-share"></i> Share</a> -->
+        </div> -->
+        <!-- <a href="#" class="btn btn-outline-primary js-share-url"><i class="fas fa-share"></i> Share</a> -->
         <!-- <div class="col-md-4" style="background:yellow;"> -->
-        <div class="col-md-8">
+        <!-- <div class="col-md-7"> -->
+        <a href="#" class="btn btn-outline-primary js-share-url mt-1 mr-1 ml-1"><i class="fas fa-share"></i> Share</a>
         {% if user.is_authenticated %}
-        <a href="{% url 'sms_create' activity.pk %}" target="_blank" class="btn btn-outline-primary mt-1 mr-2"><i class="fas fa-mobile-alt"></i> SMS</a>
-        <a href="{% url 'email_create' activity.pk %}" target="_blank" class="btn btn-outline-primary mt-1 mr-2"><i class="far fa-envelope"></i> Email</a>
+        <a href="{% url 'sms_create' activity.pk %}" target="_blank" class="btn btn-outline-primary mt-1 mr-1"><i class="fas fa-mobile-alt"></i> SMS</a>
+        <a href="{% url 'email_create' activity.pk %}" target="_blank" class="btn btn-outline-primary mt-1 mr-1"><i class="far fa-envelope"></i> Email</a>
         <!-- Bookmark button -->
         {% if user.is_authenticated %}
         {% if activity.bookmarked %}
@@ -126,61 +132,30 @@
         </button>
         {% endif %}
         <!-- End of bookmark button -->
+        {% endif %}
+        <!-- </div> -->
+      </div>
+      </div>
+      <div class="col-md-5 mt-3 mb-3">
         {% if activity.created_by == user %}
-        <a href="#collapseExample" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn mt-1 mr-2"><i class="fas fa-angle-double-down"></i>  {{ attendees_no }} coming so far</a>
+        <a href="#collapseExample" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn offset-md-2"><i class="fas fa-angle-double-down"></i> <span id="attendees_no">{{ attendees_no }}</span> coming so far</a>
         <div class="collapse bg-light" id="collapseExample" style="z-index:1;position:absolute;">
             <div class="mt-2 mb-2" style="overflow-x:auto;">
-            <table class="table" id="contact-table">
-              <thead>
-              <tr>
-                  <th>Name</th>
-                  <th>Mobile</th>
-                  <th>Email</th>
-                  <th>M or F</th>
-                  <th>Age</th>
-                  <th>Background</th>
-              </tr>
-              </thead>
-              <tbody>
-                <a href="#" data-url="#" role="button" aria-haspopup="true" aria-expanded="false">
-                  <i class="fas fa-plus-circle"></i> Add new attendee</a>
-                {% if not available and not activity.reminder_sent %}
-                <!-- <a id="{{ activity.id }}" class="btn btn-primary reminder float-right mb-2 mr-2 mt-2" href="#" data-url="#" role="button" aria-haspopup="true" aria-expanded="false">
-                Send reminder</a> -->
-                <button id="send-reminder" onclick="sendReminder(this.value)" value="{{ activity.id }}" type="button" class="btn btn-outline-success float-right mb-2 mr-2 mt-2" data-toggle="button" aria-pressed="false" autocomplete="off">
-                  Send reminder
-                </button>
-                <div id="reminder-message" class="float-right mr-2" style="display:none;color:green;">Reminder has been sent!</div>
-                {% endif %}
-                {% if not available and activity.reminder_sent %}
-                <div id="reminder-message" class="float-right mr-2" style="color:green;">Reminder has been sent for this event.</div>
-                {% endif %}
-                {% for attendee in attendees %}
-                <tr>
-                  <td>{{ attendee.first_name }} {{ attendee.surname }}</td>
-                  <td>{{ attendee.mobile_number }}</td>
-                  <td>{{ attendee.email }}</td>
-                  <td>{{ attendee.gender }}</td>
-                  <td>{% if attendee.age  %}{{ attendee.age }}{% endif %}</td>
-                  <td>{{ attendee.language }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+              <table class="table" id="contact-table">
+              {% include 'booking/includes/partial_attendee_list.html' %}
+              </table>
             </div>
           <!-- </div> -->
         </div>
         {% endif %}
-        {% endif %}
-        </div>
-      </div>
-      </div>
-      <div class="col-md-2 mt-3 mb-3">
-        {% if activity.flyer  %}
+        {% if activity.flyer %}
         <a href="{{ activity.flyer.url }}" class="btn btn-outline-primary float-right"><i class="fas fa-print"></i> Print flyer</a>
         {% endif %}
         {% if not activity.flyer %}
-        <a href="#" class="btn btn-outline-primary disabled float-right"><i class="fas fa-print"></i> Print flyer</a>
+        <a href="#" class="btn btn-outline-primary disabled"><i class="fas fa-print"></i> Print flyer</a>
+        {% endif %}
+        {% if activity.created_by == user and attendees_no > 0 %}
+        <a href="{% url 'print_attendee_list' activity.pk %}" class="btn btn-outline-primary mr-2">Print Attendee List</a>
         {% endif %}
       </div>
       <div class="col-md-3 mt-2 mb-2">
@@ -227,7 +202,7 @@
         <h6 class="card-title mt-4">OTHER INFO</h6>
         <!--      Number of available spaces-->
         {% if activity.space_choice == 'Limited' %}
-        <p class="card-text">Available space: {{ activity.space }} people</p>
+        <p class="card-text">Available space: <span id="available_space">{{ activity.space }}</span> people</p>
         {% endif %}
         <!--      Activity cost-->
         {% if activity.cost_choice == 'N' %}Free of charge
@@ -407,10 +382,10 @@
         <div id="share5" class="mr-2 share5 float-left"></div>
         <div id="share" class="mr-2 share float-left"></div>
       </div> -->
-    <!-- <div class="row justify-content-center mt-3"> -->
-        <!-- <div class="addthis_inline_share_toolbox"></div> -->
+    <div class="row justify-content-center mt-3">
+        <div class="addthis_inline_share_toolbox"></div>
         <!-- <div class="sharethis-inline-share-buttons"></div> -->
-    <!-- </div> -->
+    </div>
     <div class="row mt-2 ml-3 mr-1">
     <input style="width:85%;" class="form-control mr-2" readonly type="text" id="id_share_url" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
     <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn"><i class="far fa-copy"></i></button>
@@ -422,16 +397,23 @@
   </div>
 </div>
 
+<!-- Modal to register attendee -->
+<div class="modal fade" id="modal-register">
+  <div class="modal-dialog">
+      <div class="modal-content"></div>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block javascript %}
 <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&region=AU&callback=initMap">
 </script>
-<script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
+<!-- <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script> -->
 
 <!-- Go to www.addthis.com/dashboard to customize your tools -->
-<!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script> -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
 
 <script src="{% static 'js/jssocials.js' %}"></script>
@@ -628,6 +610,7 @@ $(function() {
   });
 
   $('#edit_btn').tooltip();
+  $('#send-reminder').tooltip();
 
   var isMobile = window.matchMedia("only screen and (max-width: 760px)");
 
@@ -644,6 +627,56 @@ $(function() {
     $("#id_url_text").html("");
     $("#modal-share-url").modal("show");
   });
+
+var loadForm = function () {
+  var btn = $(this);
+  $.ajax({
+    url: btn.attr("data-url"),
+    type: 'get',
+    dataType: 'json',
+    beforeSend: function () {
+      $("#modal-register").modal("show");
+    },
+    success: function (data) {
+      $("#modal-register .modal-content").html(data.html_form);
+      console.log(data);
+      if (data.fully_booked) {
+        $("#modal-register").modal("hide");
+        location.reload();
+        // $("#modal-test").modal("show");
+      }
+    }
+  });
+};
+
+var saveForm = function () {
+  var form = $(this);
+  $.ajax({
+    url: form.attr("action"),
+    data: form.serialize(),
+    type: form.attr("method"),
+    dataType: 'json',
+    beforeSend: function () {
+        // $('.loading').show();
+      },
+    success: function (data) {
+      if (data.form_is_valid) {
+        $("#contact-table").html(data.attendee_list);
+        $("#attendees_no").html(data.attendees_no);
+        $("#available_space").html(data.available_space);
+        $("#modal-register").modal("hide");
+      }
+      else {
+        $("#modal-register .modal-content").html(data.html_form);
+      }
+    }
+  });
+  return false;
+};
+
+// Add new attendee
+$(".js-register-client").click(loadForm);
+$("#modal-register").on("submit", ".js-booking-form", saveForm);
 
 });
 </script>
