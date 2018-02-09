@@ -1,69 +1,64 @@
 {% load static %}
 
-<div class="jumbotron mb-6">
+<div class="jumbotron">
     <div class="img"></div>
-    <div class="container text-center search-box" style="padding-top:2px; margin-top:40px;">
-    <div id="search-box">
+    <div class="container text-center search-box">
+    <div id="search-box" style="padding-top:20px;padding-bottom:25px;">
         <!-- <h1 class="display-4">Youth Poster</h1> -->
-      <h1 class="mt-2">Search for activities and events in your area</h1>
-      <hr class="my-3">
-      <form method="get" id="id_form" class="justify-content-center" novalidate>
+      <h1>Share activities and events with youth</h1>
+      <form method="get" id="id_form" class="justify-content-center mt-4" novalidate>
           <div class="form-row justify-content-center">
-          <div class="form-group col-sm-4">
+          <div class="form-group col-sm-4 mr-4">
               <label class="sr-only" for="id_name">Activity name</label>
-              <input type="text" name="name" placeholder="Swimming, Dance..." maxlength="150" class="form-control mr-sm-2" id="id_name" data-toggle="tooltip" data-placement="left" title="Enter the activity name" />
+              <input type="text" name="name" placeholder="Swimming, African Dance, Soccer..." maxlength="150" class="form-control mr-sm-4" id="id_name" data-toggle="tooltip" data-placement="left" title="Enter the activity name" />
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-4 mr-4 mb-2">
               <label class="sr-only" for="id_location">Location</label>
-              <input type="text" name="location" placeholder="Sunshine, Deer Park... " maxlength="150" class="form-control mr-sm-2 mb-2" id="id_location" data-toggle="tooltip" data-placement="left" title="Enter an adress" />
+              <input type="text" name="location" placeholder="Sunshine or 3040 " maxlength="150" class="form-control mr-4 mb-2" id="id_location" data-toggle="tooltip" data-placement="left" title="Enter an adress" />
           </div>
           <div class="col-sm-1">
-              <button type="submit" id="id_search" class="btn btn-success mr-sm-2 mb-2" name="search" value="search">Search</button>
+              <button type="submit" id="id_search" class="btn btn-success mr-sm-4 mb-2" name="search" value="search">Search</button>
           </div>
           </div>
     </div>
     </div>
-  </div>
+</div>
 <div class="container-fluid">
-    <div class="row justify-content-center mb-2">
-        <!-- <p class="lead">or search by category</p> -->
-    </div>
-    <div class="row justify-content-center mb-2 mt-4">
-    <!-- <div class="btn-group" role="group" aria-label="Categories"> -->
+    <div class="row justify-content-center mt-4" >
         <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
         <button type="submit" name="category" value="sport" class="btn mr-4 mb-2 transparent-background" style="text-align:center;">
-            <span><img src="{% static 'img/activities/sports.png' %}" class="mt-2"></span>
+            <span><img src="{% static 'img/activities/sport.svg' %}" class="mt-2" height="60px;"></span>
             <p class="lead mt-3">SPORT</p>
         </button>
         </div>
         <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
-        <button type="submit" name="category" value="fun" class="btn mr-4 mb-2 transparent-background">
-            <span><img src="{% static 'img/activities/pan.png' %}" class="mt-2"></span>
-            <p class="lead mt-3">FUN</p>
-        </button>
-        </div>
-        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
-        <button type="submit" name="category" value="culture" class="btn mr-4 mb-2 transparent-background">
-            <img src="{% static 'img/activities/drum.png' %}" class="mt-2"><br />
-            <p class="lead mt-3">CULTURE</p>
-        </button>
-        </div>
-        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
-        <button type="submit" name="category" value="career" class="btn mr-4 mb-2 transparent-background">
-            <img src="{% static 'img/activities/engineer.png' %}" class="mt-2"><br />
-            <p class="lead mt-3">CAREER</p>
-        </button>
-        </div>
-        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
         <button type="submit" name="category" value="learn" class="btn mr-4 mb-2 transparent-background">
-            <img src="{% static 'img/activities/tent.png' %}" class="mt-2"><br />
+            <span><img src="{% static 'img/activities/pan.svg' %}" class="mt-2" height="60px;"></span>
             <p class="lead mt-3">LEARN</p>
         </button>
         </div>
         <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
+        <button type="submit" name="category" value="school holidays" class="btn mr-4 mb-2 transparent-background">
+            <img src="{% static 'img/activities/tent.svg' %}" class="mt-2" height="60px;"><br />
+            <p class="lead mt-3">SCHOOL<br />HOLIDAYS</p>
+        </button>
+        </div>
+        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
+        <button type="submit" name="category" value="culture" class="btn mr-4 mb-2 transparent-background">
+            <img src="{% static 'img/activities/culture.svg' %}" class="mt-2" height="60px;"><br />
+            <p class="lead mt-3">ART &<br />CULTURE</p>
+        </button>
+        </div>
+        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
+        <button type="submit" name="category" value="career" class="btn mr-4 mb-2 transparent-background">
+            <img src="{% static 'img/activities/diploma.svg' %}" class="mt-2" height="60px;"><br />
+            <p class="lead mt-3">CAREER</p>
+        </button>
+        </div>
+        <div class="col-md-2 col-4 justify-content-center" style="display:flex;">
         <button type="submit" name="category" value="" class="btn mr-4 mb-2 transparent-background">
-            <img src="{% static 'img/activities/note.png' %}" class="mt-2"><br />
-            <p class="lead mt-3">ALL</p>
+            <img src="{% static 'img/activities/more.svg' %}" class="mt-2" height="60px;"><br />
+            <p class="lead mt-3">ALL<br />CATEGORIES</p>
         </button>
         </div>
     <!-- </div> -->

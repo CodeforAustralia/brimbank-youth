@@ -12,6 +12,7 @@ class RegistrationForm(forms.ModelForm):
         labels = {
             'gender': _('Male or Female'),
             'language': _('Languages spoken'),
+            'age': _('Your age'),
         }
         widgets = {
             'first_name': forms.TextInput(attrs={'placeholder': 'Type your first name here'}),

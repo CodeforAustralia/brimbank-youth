@@ -3,7 +3,7 @@
 {% if form.non_field_errors %}
   <div class="alert alert-danger" role="alert">
     {% for error in form.non_field_errors %}
-      <p>{% if forloop.last %} <class="mb-0"></class> {% endif %}{{ error }}</p> <!-- for the last error, put mb/margin-bottom = 0 so that the error message doesn't look weird. By default, p has mb which doesn't equal to 0-->
+      <p class="mb-0">{% if forloop.last %}{{ error }}{% endif %}</p> <!-- for the last error, put mb/margin-bottom = 0 so that the error message doesn't look weird. By default, p has mb which doesn't equal to 0-->
     {% endfor %}
   </div>
 {% endif %}

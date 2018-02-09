@@ -1,13 +1,51 @@
+h1 {
+    font-family: 'Lato', sans-serif;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+h2 {
+    font-family: 'Lato', sans-serif;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.card-title, .bold-text {
+    font-family: 'Lato', sans-serif;
+    font-size: 21px;
+    color: #484848;
+}
+
+.bold-text {
+    font-weight: bold; 
+    color: #1F1F1F;
+}
+
+.smaller, .lead {
+    font-family: 'Lato', sans-serif;
+    font-size: 18px;
+}
+
+.lead {
+    color: #666666;
+}
+
+.smaller {
+    color: #484848;
+}
+
+
+
 .card-body.select.on {
-    background-color:#CFD8DC;
+    /* background-color:#CFD8DC; */
 }
 .card-img-top.select.on{
-    opacity: 0.2;
-    filter: alpha(opacity=20); /* For IE8 and earlier */
+    /* opacity: 0.2; */
+    /* filter: alpha(opacity=20); For IE8 and earlier */
 }
 img:hover {
-    opacity: 0.2;
-    filter: alpha(opacity=20); /* For IE8 and earlier */
+    /* opacity: 0.2; */
+    /* filter: alpha(opacity=20); For IE8 and earlier */
 }
 .selectedImg{
     z-index: 1;
@@ -19,10 +57,16 @@ img:hover {
     opacity: 1;
     filter: alpha(opacity=100); /* For IE8 and earlier */
 }
-.btn.active {
+/* .btn.active {
     background-color:rgb(92,184,92);
-}
-.easy-autocomplete-container ul{
+    outline-color: transparent;
+} */
+
+.btn:focus,.btn:active {
+    outline: none !important;
+    box-shadow: none;
+ }
+.easy-autocomplete-container ul {
     text-align: left;
 }
 button {
@@ -40,6 +84,16 @@ button {
     /* border-width: 2px; */
     float:right;
     /* text-align: left; */
+    display: block;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.btn-circle-2 {
+    border-radius: 100%;
+    /* z-index: 4; */
+    height: 45px;
+    width: 45px;
+    line-height: 45px;
     display: block;
     padding-top: 0px;
     padding-bottom: 0px;
@@ -80,23 +134,23 @@ input:checked + span {
 
 /* Floating Social Media Bar Style Starts Here */
 .fl-fl {
-/* background: green; */
-background: transparent;
-/* text-transform: uppercase; */
-letter-spacing: 3px;
-/* padding: 4px; */
-width: 160px;
-position: fixed;
-/* right: -140px; */
-right: 0px;
-z-index: 1000;
-font: normal normal 10px Arial;
--webkit-transition: all .25s ease;
--moz-transition: all .25s ease;
--ms-transition: all .25s ease;
--o-transition: all .25s ease;
-transition: all .25s ease;
-border-radius: 20%;
+    /* background: green; */
+    background: transparent;
+    /* text-transform: uppercase; */
+    letter-spacing: 3px;
+    /* padding: 4px; */
+    width: 160px;
+    position: fixed;
+    /* right: -140px; */
+    right: 0px;
+    z-index: 1000;
+    font: normal normal 10px Arial;
+    -webkit-transition: all .25s ease;
+    -moz-transition: all .25s ease;
+    -ms-transition: all .25s ease;
+    -o-transition: all .25s ease;
+    transition: all .25s ease;
+    border-radius: 20%;
 }
 
 /* .fa {

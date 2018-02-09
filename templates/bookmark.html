@@ -1,0 +1,16 @@
+<!-- Bookmark button -->
+{% if user.is_authenticated %}
+{% if activity.bookmarked %}
+{% for bookmark_user in activity.bookmarked_users.all %}
+{% if bookmark_user.username == user.username %}
+<button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article active mt-1" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+    <i class="far fa-bookmark"></i>
+</button>
+{% endif %}
+{% endfor %}
+{% endif %}
+<button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article remove mt-1" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+    <i class="far fa-bookmark"></i>
+</button>
+{% endif %}
+<!-- End of bookmark button -->

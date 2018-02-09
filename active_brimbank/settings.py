@@ -189,6 +189,7 @@ STATIC_URL = '/static/'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'home' # will be used to redirect the user after authenticating from Django Login and Social Auth
+LOGOUT_REDIRECT_URL = 'home'
 
 # Integration with Facebook app
 SOCIAL_AUTH_FACEBOOK_KEY = config('SOCIAL_AUTH_FACEBOOK_KEY') # App ID

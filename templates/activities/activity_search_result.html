@@ -13,32 +13,87 @@
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
     <style>
-        .jumbotron {
-            position: relative;
-            background-color: transparent !important;
-            height: 400px;
+    .jumbotron {
+        position: relative;
+        background-color: transparent !important;
+        height: 640px;
+        padding-top: 160px;
+        padding-bottom: 40px;
+    }
+    .jumbotron .img {
+        position: absolute;
+        left:0; top:0;
+        background-size: cover;
+        min-height: 640px;
+        width: 100%;
+        /* filter: alpha(opacity=80); IE 8 and 9
+        -moz-opacity:0.8; Older than Firefox 0.9
+        -khtml-opacity: 0.8; Safari 1.x (pre WebKit!)
+        opacity: 0.8; */
+        background-image: url("/static/img/cover_search.png");
+        z-index: -1;
+    }
+    .search-box {
+        /* background-color: rgba(255,255,255,0.3); */
+        background-color:rgba(102,102,102,0.3);
+        color: rgb(255,255,255);
+        /* margin-bottom: 80px; */
+        /* text-shadow: 1px 1px white; */
+    }
+    .card {
+        border: transparent;
+    }
+    .hover-card .top {
+        /* transition: 0.05s; */
+        top: 0;
+        /* background: rgba(192, 191, 191, 0.56); */
+        /* padding: 0.5em; */
+        /* padding-top: 130px; */
+        /* padding-left: 50px; */
+        position: absolute;
+        left: 0;
+        text-align: center;
+        color: white;
+        width: 100%;
+        /* min-height: 100%; */
+        min-height: 300px;
         }
-        .jumbotron .img {
-            position: absolute;
-            left:0; top:0;
-            background-size: cover;
-            min-height: 400px;
-            width: 100%;
-            filter: alpha(opacity=80); /* IE 8 and 9 */
-            -moz-opacity:0.8; /* Older than Firefox 0.9 */
-            -khtml-opacity: 0.8; /* Safari 1.x (pre WebKit!) */
-            opacity: 0.8;
-            background-image: url("/static/img/cover_search.png");
-            z-index: -1;
-        }
-        .search-box {
-            background-color: rgba(255,255,255,0.3);
-            color: rgb(255,255,255);
-            text-shadow: 1px 1px white;
-        }
-        .card {
-            border: transparent;
-        }
+
+    .card:hover .top{
+        /* opacity:0.5; */
+        background: rgba(192, 191, 191, 0.56);
+    }
+    .vertical-button {
+        /* vertical-align: center; */
+        height:100%;
+        margin-top: 130px;
+        /* margin-left: 0; */
+        z-index: 999;
+        display: none;
+        border-radius: 0;
+    }
+    .hover-card.select .vertical-button {
+        margin-left: 50px;
+    }
+    .vertical-button:hover {
+        opacity: 1 !important;
+        /* display: inline-block; */
+    }
+    .top:hover .vertical-button {
+        display: inline-block;
+    }
+    .h1, .p {
+        font-family: sans-serif;
+    }
+    .st-custom-button[data-network] {
+        background-color: #0adeff;
+        display: inline-block;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-weight: bold;
+        color: #fff;
+    }
+   }
     </style>
 
 {% endblock %}
@@ -69,19 +124,17 @@
 </div>
 <!-- Floating sharing button ends -->
 
-
-<div class="container-fluid">
-<h3>Your activities & events</h3>
-
+<div class="container">
+<h2>Your activities & events</h2>
 {% else %}
-<div class="container-fluid">
-<h3>Activities & events</h3>
+<div class="container">
+<h2>Activities & events</h2>
 {% endif %}
-<div class="row justify-content-center">
+<div class="row justify-content-center" style="margin-top:40px;">
 {% if latest_activity and user.is_authenticated %}
-<div class="col-sm-4" id="latest_activity" style="display:none; background:mistyrose;">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12" id="latest_activity" style="display:none; background:mistyrose;">
     <div class="latest_activity_{{ latest_activity.id }}" id="latest_activity_val" style="display:none;"> </div>
-    <div class="card select">
+    <div class="card hover-card select">
     {% if latest_activity.activity_img %}
         <img class="card-img-top select" src="{{ latest_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
@@ -89,27 +142,31 @@
         <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
     {% endif %}
-    <div class="card-body select" id=card_{{ latest_activity.pk }} value="{{ latest_activity.pk }}">
-        <p id="b" class="card-text small">{{ latest_activity.activity_type|upper }}
-            <span style="color:black;" class="far fa-heart fa-2x float-right tickbox"></span>
-            <span style="display:none;color:black;" class="fas fa-heart fa-2x float-right tickboxSelected"></span>
-        </p>
-        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' latest_activity.pk %}">{{ latest_activity.name }}</a></h3>
-        <p class="card-text small"><a href=# name="address">{{ latest_activity.location }}</a></p>
+    <div class="top">
+        <a href="{% url 'activity_detail' latest_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+    </div>
+    <div class="card-body select" id=card_{{ latest_activity.pk }} value="{{ latest_activity.pk }}" style="padding-left:0;padding-right:0;">
+        <p id="b" class="card-text bold-text">{{ latest_activity.activity_type|upper }} - <a name="address" style="display:none;">{{ latest_activity.location }}</a>
+        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ latest_activity.id }}" value="{% url 'activity_detail' latest_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
+        <img src="{% static 'img/icons/share.png' %}" height="25"> Share
+        </button></p>
+        <h3 id="a" class="card-title">{{ latest_activity.name }}</h3>
+        <!-- <p class="card-text small"><a href=# name="address">{{ latest_activity.location }}</a></p> -->
 
         <!--    Activities that only occur once -->
         {% if latest_activity.term == 'Once' %}
         {% if latest_activity.activity_date %}
-        <p class="card-text">{{ latest_activity.activity_date|date:'D, d M Y'|upper }} - {{ latest_activity.start_time|time:'g:i A' }}</p>
+        <!-- <p class="card-text">{{ latest_activity.activity_date|date:'D, d M Y'|upper }}  {{ latest_activity.start_time|time:'g:iA' }}</p> -->
+        <p class="card-text smaller">{{ latest_activity.activity_date|date:'D, d M'|upper }}  {{ latest_activity.start_time|time:'g:iA' }}</p>
         {% endif %}
         {% endif %}
 
         <!--      Daily, weekly, fortnightly, monthly activities-->
         {% if latest_activity.term != 'Once' %}
         {% if latest_activity.term != 'Daily' %}
-        <p class="card-text">Every {{ latest_activity.activity_day }} until {{ latest_activity.end_date|date:'D, d M Y' }} - {{ latest_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">EVERY {{ latest_activity.activity_day|upper }} UNTIL {{ latest_activity.end_date|date:'D, d M'|upper }}  {{ latest_activity.start_time|time:'g:iA' }}</p>
         {% else %}
-        <p class="card-text">Every day until {{ latest_activity.end_date|date:'D, d M Y' }} - {{ latest_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">EVERY DAY UNTIL {{ latest_activity.end_date|date:'D, d M' }}  {{ latest_activity.start_time|time:'g:iA' }}</p>
         {% endif %}
         {% endif %}
 
@@ -117,12 +174,12 @@
         <!-- <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span>
         <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span> -->
     </div>
-    <div class="card-footer">
-        <a target="_blank" href="{% url 'sms_create' latest_activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a>
-        <a target="_blank" href="{% url 'email_create' latest_activity.pk %}" class="btn btn-outline-primary float-right mr-2 share_btn"><i class="far fa-envelope"></i></a>
+    <!-- <div class="card-footer"> -->
+        <!-- <a target="_blank" href="{% url 'sms_create' latest_activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a>
+        <a target="_blank" href="{% url 'email_create' latest_activity.pk %}" class="btn btn-outline-primary float-right mr-2 share_btn"><i class="far fa-envelope"></i></a> -->
         
         <!-- Bookmark button -->
-        {% if latest_activity.bookmarked %}
+        <!-- {% if latest_activity.bookmarked %}
         {% for bookmark_user in latest_activity.bookmarked_users.all %}
         {% if bookmark_user.username == user.username %}
         <button onclick="markActivity(this.id)" id={{ latest_activity.id }} type="button" class="btn js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
@@ -133,20 +190,20 @@
         {% endif %}
         <button onclick="markActivity(this.id)" id={{ latest_activity.id }} type="button" class="btn js-bookmark-article remove" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="far fa-bookmark"></i>
-        </button>
+        </button> -->
         <!-- End of bookmark button -->
-        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ latest_activity.id }}" value="{% url 'activity_detail' latest_activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <!-- <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ latest_activity.id }}" value="{% url 'activity_detail' latest_activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="fas fa-share"></i>
-        </button>
-    </div>
+        </button> -->
+    <!-- </div> -->
     </div>
 </div>
 {% endif %}
 
 {% for activity in activities %}
-<div class="col-sm-4 activity" id="activity_{{ activity.id }}">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12 activity" id="activity_{{ activity.id }}">
     {% if user.is_authenticated %}
-    <div class="card select">
+    <div class="card hover-card select">
     {% if activity.activity_img %}
         <img class="card-img-top select" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
@@ -154,40 +211,52 @@
         <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
     {% endif %}
-    <div class="card-body select" id=card_{{ activity.pk }} value="{{ activity.pk }}">
-        <p id="b" class="card-text small">{{ activity.activity_type|upper }} 
-            <span style="color:black;" class="far fa-heart fa-2x float-right tickbox"></span>
-            <span style="display:none;color:black;" class="fas fa-heart fa-2x float-right tickboxSelected"></span>
-        </p>
-        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
-        <p class="card-text small"><a href=# name="address">{{ activity.location }}</a></p>
+    <div class="top">
+        <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
+        <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
+        <a href="{% url 'activity_detail' activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+    </div>
+    <div class="card-body select" id=card_{{ activity.pk }} value="{{ activity.pk }}" style="padding-left:0;padding-right:0;">
+        <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - <a name="address" style="display:none;">{{ activity.location }}</a>
+        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
+        <img src="{% static 'img/icons/share.png' %}" height="25"> Share
+        </button></p>
+        <h3 id="a" class="card-title">{{ activity.name }}</h3>
 
         <!--    Activities that only occur once -->
         {% if activity.term == 'Once' %}
         {% if activity.activity_date %}
-        <p class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">{{ activity.activity_date|date:'D, d M'|upper }}  {{ activity.start_time|time:'g:iA' }}
+            <!-- <a target="_blank" href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a> -->
+            <!-- <a target="_blank" href="{% url 'email_create' activity.pk %}" class="btn btn-outline-primary float-right mr-2 share_btn"><i class="far fa-envelope"></i></a> -->
+        </p>
         {% endif %}
         {% endif %}
 
         <!--      Daily, weekly, fortnightly, monthly activities-->
         {% if activity.term != 'Once' %}
         {% if activity.term != 'Daily' %}
-        <p class="card-text">Every {{ activity.activity_day }} until {{ activity.end_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">EVERY {{ activity.activity_day|upper }} UNTIL {{ activity.end_date|date:'D, d M'|upper }} {{ activity.start_time|time:'g:iA' }}
+            <!-- <a target="_blank" href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a> -->
+            <!-- <a target="_blank" href="{% url 'email_create' activity.pk %}" class="btn btn-outline-primary float-right mr-2 share_btn"><i class="far fa-envelope"></i></a> -->
+        </p>
         {% else %}
-        <p class="card-text">Every day until {{ activity.end_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">EVERY DAY UNTIL {{ activity.end_date|date:'D, d M' }}  {{ activity.start_time|time:'g:iA' }}
+            <!-- <a target="_blank" href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a> -->
+            <!-- <a target="_blank" href="{% url 'email_create' activity.pk %}" class="btn btn-outline-primary float-right mr-2 share_btn"><i class="far fa-envelope"></i></a> -->
+        </p>
         {% endif %}
         {% endif %}
+
+        <p class="card-text smaller">{{ activity.bookings.count }} REGISTERED</p>
 
         <input class="selected" style="display:none;" type="checkbox" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }}>
         <!-- <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span> -->
         <!-- <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span> -->
     </div>
-    <div class="card-footer">
-        <a target="_blank" href="{% url 'sms_create' activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a>
-        <a target="_blank" href="{% url 'email_create' activity.pk %}" class="btn btn-outline-primary float-right mr-2 share_btn"><i class="far fa-envelope"></i></a>
-        
+    <!-- <div class="card-footer">         -->
         <!-- Bookmark button -->
-        {% if activity.bookmarked %}
+        <!-- {% if activity.bookmarked %}
         {% for bookmark_user in activity.bookmarked_users.all %}
         {% if bookmark_user.username == user.username %}
         <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
@@ -198,17 +267,13 @@
         {% endif %}
         <button onclick="markActivity(this.id)" id={{ activity.id }} type="button" class="btn js-bookmark-article remove" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="far fa-bookmark"></i>
-        </button>
+        </button> -->
         <!-- End of bookmark button -->
-        
-        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-            <i class="fas fa-share"></i>
-        </button>
-    </div>
+    <!-- </div> -->
     </div>
     
     {% else %}
-    <div class="card">
+    <div class="card hover-card">
     {% if activity.activity_img %}
         <a href="{% url 'activity_detail' activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
         <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
@@ -216,32 +281,38 @@
         <a href="{% url 'activity_detail' activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
         <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% endif %}
-    <div class="card-body" id=card_{{ activity.pk }}>
-    <p id="b" class="card-text small">{{ activity.activity_type|upper }}</p>
-    <h3 id="a" class="card-title"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></h3>
-    <p class="card-text small"><a href=# name="address">{{ activity.location }}</a></p>
+    <div class="top">
+        <a href="{% url 'activity_detail' activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+    </div>
+    <div class="card-body" id=card_{{ activity.pk }} style="padding-left:0;padding-right:0;">
+    <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - <a name="address" style="display:none;">{{ activity.location }}</a>
+    <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
+    <img src="{% static 'img/icons/share.png' %}" height="25"> Share
+    </button></p>
+    <h3 id="a" class="card-title">{{ activity.name }}</h3>
+    <!-- <p class="card-text small"><a href=# name="address">{{ activity.location }}</a></p> -->
     <!--    Activities that only occur once -->
     {% if activity.term == 'Once' %}
     {% if activity.activity_date %}
-    <p class="card-text">{{ activity.activity_date|date:'D, d M Y'|upper }} - {{ activity.start_time|time:'g:i A' }}</p>
+    <p class="card-text smaller">{{ activity.activity_date|date:'D, d M'|upper }}  {{ activity.start_time|time:'g:iA' }}</p>
     {% endif %}
     {% endif %}
 
     <!--      Daily, weekly, fortnightly, monthly activities-->
     {% if activity.term != 'Once' %}
     {% if activity.term != 'Daily' %}
-    <p class="card-text">Every {{ activity.activity_day }} until {{ activity.end_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+    <p class="card-text smaller">EVERY {{ activity.activity_day|upper }} UNTIL {{ activity.end_date|date:'D, d M'|upper }}  {{ activity.start_time|time:'g:iA' }}</p>
     {% else %}
-    <p class="card-text">Every day until {{ activity.end_date|date:'D, d M Y' }} - {{ activity.start_time|time:'g:i A' }}</p>
+    <p class="card-text smaller">EVERY DAY UNTIL {{ activity.end_date|date:'D, d M' }}  {{ activity.start_time|time:'g:iA' }}</p>
     {% endif %}
     {% endif %}
     <input class="selected" type="checkbox" style="display:none" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }} />
     </div>
-    <div class="card-footer">
+    <!-- <div class="card-footer">
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="fas fa-share"></i>
         </button>
-    </div>
+    </div> -->
     </div>
     {% endif %}
     <br />
@@ -253,27 +324,18 @@
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-        <h4 class="modal-title">Share the link</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>
+            <h4 class="modal-title">Share the link</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-            <!-- <div id="div_desktop" class="row mt-2" style="align-content:center;">
-                <div id="share2_{{ activity.id }}" class="offset-md-3 mr-2"></div>
-                <div id="share3_{{ activity.id }}" class="float-left mr-2"></div>
-                <div class="jssocials send_dialog float-left mr-2">
-                    <div class="jssocials-shares">
-                    <div class="jssocials-share jssocials-share-messenger2">
-                        <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' activity.pk %}" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
-                    </div>
-                    </div>
-                </div>
-                <div id="share4_{{ activity.id }}" class="mr-2 share4 float-left"></div>
-                <div id="share5_{{ activity.id }}" class="mr-2 share5 float-left"></div>
-                <div id="share_{{ activity.id }}" class="mr-2 share float-left"></div>
-            </div> -->
         <div class="row justify-content-center mt-3">
-            <div class="addthis_inline_share_toolbox" data-url="http://{{ domain }}{% url 'activity_detail' activity.pk %}"></div>
+            <!-- <div class="addthis_inline_share_toolbox" data-url="http://{{ domain }}{% url 'activity_detail' activity.pk %}"></div> -->
+            <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' activity.pk %}" 
+            data-title="{{ activity.name }}" data-description="Test" data-message="test message"></div>
+            <!-- <a target="_self" class="btn btn-circle-2 ml-2" href="mailto:?Subject=Check this out!&amp;Body=Check this out:http://{{ domain }}{% url 'activity_detail' activity.pk %}"
+            style="background:grey;width:49px;height:49px;border-radius:100%;color:white;">
+            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-top:5px;"></a> -->
         </div>
         <div class="row mt-2 ml-3 mr-1">
         <input style="width:85%;" class="form-control mr-2" readonly type="text" id="textshow_{{ activity.id }}" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
@@ -296,11 +358,11 @@
 {% include 'includes/pagination_2.html' %}
 
 {% else %}
-<div class="container-fluid">
+<div class="container">
     {% if user.is_authenticated %}
-    <h3>Your activities & events</h3>
+    <h2>Your activities & events</h2>
     {% else %}
-    <h3>Activities & events</h3>
+    <h2>Activities & events</h2>
     {% endif %}
     <p class="lead" style="text-align:center;">No activity that matches the search query</p>
 </div>
@@ -309,12 +371,12 @@
 
 {% if not user.is_authenticated %}
 {% if other_activities %}
-<div class="container-fluid" style="background:rgb(244, 248, 250); padding-top:1%">
+<div class="container" style="padding-top:1%">
 <h3 class="mb-3">Other activities and events in this area</h3>
-<div class="row">
+<div class="row justify-content-center">
 {% for other_activity in other_activities %}
-<div class="col-sm-4">
-<div class="card mb-4">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+<div class="card hover-card mb-4">
     {% if other_activity.activity_img %}
         <a href="{% url 'activity_detail' other_activity.pk %}"><img class="card-img-top" src="{{ other_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
         <a href="{% url 'activity_detail' other_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
@@ -322,34 +384,40 @@
         <a href="{% url 'activity_detail' other_activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
         <a href="{% url 'activity_detail' other_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% endif %}
-    <div class="card-body" id=card_{{ other_activity.pk }}>
-        <p id="b" class="card-text small">{{ other_activity.activity_type|upper }}</p>
-        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' other_activity.pk %}">{{ other_activity.name }}</a></h3>
-        <p class="card-text small"><a href=# name="address">{{ other_activity.location }}</a></p>
+    <div class="top">
+        <a href="{% url 'activity_detail' other_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+    </div>
+    <div class="card-body" id=card_{{ other_activity.pk }} style="padding-left:0;padding-right:0;">
+        <p id="b" class="card-text bold-text">{{ other_activity.activity_type|upper }} - <a name="address" style="display:none;">{{ other_activity.location }}</a>
+        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ other_activity.id }}" value="{% url 'activity_detail' other_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
+        <img src="{% static 'img/icons/share.png' %}" height="25"> Share
+        </button></p>
+        <h3 id="a" class="card-title">{{ other_activity.name }}</h3>
+        <!-- <p class="card-text small"><a href=# name="address">{{ other_activity.location }}</a></p> -->
 
         <!--    Activities that only occur once -->
         {% if other_activity.term == 'Once' %}
         {% if other_activity.activity_date %}
-        <p class="card-text">{{ other_activity.activity_date|date:'D, d M Y'|upper }} - {{ other_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">{{ other_activity.activity_date|date:'D, d M'|upper }}  {{ other_activity.start_time|time:'g:iA' }}</p>
         {% endif %}
         {% endif %}
 
         <!--      Daily, weekly, fortnightly, monthly activities-->
         {% if other_activity.term != 'Once' %}
         {% if other_activity.term != 'Daily' %}
-        <p class="card-text">Every {{ other_activity.activity_day }} until {{ other_activity.end_date|date:'D, d M Y' }} - {{ other_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">EVERY {{ other_activity.activity_day|upper }} UNTIL {{ other_activity.end_date|date:'D, d M'|upper }}  {{ other_activity.start_time|time:'g:iA' }}</p>
         {% else %}
-        <p class="card-text">Every day until {{ other_activity.end_date|date:'D, d M Y' }} - {{ other_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">EVERY DAY UNTIL {{ other_activity.end_date|date:'D, d M' }}  {{ other_activity.start_time|time:'g:iA' }}</p>
         {% endif %}
         {% endif %}
 
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ other_activity.pk }} name ="checkboxes" value={{ other_activity.pk }} />
     </div>
-    <div class="card-footer">
+    <!-- <div class="card-footer">
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ other_activity.id }}" value="{% url 'activity_detail' other_activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="fas fa-share"></i>
         </button>
-    </div>
+    </div> -->
 </div>
 
 <!-- THE MODAL FOR SHARING URL -->
@@ -378,7 +446,9 @@
                 <div id="share_{{ other_activity.id }}" class="mr-2 share float-left"></div>
             </div> -->
         <div class="row justify-content-center mt-3">
-            <div class="addthis_inline_share_toolbox"></div>
+            <!-- <div class="addthis_inline_share_toolbox"></div> -->
+            <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' other_activity.id %}" 
+            data-title="{{ other_activity.name }}" data-description="Test" data-message="test message"></div>
         </div>
         <div class="row mt-2 ml-3 mr-1">
         <input style="width:85%;" class="form-control mr-2" readonly type="text" id="textshow_{{ other_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' other_activity.pk %}">
@@ -400,12 +470,12 @@
 
 {% if user.is_authenticated %}
 {% if not_my_activities %}
-<div class="container-fluid" style="background:rgb(244, 248, 250); padding-top:1%">
+<div class="container" style="padding-top:1%">
 <h3 class="mb-3">Other activities and events in this area</h3>
-<div class="row">
+<div class="row justify-content-center">
 {% for not_my_activity in not_my_activities %}
-<div class="col-sm-4">
-<div class="card select mb-4">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12">
+<div class="card hover-card select mb-4">
     {% if not_my_activity.activity_img %}
         <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="card-img-top" src="{{ not_my_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
         <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
@@ -413,37 +483,42 @@
         <a href="{% url 'activity_detail' not_my_activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
         <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% endif %}
-    <div class="card-body select" id=card_{{ not_my_activity.pk }} value="{{ not_my_activity.pk }}">
-        <p id="b" class="card-text small">{{ not_my_activity.activity_type|upper }}
-            <span style="color:black;" class="far fa-heart fa-2x float-right tickbox"></span>
-            <span style="display:none;color:black;" class="fas fa-heart fa-2x float-right tickboxSelected"></span>
-        </p>
-        <h3 id="a" class="card-title"><a href="{% url 'activity_detail' not_my_activity.pk %}">{{ not_my_activity.name }}</a></h3>
-        <p class="card-text small"><a href=# name="address">{{ not_my_activity.location }}</a></p>
+    <div class="top">
+        <span class="far fa-heart fa-2x float-right tickbox mt-2 mr-2"></span>
+        <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mt-2 mr-2"></span>
+        <a href="{% url 'activity_detail' not_my_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+    </div>
+    <div class="card-body select" id=card_{{ not_my_activity.pk }} value="{{ not_my_activity.pk }}" style="padding-left:0;padding-right:0;">
+        <p id="b" class="card-text bold-text">{{ not_my_activity.activity_type|upper }} - <a name="address" style="display:none;">{{ not_my_activity.location }}</a>
+        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ not_my_activity.id }}" value="{% url 'activity_detail' not_my_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
+        <img src="{% static 'img/icons/share.png' %}" height="25"> Share
+        </button></p>
+        <h3 id="a" class="card-title">{{ not_my_activity.name }}</h3>
+        <!-- <p class="card-text small"><a href=# name="address">{{ not_my_activity.location }}</a></p> -->
         <!--    Activities that only occur once -->
         {% if not_my_activity.term == 'Once' %}
         {% if not_my_activity.activity_date %}
-        <p class="card-text">{{ not_my_activity.activity_date|date:'D, d M Y'|upper }} - {{ not_my_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">{{ not_my_activity.activity_date|date:'D, d M'|upper }}  {{ not_my_activity.start_time|time:'g:iA' }}</p>
         {% endif %}
         {% endif %}
 
         <!--      Daily, weekly, fortnightly, monthly activities-->
         {% if not_my_activity.term != 'Once' %}
         {% if not_my_activity.term != 'Daily' %}
-        <p class="card-text">Every {{ not_my_activity.activity_day }} until {{ not_my_activity.end_date|date:'D, d M Y' }} - {{ not_my_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">EVERY {{ not_my_activity.activity_day|upper }} UNTIL {{ not_my_activity.end_date|date:'D, d M'|upper }}  {{ not_my_activity.start_time|time:'g:iA' }}</p>
         {% else %}
-        <p class="card-text">Every day until {{ not_my_activity.end_date|date:'D, d M Y' }} - {{ not_my_activity.start_time|time:'g:i A' }}</p>
+        <p class="card-text smaller">EVERY DAY UNTIL {{ not_my_activity.end_date|date:'D, d M' }}  {{ not_my_activity.start_time|time:'g:iA' }}
+            <!-- <a target="_blank" href="{% url 'sms_create' not_my_activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a> -->
+            <!-- <a target="_blank" href="{% url 'email_create' not_my_activity.pk %}" class="btn btn-outline-primary float-right mr-2 share_btn"><i class="far fa-envelope"></i></a> -->
+        </p>
         {% endif %}
         {% endif %}
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ not_my_activity.pk }} name ="checkboxes" value={{ not_my_activity.pk }} />
         <!-- <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span> -->
         <!-- <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span> -->
     </div>
-    <div class="card-footer">
-        <a target="_blank" href="{% url 'sms_create' not_my_activity.pk %}" class="btn btn-outline-primary float-right share_btn"><i class="fas fa-mobile-alt"></i></a>
-        <a target="_blank" href="{% url 'email_create' not_my_activity.pk %}" class="btn btn-outline-primary float-right mr-2 share_btn"><i class="far fa-envelope"></i></a>
-        
-        {% if not_my_activity.bookmarked %}
+    <!-- <div class="card-footer"> -->
+        <!-- {% if not_my_activity.bookmarked %}
         {% for bookmark_user in not_my_activity.bookmarked_users.all %}
         {% if bookmark_user.username == user.username %}
         <button onclick="markActivity(this.id)" id={{ not_my_activity.id }} type="button" class="btn js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
@@ -454,11 +529,11 @@
         {% endif %}
         <button onclick="markActivity(this.id)" id={{ not_my_activity.id }} type="button" class="btn js-bookmark-article remove" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="far fa-bookmark"></i>
-        </button>
-        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ not_my_activity.id }}" value="{% url 'activity_detail' not_my_activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+        </button> -->
+        <!-- <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ not_my_activity.id }}" value="{% url 'activity_detail' not_my_activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="fas fa-share"></i>
         </button>
-    </div>
+    </div> -->
 </div>
 </div>
 <!-- THE MODAL FOR SHARING URL -->
@@ -471,20 +546,10 @@
         <span aria-hidden="true">&times;</span>
         </button>
         </div>
-            <div id="div_desktop" class="row mt-2" style="align-content:center;">
-                <div id="share2_{{ not_my_activity.id }}" class="offset-md-3 mr-2"></div>
-                <div id="share3_{{ not_my_activity.id }}" class="float-left mr-2"></div>
-                <div class="jssocials send_dialog float-left mr-2">
-                    <div class="jssocials-shares">
-                    <div class="jssocials-share jssocials-share-messenger2">
-                        <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' not_my_activity.pk %}" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
-                    </div>
-                    </div>
-                </div>
-                <div id="share4_{{ not_my_activity.id }}" class="mr-2 share4 float-left"></div>
-                <div id="share5_{{ not_my_activity.id }}" class="mr-2 share5 float-left"></div>
-                <div id="share_{{ not_my_activity.id }}" class="mr-2 share float-left"></div>
-            </div>
+        <div class="row justify-content-center mt-3">
+            <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' not_my_activity.id %}" 
+            data-title="{{ not_my_activity.name }}" data-description="Test" data-message="test message" data-subject="test"></div>
+        </div>
         <div class="row mt-2 ml-3 mr-1">
         <input style="width:85%;" class="form-control mr-2" readonly type="text" id="textshow_{{ not_my_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}">
         <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ not_my_activity.id }}"><i class="far fa-copy"></i></button>
@@ -504,12 +569,15 @@
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script>
+<script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
+<!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script> -->
+<script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a7c1b21bd04be00137829e6&product=custom-share-buttons"></script>
 <script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script src="{% static 'activities/js/bookmarks.js' %}"></script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
+
 <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
 <script src="{% static 'js/jssocials.js' %}"></script>
 <script>
@@ -565,6 +633,8 @@ function getURL(id, value) {
 
     $(input_id).html("");
     $(modal_id).modal("show");
+
+    $(".st-btn").show();
 
     var share = "#share_" + activity_id;
     var share2 = "#share2_" + activity_id;
@@ -622,16 +692,71 @@ function copyURL(id) {
 
     $(input_id).html("Link has been copied!");
 }
+
+var shareBtns = document.getElementsByClassName("st-btn");
+
+// shareBtns.forEach(function(element) {
+    // element.style.display = inline-block;
+    // console.log(element);
+// });
+
+// for (var i = 0; i < shareBtns.length; i++) {
+//     console.log(shareBtns[i]);
+// }
+
+$('.email').click(function() {
+    console.log($('.email').attr("href"));
+})
     
 $( function() {
    // Add Google Maps URL
-   var form_elems = document.getElementsByName("address");
-   for (var i = 0; i < form_elems.length; i++) {
-       var address = $(form_elems[i]).text();
-       var map_url = "https://www.google.com/maps/search/?api=1&query=";
-       var full_url = map_url + address;
-       $(form_elems[i]).attr("href", full_url);
-   }
+   var addressElements = document.getElementsByName("address");
+   var geocoder = new google.maps.Geocoder();
+
+//    for (var i = 0; i < addressElements.length; i++) {
+//        var address = $(addressElements[i]).text();
+//        var map_url = "https://www.google.com/maps/search/?api=1&query=";
+//        var full_url = map_url + address;
+//        $(addressElements[i]).attr("href", full_url);
+//    }
+
+function getSuburb(addressElement, address) {
+    var suburb = '';
+
+    geocoder.geocode({'address': address}, function(results, status) {
+    if (status === 'OK') {
+
+    var addressComponents = results[0].address_components;
+
+    console.log(addressComponents);
+
+    for (var k=0; k<addressComponents.length; k++) {
+        var types = addressComponents[k].types;
+        for (var j=0; j<types.length; j++) {
+            if (types[j] == "locality")  {
+                suburb = addressComponents[k].long_name;
+                addressElement.innerHTML = suburb.toUpperCase();
+                addressElement.style.display = 'inline';
+                break;
+            }
+        }
+        if (suburb != '') {
+            break;
+        }
+    }
+    } else {
+        console.log('Geocode was not successful for the following reason: ' + status);
+    }
+    return suburb;
+    });
+}
+
+for (var i = 0; i < addressElements.length; i++) {
+    var addressElement = addressElements[i];
+    var address = addressElement.innerHTML;
+    getSuburb(addressElement, address);
+}
+
 
    // Change apperance of bookmark button when clicked
     $( ".active" ).each(function() {
@@ -679,6 +804,56 @@ $( function() {
   var checkbox_arr = [];
 
   // Dynamically display checkboxes
+  $('.top').click( function() {
+    $(this).children(".tickbox").toggle();
+    $(this).children(".tickboxSelected").toggle();
+
+    if ( $(this).children(".tickbox").css('display') == 'none' ) {
+        $(this).css('background-color', 'rgba(192, 191, 191, 0.56)');
+    } else {
+        $(this).css('background-color', 'transparent');
+    }
+
+    
+
+    //Change the background colour of card-body
+    $(this).siblings(".card-body.select").toggleClass('on');
+
+    var val = $(this).siblings(".card-body.select").attr('value');
+
+    if ($(this).siblings(".card-body.select").hasClass('on')) {
+    if (!checkbox_arr.includes(val)) {
+        checkbox_arr.push(val);
+    }
+    } else {
+        if (checkbox_arr.includes(val)) {
+            var index = checkbox_arr.indexOf(val);
+            checkbox_arr.splice(index, 1);
+        }
+    }
+    var href;
+    var sms_url, email_url;
+    if (checkbox_arr != []) {
+        href = checkbox_arr.join('_');
+    }
+
+    var ori_url = (window.location.href).toString();
+    var web_url = (ori_url.substr(0, ori_url.indexOf('?')));
+
+
+    if (href != '') {
+    sms_url = web_url + "sms_create/" + href + "/";
+    email_url = web_url + "email_create/" + href + "/";
+    } else {
+    sms_url = "#";
+    email_url = "#";
+    }
+    
+    $("#share-text").attr("href", sms_url);
+    $("#share-email").attr("href", email_url);
+  });
+
+
   $('.card-body.select').click( function() {
       //Change the background colour of card-body
       $(this).toggleClass('on');
@@ -729,8 +904,9 @@ $( function() {
     //   $(this).siblings(".selectedImg.select").toggle();
     //   $(this).children(".tickbox").toggle();
     //   $(this).children(".tickboxSelected").toggle();
-      $(this).children(".card-text.small").children(".tickbox").toggle();
-      $(this).children(".card-text.small").children(".tickboxSelected").toggle();
+    
+    //   $(this).children(".card-text.small").children(".tickbox").toggle();
+    //   $(this).children(".card-text.small").children(".tickboxSelected").toggle();
 //      card.children(".selectedImg").toggle();
       
       //checked the checkbox element

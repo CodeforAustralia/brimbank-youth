@@ -38,11 +38,11 @@ GENDER = (
 )
 
 ACTIVITY_TYPES = (
-    ('Sports', 'Sports'),
-    ('Fun', 'Fun'),
+    ('Sport', 'Sport'),
     ('Learn', 'Learn'),
-    ('Job', 'Get a job'),
-    ('Culture', 'Culture'),
+    ('School holidays', 'School holidays'),
+    ('Career', 'Career'),
+    ('Culture', 'Art & Culture'),
 )
 
 LISTING_PRIVACY = (
@@ -76,7 +76,7 @@ class ActivityType(models.Model):
     
 class Activity(models.Model):
     name = models.CharField(max_length=150)
-    activity_type = models.CharField(max_length=100, choices=ACTIVITY_TYPES, blank=True, default='Sports')
+    activity_type = models.CharField(max_length=100, choices=ACTIVITY_TYPES, blank=True, default='Sport')
     term = models.CharField(max_length=50, choices=TERMS, blank=True, default='Once')
     location = models.CharField(max_length=150, blank=True, null=True)
     organiser = models.CharField(max_length=150, blank=True, null=True)
