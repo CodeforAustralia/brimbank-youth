@@ -43,45 +43,6 @@
     .card {
         border: transparent;
     }
-    .hover-card .top {
-        /* transition: 0.05s; */
-        top: 0;
-        /* background: rgba(192, 191, 191, 0.56); */
-        /* padding: 0.5em; */
-        /* padding-top: 130px; */
-        /* padding-left: 50px; */
-        position: absolute;
-        left: 0;
-        text-align: center;
-        color: white;
-        width: 100%;
-        /* min-height: 100%; */
-        min-height: 300px;
-        }
-
-    .card:hover .top{
-        /* opacity:0.5; */
-        background: rgba(192, 191, 191, 0.56);
-    }
-    .vertical-button {
-        /* vertical-align: center; */
-        height:100%;
-        margin-top: 130px;
-        /* margin-left: 0; */
-        z-index: 999;
-        display: none;
-        border-radius: 0;
-    }
-    .hover-card.select .vertical-button {
-        margin-left: 50px;
-    }
-    .vertical-button:hover {
-        opacity: 1 !important;
-        /* display: inline-block; */
-    }
-    .top:hover .vertical-button {
-        display: inline-block;
-    }
     .h1, .p {
         font-family: sans-serif;
     }
@@ -148,7 +109,7 @@
     <div class="card-body select" id=card_{{ latest_activity.pk }} value="{{ latest_activity.pk }}" style="padding-left:0;padding-right:0;">
         <p id="b" class="card-text bold-text">{{ latest_activity.activity_type|upper }} - <a name="address" style="display:none;">{{ latest_activity.location }}</a>
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ latest_activity.id }}" value="{% url 'activity_detail' latest_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
-        <img src="{% static 'img/icons/share.png' %}" height="25"> Share
+        <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
         </button></p>
         <h3 id="a" class="card-title">{{ latest_activity.name }}</h3>
         <!-- <p class="card-text small"><a href=# name="address">{{ latest_activity.location }}</a></p> -->
@@ -219,7 +180,7 @@
     <div class="card-body select" id=card_{{ activity.pk }} value="{{ activity.pk }}" style="padding-left:0;padding-right:0;">
         <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - <a name="address" style="display:none;">{{ activity.location }}</a>
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
-        <img src="{% static 'img/icons/share.png' %}" height="25"> Share
+        <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
         </button></p>
         <h3 id="a" class="card-title">{{ activity.name }}</h3>
 
@@ -287,7 +248,7 @@
     <div class="card-body" id=card_{{ activity.pk }} style="padding-left:0;padding-right:0;">
     <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - <a name="address" style="display:none;">{{ activity.location }}</a>
     <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
-    <img src="{% static 'img/icons/share.png' %}" height="25"> Share
+    <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
     </button></p>
     <h3 id="a" class="card-title">{{ activity.name }}</h3>
     <!-- <p class="card-text small"><a href=# name="address">{{ activity.location }}</a></p> -->
@@ -390,7 +351,7 @@
     <div class="card-body" id=card_{{ other_activity.pk }} style="padding-left:0;padding-right:0;">
         <p id="b" class="card-text bold-text">{{ other_activity.activity_type|upper }} - <a name="address" style="display:none;">{{ other_activity.location }}</a>
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ other_activity.id }}" value="{% url 'activity_detail' other_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
-        <img src="{% static 'img/icons/share.png' %}" height="25"> Share
+        <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
         </button></p>
         <h3 id="a" class="card-title">{{ other_activity.name }}</h3>
         <!-- <p class="card-text small"><a href=# name="address">{{ other_activity.location }}</a></p> -->
@@ -491,7 +452,7 @@
     <div class="card-body select" id=card_{{ not_my_activity.pk }} value="{{ not_my_activity.pk }}" style="padding-left:0;padding-right:0;">
         <p id="b" class="card-text bold-text">{{ not_my_activity.activity_type|upper }} - <a name="address" style="display:none;">{{ not_my_activity.location }}</a>
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ not_my_activity.id }}" value="{% url 'activity_detail' not_my_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
-        <img src="{% static 'img/icons/share.png' %}" height="25"> Share
+        <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
         </button></p>
         <h3 id="a" class="card-title">{{ not_my_activity.name }}</h3>
         <!-- <p class="card-text small"><a href=# name="address">{{ not_my_activity.location }}</a></p> -->

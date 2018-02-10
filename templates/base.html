@@ -7,7 +7,7 @@
 <!--  For responsiveness in mobile, include 1 line below -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}Youth Future{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,200,300,400,700,800" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -55,6 +55,46 @@
 
     .btn-transparent {
       background: transparent;
+    }
+
+    .hover-card .top {
+        /* transition: 0.05s; */
+        top: 0;
+        /* background: rgba(192, 191, 191, 0.56); */
+        /* padding: 0.5em; */
+        /* padding-top: 130px; */
+        /* padding-left: 50px; */
+        position: absolute;
+        left: 0;
+        text-align: center;
+        color: white;
+        width: 100%;
+        /* min-height: 100%; */
+        min-height: 300px;
+        }
+
+    .card:hover .top{
+        /* opacity:0.5; */
+        background: rgba(192, 191, 191, 0.56);
+    }
+    .vertical-button {
+        /* vertical-align: center; */
+        height:100%;
+        margin-top: 130px;
+        /* margin-left: 0; */
+        z-index: 999;
+        display: none;
+        border-radius: 0;
+    }
+    .hover-card.select .vertical-button {
+        margin-left: 50px;
+    }
+    .vertical-button:hover {
+        opacity: 1 !important;
+        /* display: inline-block; */
+    }
+    .top:hover .vertical-button {
+        display: inline-block;
     }
 
   </style>
