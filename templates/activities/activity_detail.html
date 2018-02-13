@@ -5,14 +5,19 @@
 {% block title %}{{ activity.name }}{% endblock title %}
 
 {% block stylesheet %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/jssocials.css'%}" />
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials.css'%}" />
 <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials-theme-flat.css'%}" />
 <link rel="stylesheet" type="text/css" href="{% static 'css/slick.css'%}"/>
-<link rel="stylesheet" type="text/css" href="{% static 'css/slick-theme.css'%}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/slick-theme.css'%}"/> -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/swiper.css'%}" />
 <!-- <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css" /> -->
 <!-- <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-flat.css" /> -->
 
 <style>
+  .swiper-container {
+      width: 100%;
+      height: 100%;
+  }
   .card {
     border: none;
   }
@@ -54,14 +59,11 @@
     color: rgba(128, 128, 128, 0.842);
     border-color: transparent;
   }
-  tr:hover {
-    background-color: white;
-  }
   .tooltip-inner
   { background-color:red;}
 
-  .tooltip.bs-tooltip-auto[x-placement^=left] .arrow::before, .tooltip.bs-tooltip-left .arrow::before 
-  { border-left-color: red;}
+  .tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before, .tooltip.bs-tooltip-bottom .arrow::before 
+  { border-bottom-color: red;}
 
   .bold-text {
     font-weight: bold;
@@ -74,7 +76,25 @@
   .card-text {
     color: #484848;
   }
-
+  /* Table Style */
+  #contact-table {
+    border-collapse: collapse;
+  }
+  #contact-table tbody tr:hover {
+    background-color: #fafafa;
+  }
+  #contact-table thead th {
+    text-align: center;
+    vertical-align: middle;
+  }
+  th, td {
+    font-weight: 300;
+    font-size: 18px;
+    color: #999999;
+  }
+  #contact-table th {
+    font-weight: 600;
+  }
 
 </style>
 {% endblock %}
@@ -102,7 +122,7 @@
 
       <!-- LOCATION -->
       {% if activity.location %}
-      <p class="card-text" id="address">{{ activity.location }}</p>
+      <p class="card-text" id="address">{{ activity.location }} {{ activity.postcode }}</p>
       <p class="card-text"><a href=# id="address2" style="color:#5DAE69;">Open in Google Maps</a></p>
       {% else %}
       <p class="card-text"><i>Location hasn't been specified</i></p>
@@ -157,8 +177,12 @@
       <img src="{% static 'img/icons/down-arrow.svg' %}" height="25">
       <!-- <span id="attendees_no"> {{ attendees_no }}</span>  -->
       &nbsp;Attendees</a>
-      <div class="collapse bg-light" id="collapseExample" style="z-index:1;position:absolute;">
+      <div class="collapse" id="collapseExample" style="z-index:1;position:absolute; 
+      border:solid #0f0f0fa9 0.5px;background:#FFFFFF;border-radius:1%;padding:20px;">
         <div class="mt-2 mb-2" style="overflow-x:auto;">
+          <span id="send-reminder-btn">
+          {% include 'booking/includes/send_reminder_btn.html' %}
+          </span>
           <table class="table" id="contact-table">
           {% include 'booking/includes/partial_attendee_list.html' %}
           </table>
@@ -169,7 +193,7 @@
     {% if activity.created_by == user %}
     <div class="col-6 col-sm-2 mb-4">
     {% else %}
-    <div class="col-12 col-sm-2 mb-4">
+    <div class="col-6 col-sm-4 mb-4">
     {% endif %}
       <div class="row justify-content-center">
       <a href="#" class="btn js-share-url">
@@ -181,27 +205,27 @@
       {% endif %}
       </div>
     </div>
+
     {% if activity.created_by == user %}
     <div class="col-6 col-sm-2 mb-2">
-    {% else %}
-    <div class="col-6 col-sm-3 mb-4">
-    {% endif %}
       <div class="row justify-content-center">
-      {% if activity.created_by == user and attendees_no > 0 %}
+      {% if attendees_no > 0 %}
       <img src="{% static 'img/icons/checklist.svg' %}" height="45">
       <a href="{% url 'print_attendee_list' activity.pk %}" class="btn" style="color:#484848;">
       Print Attendees<br />List</a>
       {% else %}
       <img src="{% static 'img/icons/checklist.svg' %}" height="45">
       <a href="#" class="btn disabled" style="color:#484848;">
-      Print Attendees<br />List</a>
+      No Attendees<br />Yet</a>
       {% endif %}
       </div>
     </div>
+    {% endif %}
+
     {% if activity.created_by == user %}
     <div class="col-6 col-sm-2 mb-2">
     {% else %}
-    <div class="col-6 col-sm-3 mb-4">
+    <div class="col-6 col-sm-4 mb-4">
     {% endif %}
       <div class="row justify-content-center">
       <img src="{% static 'img/icons/advertising.svg' %}" height="45">
@@ -306,76 +330,18 @@
 <!-- More activities from the same organisation -->
 <div class="container-fluid mt-4">
   <div class="container">
-    <h3 style="margin-bottom:2%;">More activities and events from this organiser</h3>
-    <div class="multiple-items">
-      {% for org_activity in org_activities %}
-      <div class="card hover-card mr-4 ml-4">
-        {% if org_activity.activity_img %}
-        <img class="card-img-top" src="{{ org_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;height:300px;display:inline;">
-        {% else %}
-        <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
-        {% endif %}
-        <div class="top">
-            <a href="{% url 'activity_detail' org_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
-        </div>
-        <div class="card-body">
-        <p class="card-text bold-text">{{ org_activity.activity_type|upper }} - <span name="address" style="display:none;color:#484848;">{{ org_activity.location }}</span>
-          <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ org_activity.id }}" value="{% url 'activity_detail' org_activity.id %}" type="button" 
-          class="btn btn-transparent float-right" style="margin-top:-5px;"
-          data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-          <span class="row">
-          <img src="{% static 'img/icons/share.svg' %}" height="25">&nbsp;Share </span>
-        </button></p>
-        <p class="card-text">{{ org_activity.name }}</p>
-        <!--    Activities that only occur once -->
-        {% if org_activity.term == 'Once' %}
-        {% if org_activity.activity_date %}
-        <p class="card-text">{{ org_activity.activity_date|date:'D, d M'|upper }} - {{ org_activity.start_time|time:'g:i A' }}</p>
-        {% endif %}
-        {% endif %}
-
-        <!--      Daily, weekly, fortnightly, monthly activities-->
-        {% if org_activity.term != 'Once' %}
-        {% if org_activity.term != 'Daily' %}
-        <p class="card-text">EVERY {{ org_activity.activity_day|upper }} - {{ org_activity.start_time|time:'g:i A' }}</p>
-        {% else %}
-        <p class="card-text">EVERY DAY - {{ org_activity.start_time|time:'g:i A' }}</p>
-        {% endif %}
-        {% endif %}
-
-        <p class="card-text">{{ org_activity.bookings.count }} REGISTERED</p>
-        </div>
+  <h3 style="margin-bottom:2%;">More activities and events from this organiser</h3>
+  <div class="swiper-container">
+      <div class="swiper-wrapper">
+      {% include 'activities/includes/other_activities.html' %}
       </div>
-      {% endfor %}
-    </div>
-  </div>
-</div>
-{% for org_activity in org_activities %}
-<!-- THE MODAL FOR SHARING ACTIVITY URL -->
-<div class="modal fade" id="modal_{{ org_activity.id }}">
-  <div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-        <h4 class="modal-title">Share this activity</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="row justify-content-center mt-3">
-        <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' org_activity.pk %}" 
-        data-title="{{ org_activity.name }}" data-description="Test" data-message="test message"></div>
-    </div>
-    <div class="row mt-3 ml-3 mr-3">
-    <input class="form-control text-center" type="text" id="textshow_{{ org_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' org_activity.id %}">
-    </div>
-    <div class="row ml-3 mt-1">
-    <p class="small" id="input_{{ org_activity.id }}"></p>
-    </div>
+      <!-- Navigation buttons -->
+      <div class="swiper-button-prev swiper-button-black"></div>
+      <div class="swiper-button-next swiper-button-black"></div>
   </div>
   </div>
 </div>
-{% endfor %}
-
+{% include 'activities/includes/modal_other_activities.html' %}
 {% endif %}
 
 <!-- Google Maps -->
@@ -389,77 +355,20 @@
 
 {% if recommended_activities %}
 <!-- Other events and activities you might like -->
-<div id="id_others" class="container-fluid mt-4 mb-0">
+<div class="container-fluid mt-4 mb-0" id="id_others">
 <div class="container mt-4">
 <h3 style="margin-top:2%;margin-bottom:2%;">Other activities and events you might like</h3>
-<div class="multiple-items">
-  {% for recommended_activity in recommended_activities %}
-  <div class="card hover-card mr-4 ml-4">
-    {% if recommended_activity.activity_img %}
-    <img class="card-img-top" src="{{ recommended_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;height:300px;display:inline;">
-    {% else %}
-    <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
-    {% endif %}
-    <div class="top">
-        <a href="{% url 'activity_detail' recommended_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
-    </div>
-    <div class="card-body">
-      <p class="card-text bold-text">{{ recommended_activity.activity_type|upper }} - <span name="address2" style="display:none; color:#484848;">{{ recommended_activity.location }}</span>
-        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ recommended_activity.id }}" value="{% url 'activity_detail' recommended_activity.id %}" type="button" 
-        class="btn btn-transparent float-right" style="margin-top:-5px;"
-        data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-        <span class="row">
-        <img src="{% static 'img/icons/share.svg' %}" height="25">&nbsp;Share </span>
-      </button></p>
-      <p class="card-text">{{ recommended_activity.name }}</p>
-      <!--    Activities that only occur once -->
-      {% if recommended_activity.term == 'Once' %}
-      {% if recommended_activity.activity_date %}
-      <p class="card-text">{{ recommended_activity.activity_date|date:'D, d M'|upper }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
-      {% endif %}
-      {% endif %}
-
-      <!--      Daily, weekly, fortnightly, monthly activities-->
-      {% if recommended_activity.term != 'Once' %}
-      {% if recommended_activity.term != 'Daily' %}
-      <p class="card-text">EVERY {{ recommended_activity.activity_day|upper }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
-      {% else %}
-      <p class="card-text">EVERY DAY - {{ recommended_activity.start_time|time:'g:i A' }}</p>
-      {% endif %}
-      {% endif %}
-    </div>
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+  {% include 'activities/includes/recommended_activities.html' %}
   </div>
-  {% endfor %}
+  <!-- Navigation buttons -->
+  <div class="swiper-button-prev swiper-button-black"></div>
+  <div class="swiper-button-next swiper-button-black"></div>
 </div>
 </div>
 </div>
-
-{% for recommended_activity in recommended_activities %}
-<!-- THE MODAL FOR SHARING ACTIVITY URL -->
-<div class="modal fade" id="modal_{{ recommended_activity.id }}">
-  <div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-        <h4 class="modal-title">Share this activity</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="row justify-content-center mt-3">
-        <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' recommended_activity.pk %}" 
-        data-title="{{ recommended_activity.name }}" data-description="Test" data-message="test message"></div>
-    </div>
-    <div class="row mt-3 ml-3 mr-3">
-    <input class="form-control text-center" type="text" id="textshow_{{ recommended_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' recommended_activity.id %}">
-    </div>
-    <div class="row ml-3 mt-1">
-    <p class="small" id="input_{{ recommended_activity.id }}"></p>
-    </div>
-  </div>
-  </div>
-</div>
-{% endfor %}
-
+{% include 'activities/includes/modal_recommended_activities.html' %}
 {% endif %}
 
 <!-- THE MODAL FOR SHARING ACTIVITY URL -->
@@ -507,40 +416,264 @@
 <!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script> -->
 
-<script src="{% static 'js/jssocials.js' %}"></script>
-<script src="{% static 'js/slick.js' %}"></script>
+<!-- <script src="{% static 'js/jssocials.js' %}"></script>
+<script src="{% static 'js/slick.js' %}"></script> -->
+<script src="{% static 'js/swiper.js' %}"></script>
 
 <script>
+$(function() {
+  // $('.multiple-items').slick({
+  //   infinite: true,
+  //   slidesToShow: 3,
+  //   slidesToScroll: 1,
+  //   mobileFirst: true,
+  //   prevArrow: "<button type=\"button\" class=\"slick-prev\"><i class=\"fas fa-arrow-left\"></i></button>",
+  //   responsive: [
+  //   {
+  //     breakpoint: 1024,
+  //     settings: {
+  //       slidesToShow: 3,
+  //       slidesToScroll: 1,
+  //       infinite: true
+  //     }
+  //   },
+  //   {
+  //     breakpoint: 600,
+  //     settings: {
+  //       slidesToShow: 2,
+  //       slidesToScroll: 1
+  //     }
+  //   },
+  //   {
+  //     breakpoint: 300,
+  //     settings: {
+  //       slidesToShow: 1,
+  //       slidesToScroll: 1
+  //     }
+  //   }
+  //   // You can unslick at a given breakpoint now by adding:
+  //   // settings: "unslick"
+  //   // instead of a settings object
+  //   ],
+  // });
+
+var swiper = new Swiper('.swiper-container', {
+  slidesPerView: 3,
+  spaceBetween: 30,
+  // Navigation arrows
+  navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+  },
+  loop: true,
+  breakpoints: {
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+        loop: true,
+      },
+      768: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+        loop: true,
+      },
+      640: {
+        slidesPerView: 1,
+        spaceBetween: 15,
+        loop: true,
+      },
+      320: {
+        slidesPerView: 1,
+        spaceBetween: 10,
+        loop: true,
+      }
+  }
+});
+
+  // Change apperance of bookmark button when clicked
+  $( ".active" ).each(function() {
+    $( this ).siblings('.remove').css( "display", "none" );
+  });
+
+  $('#edit_btn').tooltip();
+  $('#send-reminder').tooltip();
+
+  var isMobile = window.matchMedia("only screen and (max-width: 760px)");
+
+  if (isMobile.matches) {
+    $(".send_dialog").hide();
+  }
+  else{
+    $("#share").hide();
+    $("#share4").hide();
+    $("#share5").hide();
+  }
+
+  $(".js-share-url").click(function () {
+    $("#id_url_text").html("");
+    $("#modal-share-url").modal("show");
+    $(".st-btn").show();
+  });
+
+// Change displayed address
+var addressElements = document.getElementsByName("address");
+var addressElements2 = document.getElementsByName("address2");
+var geocoder = new google.maps.Geocoder();
+
+function getSuburb(addressElement, address) {
+    var suburb = '';
+
+    geocoder.geocode({'address': address}, function(results, status) {
+    if (status === 'OK') {
+
+    var addressComponents = results[0].address_components;
+
+    for (var k=0; k<addressComponents.length; k++) {
+        var types = addressComponents[k].types;
+        for (var j=0; j<types.length; j++) {
+            if (types[j] == "locality")  {
+                suburb = addressComponents[k].long_name;
+                addressElement.innerHTML = suburb.toUpperCase();
+                addressElement.style.display = 'inline';
+                break;
+            }
+        }
+        if (suburb != '') {
+            break;
+        }
+    }
+    } else {
+        console.log('Geocode was not successful for the following reason: ' + status);
+    }
+    return suburb;
+    });
+}
+
+for (var i = 0; i < addressElements.length; i++) {
+    var addressElement = addressElements[i];
+    var address = addressElement.innerHTML;
+    getSuburb(addressElement, address);
+}
+
+for (var i = 0; i < addressElements2.length; i++) {
+    var addressElement2 = addressElements2[i];
+    var address = addressElement2.innerHTML;
+    // console.log(address);
+    getSuburb(addressElement2, address);
+}
+
+var loadForm = function () {
+  var btn = $(this);
+  $.ajax({
+    url: btn.attr("data-url"),
+    type: 'get',
+    dataType: 'json',
+    beforeSend: function () {
+      $("#modal-register").modal("show");
+    },
+    success: function (data) {
+      $("#modal-register .modal-content").html(data.html_form);
+      console.log(data);
+      if (data.fully_booked) {
+        $("#modal-register").modal("hide");
+        location.reload();
+        // $("#modal-test").modal("show");
+      }
+    }
+  });
+};
+
+var saveForm = function () {
+  var form = $(this);
+  $.ajax({
+    url: form.attr("action"),
+    data: form.serialize(),
+    type: form.attr("method"),
+    dataType: 'json',
+    beforeSend: function () {
+        $('.loading').show();
+    },
+    success: function (data) {
+      $('.loading').hide();
+      if (data.form_is_valid) {
+        $("#modal-register").modal("hide");
+        $("#contact-table").html(data.attendee_list);
+        $("#attendees_no").html(data.attendees_no);
+        $("#available_space").html(data.available_space);
+        $("#send-reminder-btn").html(data.send_reminder_btn);
+        $('[data-toggle="tooltip"]').tooltip();
+      }
+      else {
+        $("#modal-register .modal-content").html(data.html_form);
+      }
+    }
+  });
+  return false;
+};
+
+// Add new attendee
+$(".js-register-client").click(loadForm);
+$("#modal-register").on("submit", ".js-booking-form", saveForm);
+
+});
+
+var loadForm = function () {
+  var btn = $(this);
+  $.ajax({
+    url: btn.attr("data-url"),
+    type: 'get',
+    dataType: 'json',
+    beforeSend: function () {
+      $("#modal-register").modal("show");
+    },
+    success: function (data) {
+      $("#modal-register .modal-content").html(data.html_form);
+      console.log(data);
+      if (data.fully_booked) {
+        $("#modal-register").modal("hide");
+        location.reload();
+        // $("#modal-test").modal("show");
+      }
+    }
+  });
+};
+
+$(document).on('click', '.js-register-client', loadForm);
+
   // Show the map
   // setTimeout(function initMap() {
   //   var geocoder = new google.maps.Geocoder();
   //   var map = new google.maps.Map(document.getElementById('map'));
     
-    // Populate addresses from GMaps on address input
-    // var address = $('#address').text();
-    // geocodeAddress(geocoder, map);
+  //   Populate addresses from GMaps on address input
+  //   var address = $('#address').text();
+  //   geocodeAddress(geocoder, map);
 
-    // Populate GMaps URL on the address link
+  //   Populate GMaps URL on the address link
   //   var map_url = "https://www.google.com/maps/search/?api=1&query=";
   //   var full_url = map_url + address;
   //   $("#address2").attr("href", full_url);
   // }, 1000);
 
-  // function geocodeAddress(geocoder, resultsMap) {
-  //   var address = $('#address').text();
-  //   // var address = 'Southern Cross Station';
-  //   // alert(address);
-  //   geocoder.geocode({'address': address}, function(results, status) {
-  //     if (status === 'OK') {
-  //       resultsMap.setCenter(results[0].geometry.location);
-  //       resultsMap.setZoom(14);
-  //       var marker = new google.maps.Marker({
-  //         map: resultsMap,
-  //         position: results[0].geometry.location
-  //       });
-  //     }
-  //   });
-  // }
+//   Populate addresses from GMaps on address input
+// var address = $('#address').text();
+// var map_url = "https://www.google.com/maps/search/?api=1&query=";
+// var full_url = map_url + address;
+// $("#address2").attr("href", full_url);
+
+// function geocodeAddress(geocoder, resultsMap) {
+//   var address = $('#address').text();
+//   geocoder.geocode({'address': address}, function(results, status) {
+//     if (status === 'OK') {
+//       resultsMap.setCenter(results[0].geometry.location);
+//       resultsMap.setZoom(14);
+//       var marker = new google.maps.Marker({
+//         map: resultsMap,
+//         position: results[0].geometry.location
+//       });
+//     }
+//   });
+// }
   // google.maps.event.addDomListener(window, 'page:load', initMap);
 
 
@@ -636,26 +769,26 @@ function sendReminder(clicked_id) {
 };
 
 // When user clicks the Back button, it will open the link to Update activity draft page
-history.pushState(null, document.title, location.href);
-window.addEventListener('popstate', function (event)
-{
-  // history.pushState(null, document.title, location.href); // preventing from pressing the back button
-  var old_URL = document.referrer; // document.referrer = previous URL
-  var edit_activity_URL = document.getElementById("edit_btn_url").getAttribute("href");
-  var hostname = window.location.hostname;
-  var dest_edit_url;
+// history.pushState(null, document.title, location.href);
+// window.addEventListener('popstate', function (event)
+// {
+//   // history.pushState(null, document.title, location.href); // preventing from pressing the back button
+//   var old_URL = document.referrer; // document.referrer = previous URL
+//   var edit_activity_URL = document.getElementById("edit_btn_url").getAttribute("href");
+//   var hostname = window.location.hostname;
+//   var dest_edit_url;
 
-  if (hostname == 'localhost') {
-    dest_edit_url = "http://" + hostname + ":8000" + edit_activity_URL;
-  } else {
-    dest_edit_url = "http://" + hostname + edit_activity_URL;
-  }
+//   if (hostname == 'localhost') {
+//     dest_edit_url = "http://" + hostname + ":8000" + edit_activity_URL;
+//   } else {
+//     dest_edit_url = "http://" + hostname + edit_activity_URL;
+//   }
 
-  if ( old_URL == dest_edit_url ) { // Check if previous URL is editing the activity draft
-    window.location.href = dest_edit_url;
-    console.log("test");
-  }
-});
+//   if ( old_URL == dest_edit_url ) { // Check if previous URL is editing the activity draft
+//     window.location.href = dest_edit_url;
+//     console.log("test");
+//   }
+// });
 
 function getURL(id, value) {
     var text_input_arr = id.split("sharebutton_");
@@ -669,170 +802,6 @@ function getURL(id, value) {
 
     $(".st-btn").show();
 }
-
-$(function() {
-  $('.multiple-items').slick({
-    infinite: true,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    // focusOnSelect: true,
-    mobileFirst: true,
-    prevArrow: "<button type=\"button\" class=\"slick-prev\"><i class=\"fas fa-arrow-left\"></i></button>",
-    responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        infinite: true
-        // dots: true
-      }
-    },
-    {
-      breakpoint: 600,
-      settings: {
-        slidesToShow: 2,
-        slidesToScroll: 1
-      }
-    },
-    {
-      breakpoint: 300,
-      settings: {
-        slidesToShow: 1,
-        slidesToScroll: 1
-      }
-    }
-    // You can unslick at a given breakpoint now by adding:
-    // settings: "unslick"
-    // instead of a settings object
-    ],
-  });
-
-  // Change apperance of bookmark button when clicked
-  $( ".active" ).each(function() {
-    $( this ).siblings('.remove').css( "display", "none" );
-  });
-
-  $('#edit_btn').tooltip();
-  $('#send-reminder').tooltip();
-
-  var isMobile = window.matchMedia("only screen and (max-width: 760px)");
-
-  if (isMobile.matches) {
-    $(".send_dialog").hide();
-  }
-  else{
-    $("#share").hide();
-    $("#share4").hide();
-    $("#share5").hide();
-  }
-
-  $(".js-share-url").click(function () {
-    $("#id_url_text").html("");
-    $("#modal-share-url").modal("show");
-    $(".st-btn").show();
-  });
-
-// Change displayed address
-var addressElements = document.getElementsByName("address");
-var addressElements2 = document.getElementsByName("address2");
-var geocoder = new google.maps.Geocoder();
-
-function getSuburb(addressElement, address) {
-    var suburb = '';
-
-    geocoder.geocode({'address': address}, function(results, status) {
-    if (status === 'OK') {
-
-    var addressComponents = results[0].address_components;
-
-    for (var k=0; k<addressComponents.length; k++) {
-        var types = addressComponents[k].types;
-        for (var j=0; j<types.length; j++) {
-            if (types[j] == "locality")  {
-                suburb = addressComponents[k].long_name;
-                addressElement.innerHTML = suburb.toUpperCase();
-                addressElement.style.display = 'inline';
-                break;
-            }
-        }
-        if (suburb != '') {
-            break;
-        }
-    }
-    } else {
-        console.log('Geocode was not successful for the following reason: ' + status);
-    }
-    return suburb;
-    });
-}
-
-for (var i = 0; i < addressElements.length; i++) {
-    var addressElement = addressElements[i];
-    var address = addressElement.innerHTML;
-    getSuburb(addressElement, address);
-}
-
-for (var i = 0; i < addressElements2.length; i++) {
-    var addressElement = addressElements2[i];
-    var address = addressElement.innerHTML;
-    console.log(address);
-    getSuburb(addressElement, address);
-}
-
-
-var loadForm = function () {
-  var btn = $(this);
-  $.ajax({
-    url: btn.attr("data-url"),
-    type: 'get',
-    dataType: 'json',
-    beforeSend: function () {
-      $("#modal-register").modal("show");
-    },
-    success: function (data) {
-      $("#modal-register .modal-content").html(data.html_form);
-      console.log(data);
-      if (data.fully_booked) {
-        $("#modal-register").modal("hide");
-        location.reload();
-        // $("#modal-test").modal("show");
-      }
-    }
-  });
-};
-
-var saveForm = function () {
-  var form = $(this);
-  $.ajax({
-    url: form.attr("action"),
-    data: form.serialize(),
-    type: form.attr("method"),
-    dataType: 'json',
-    beforeSend: function () {
-        $('.loading').show();
-      },
-    success: function (data) {
-      $('.loading').hide();
-      if (data.form_is_valid) {
-        $("#contact-table").html(data.attendee_list);
-        $("#attendees_no").html(data.attendees_no);
-        $("#available_space").html(data.available_space);
-        $("#modal-register").modal("hide");
-      }
-      else {
-        $("#modal-register .modal-content").html(data.html_form);
-      }
-    }
-  });
-  return false;
-};
-
-// Add new attendee
-$(".js-register-client").click(loadForm);
-$("#modal-register").on("submit", ".js-booking-form", saveForm);
-
-});
 </script>
 
 {% endblock %}

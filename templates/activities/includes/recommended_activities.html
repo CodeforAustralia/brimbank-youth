@@ -1,37 +1,41 @@
-<!-- Other events and activities you may like -->
-<div id="id_others" class="container-fluid mt-4 mb-0">
-    <h3 class="text-center" style="margin-top:2%;margin-bottom:2%;">Other events and activities you may like</h3>
-    <div class="container-fluid mt-4">
-    <div class="multiple-items">
-        {% for recommended_activity in recommended_activities %}
-        <div class="card mr-2">
-        {% if recommended_activity.activity_img %}
-        <img class="card-img-top" src="{{ recommended_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x200?text=Image not available';" style="object-fit:cover;height:200px;display:inline;">
-        {% else %}
-        <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:200px;">
-        {% endif %}
-        <div class="card-body">
-            <p class="lead"><a href="{% url 'activity_detail' recommended_activity.pk %}">{{ recommended_activity.name }}</a></p>
-            {% if recommended_activity.location %}<p class="card-text"> {{ recommended_activity.location }} </p>{% endif %}
-            
-            <!--    Activities that only occur once -->
-            {% if recommended_activity.term == 'Once' %}
-            {% if recommended_activity.activity_date %}
-            <p class="card-text">{{ recommended_activity.activity_date|date:'D, d M Y'|upper }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
-            {% endif %}
-            {% endif %}
-    
-            <!--      Daily, weekly, fortnightly, monthly activities-->
-            {% if recommended_activity.term != 'Once' %}
-            {% if recommended_activity.term != 'Daily' %}
-            <p class="card-text">Every {{ recommended_activity.activity_day }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
-            {% else %}
-            <p class="card-text">Every day from {{ recommended_activity.start_date|date:'D, d M Y' }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
-            {% endif %}
-            {% endif %}
-        </div>
-        </div>
-        {% endfor %}
+{% load static %}
+
+{% for recommended_activity in recommended_activities %}
+<div class="swiper-slide">
+  <div class="card hover-card mr-4 ml-4">
+    {% if recommended_activity.activity_img %}
+    <img class="card-img-top" src="{{ recommended_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;height:300px;display:inline;">
+    {% else %}
+    <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
+    {% endif %}
+    <div class="top">
+        <a href="{% url 'activity_detail' recommended_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
+    <div class="card-body">
+      <p class="card-text bold-text">{{ recommended_activity.activity_type|upper }} - {{ recommended_activity.suburb|upper }}
+        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ recommended_activity.id }}" value="{% url 'activity_detail' recommended_activity.id %}" type="button" 
+        class="btn btn-transparent float-right" style="margin-top:-5px;"
+        data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <span class="row">
+        <img src="{% static 'img/icons/share.svg' %}" height="25">&nbsp;Share </span>
+      </button></p>
+      <p class="card-text">{{ recommended_activity.name }}</p>
+      <!--    Activities that only occur once -->
+      {% if recommended_activity.term == 'Once' %}
+      {% if recommended_activity.activity_date %}
+      <p class="card-text">{{ recommended_activity.activity_date|date:'D, d M'|upper }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
+      {% endif %}
+      {% endif %}
+
+      <!--      Daily, weekly, fortnightly, monthly activities-->
+      {% if recommended_activity.term != 'Once' %}
+      {% if recommended_activity.term != 'Daily' %}
+      <p class="card-text">EVERY {{ recommended_activity.activity_day|upper }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
+      {% else %}
+      <p class="card-text">EVERY DAY - {{ recommended_activity.start_time|time:'g:i A' }}</p>
+      {% endif %}
+      {% endif %}
     </div>
-</div>
+  </div>
+ </div>
+  {% endfor %}

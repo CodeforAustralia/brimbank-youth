@@ -25,7 +25,10 @@ class ActivityForm(forms.ModelForm):
 
     class Meta:
         model = Activity
-        fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'contact_number', 'activity_img', 'flyer', 'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 'listing_privacy')
+        fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 
+        'activity_date', 'activity_day', 'description','organiser', 'contact_number', 'activity_img', 'flyer', 
+        'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 
+        'listing_privacy', 'suburb', 'postcode')
         labels = {
 #            'activity_img': _('Add an event image'),
             'name': _('What is the name of the activity ?'),
@@ -46,6 +49,7 @@ class ActivityForm(forms.ModelForm):
             'max_age': _('To age'),
             'listing_privacy': _('Listing Privacy'),
             'space_choice':_('Create the number of spaces available'),
+            'background':_('Language(s) spoken'),
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Give a short distinct name'}),
@@ -57,6 +61,8 @@ class ActivityForm(forms.ModelForm):
             'max_age': forms.TextInput(attrs={'placeholder': 'Maximum age'}),
             'organiser': forms.TextInput(attrs={'placeholder': 'Contact person'}),
             'contact_number': forms.TextInput(attrs={'placeholder': 'Contact number'}),
+            'suburb': forms.TextInput(attrs={'placeholder': 'Suburb', 'data-geo':'locality'}),
+            'postcode': forms.TextInput(attrs={'placeholder': 'Postcode', 'data-geo':'postal_code'}),
         }
         error_messages = {
             'name': {
@@ -115,7 +121,10 @@ class ActivityDraftForm(forms.ModelForm):
                            
     class Meta:
         model = ActivityDraft
-        fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 'activity_date', 'activity_day', 'description','organiser', 'contact_number', 'activity_img', 'flyer', 'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 'listing_privacy')
+        fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 
+        'activity_date', 'activity_day', 'description','organiser', 'contact_number', 'activity_img', 'flyer', 
+        'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 
+        'living_duration', 'listing_privacy', 'suburb', 'postcode')
         labels = {
 #            'activity_img': _('Add an event image'),
             'name': _('What is the name of the activity ?'),
@@ -136,6 +145,7 @@ class ActivityDraftForm(forms.ModelForm):
             'max_age': _('To age'),
             'listing_privacy': _('Listing Privacy'),
             'space_choice':_('Create the number of spaces available'),
+            'background':_('Language(s) spoken'),
         }
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Give a short distinct name'}),
@@ -147,6 +157,8 @@ class ActivityDraftForm(forms.ModelForm):
             'max_age': forms.TextInput(attrs={'placeholder': 'Maximum age'}),
             'organiser': forms.TextInput(attrs={'placeholder': 'Contact person'}),
             'contact_number': forms.TextInput(attrs={'placeholder': 'Contact number'}),
+            'suburb': forms.TextInput(attrs={'placeholder': 'Suburb', 'data-geo':'locality'}),
+            'postcode': forms.TextInput(attrs={'placeholder': 'Postcode', 'data-geo':'postal_code'}),
         }
         error_messages = {
             'name': {

@@ -76,7 +76,8 @@ button {
     border-radius: 0%;
 }
 .btn-circle {
-    border-radius: 100%;
+    /* border-radius: 100%; */
+    border-radius:0;
     z-index: 4;
     height: 75px;
     width: 75px;
@@ -175,10 +176,12 @@ vertical-align: center!important;
 }
 
 .float-sms {
-top: 200px;
+    /* top: 200px; */
+    top: 375px;
 }
 
 .float-email {
-top: 300px;
+    /* top: 300px; */
+    top: 450px;
 }
 /* Floating Social Media Bar Style Ends Here */

@@ -135,7 +135,7 @@
 <!--<script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>-->
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
-
+<script src="{% static 'js/jquery.geocomplete.js' %}"></script>
 <script>
     
 //$( document ).ready(function() {
@@ -351,11 +351,18 @@ $( "#id_term" ).click(function() {
 });
     
 //Google maps
-function initialize() {
-    var input = document.getElementById('id_location');
-    var autocomplete = new google.maps.places.Autocomplete(input);
-}
-google.maps.event.addDomListener(window, 'load', initialize);
+// function initialize() {
+//     var input = document.getElementById('id_location');
+//     var autocomplete = new google.maps.places.Autocomplete(input);
+// }
+// google.maps.event.addDomListener(window, 'load', initialize);
+
+$("#id_location").geocomplete(
+    { 
+        details: ".address-details",
+        detailsAttribute: "data-geo"
+    }
+);
     
 </script>
 

@@ -40,7 +40,7 @@ def register(request, pk):
             send_email(request, str('Confirmation to '+activity.name), '', 'noreply@youthposter.com', [registration.email], msg_html)
             return redirect('registration_detail', pk=registration_pk)
     else:
-        if activity.space_choice == 'Limited' and activity.space <= activity.bookings.count():
+        if activity.space_choice == 'Limited' and activity.space <= 0:
             messages.info(request, 'Sorry, this activity is fully booked.')
             return redirect('activity_detail', pk=activity_pk)
         else:
@@ -89,25 +89,33 @@ def save_form(request, form, template_name, activity_pk, full):
             attendees = Registration.objects.filter(activity=activity)
             attendees_no = attendees.count()
             available = True
-            if activity.space <= attendees_no and activity.space_choice == 'Limited':
+            if activity.space <= 0 and activity.space_choice == 'Limited':
                 available = False
+            else:
+                available = True
             print("still available? ", available)
             data['attendee_list'] = render_to_string('booking/includes/partial_attendee_list.html', {
                 'attendees': attendees,
                 'activity': activity,
                 'available': available,
             })
+            data['send_reminder_btn'] = render_to_string('booking/includes/send_reminder_btn.html', {
+                'activity': activity,
+                'available': available,
+            })
             data['attendees_no'] = attendees_no
             data['available_space'] = activity.space
+            data['available'] = available
+            data['reminder_sent'] = activity.reminder_sent
 
             # Send confirmation email
-            current_site = get_current_site(request)
-            domain = current_site.domain
-            msg_html = render_to_string('booking/confirmation_email.html',
-            {'activity': activity,
-            'domain': domain,
-            })
-            send_email(request, str('Confirmation to '+activity.name), '', 'noreply@youthposter.com', [registration.email], msg_html)
+            # current_site = get_current_site(request)
+            # domain = current_site.domain
+            # msg_html = render_to_string('booking/confirmation_email.html',
+            # {'activity': activity,
+            # 'domain': domain,
+            # })
+            # send_email(request, str('Confirmation to '+activity.name), '', 'noreply@youthposter.com', [registration.email], msg_html)
         else:
             data['form_is_valid'] = False
     context = {
@@ -127,7 +135,7 @@ def register_client(request, pk):
         form = RegistrationForm(request.POST, **pk)
     else:
         activity = Activity.objects.get(pk=activity_pk)
-        if activity.space_choice == 'Limited' and activity.space <= activity.bookings.count():
+        if activity.space_choice == 'Limited' and activity.space <= 0:
             messages.info(request, 'Sorry, this activity is fully booked.')
             form = RegistrationForm(**pk)
             full = True

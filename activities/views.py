@@ -132,6 +132,8 @@ def submit_activity(request, pk):
                             space_choice = draft.space_choice,
                             listing_privacy = draft.listing_privacy,
                             created_by = draft.created_by,
+                            suburb = draft.suburb,
+                            postcode = draft.postcode,
                             published = True,
                             )
         activity.save()
@@ -168,8 +170,8 @@ class ActivityDetailView(DetailView):
         attendees_no = self.object.bookings.count()
         if self.object.space_choice == 'Unlimited':
             available = True
-        else:
-            if self.object.space <= attendees_no:
+        if self.object.space_choice == 'Limited':
+            if self.object.space <= 0:
                 available = False
             else:
                 available = True

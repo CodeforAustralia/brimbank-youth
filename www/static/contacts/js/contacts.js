@@ -125,6 +125,7 @@ $("#modal-group").on("submit", ".js-email-group-delete-form", saveGroupForm);
   
 // Create SMS contact
 $(".js-create-sms-member").click(loadForm);
+$(document).on('click', '.js-create-sms-member', loadForm);
 $("#modal-contact").on("submit", ".js-sms-member-create-form", saveForm);
 
 // Update SMS contact
@@ -134,11 +135,13 @@ $("#modal-contact").on("submit", ".js-sms-member-update-form",saveForm);
 // Delete contact
 // $("#contact-table").on("click", ".js-delete-sms-member", loadForm);
 $(".contact").on("click", ".js-delete-sms-member", loadForm);
+$(document).on('click', '.js-delete-sms-member', loadForm);
 // $("#modal-contact").on("submit", ".js-sms-member-delete-form", saveForm);
 $("#modal-contact").on("submit", ".js-sms-member-delete-form", modifyDeleteForm);
 
 // Create Email contact
 $(".js-create-email-member").click(loadForm);
+$(document).on('click', '.js-create-email-member', loadForm);
 $("#modal-contact").on("submit", ".js-email-member-create-form", saveForm);
 
 // Update Email contact
@@ -147,6 +150,7 @@ $("#modal-contact").on("submit", ".js-email-member-update-form",saveForm);
 
 // Delete Email contact
 $("#contact-table").on("click", ".js-delete-email-member", loadForm);
+$(document).on('click', '.js-delete-email-member', loadForm);
 $("#modal-contact").on("submit", ".js-email-member-delete-form", saveForm);
 
 });

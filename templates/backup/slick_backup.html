@@ -1,0 +1,39 @@
+{% for org_activity in org_activities %}
+<div class="card hover-card mr-4 ml-4">
+    {% if org_activity.activity_img %}
+    <img class="card-img-top" src="{{ org_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;height:300px;display:inline;">
+    {% else %}
+    <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
+    {% endif %}
+    <div class="top">
+        <a href="{% url 'activity_detail' org_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+    </div>
+    <div class="card-body">
+    <p class="card-text bold-text">{{ org_activity.activity_type|upper }} - <span name="address" style="display:none;color:#484848;">{{ org_activity.location }}</span>
+    <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ org_activity.id }}" value="{% url 'activity_detail' org_activity.id %}" type="button" 
+    class="btn btn-transparent float-right" style="margin-top:-5px;"
+    data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+    <span class="row">
+    <img src="{% static 'img/icons/share.svg' %}" height="25">&nbsp;Share </span>
+    </button></p>
+    <p class="card-text">{{ org_activity.name }}</p>
+    <!--    Activities that only occur once -->
+    {% if org_activity.term == 'Once' %}
+    {% if org_activity.activity_date %}
+    <p class="card-text">{{ org_activity.activity_date|date:'D, d M'|upper }} - {{ org_activity.start_time|time:'g:i A' }}</p>
+    {% endif %}
+    {% endif %}
+
+    <!--      Daily, weekly, fortnightly, monthly activities-->
+    {% if org_activity.term != 'Once' %}
+    {% if org_activity.term != 'Daily' %}
+    <p class="card-text">EVERY {{ org_activity.activity_day|upper }} - {{ org_activity.start_time|time:'g:i A' }}</p>
+    {% else %}
+    <p class="card-text">EVERY DAY - {{ org_activity.start_time|time:'g:i A' }}</p>
+    {% endif %}
+    {% endif %}
+
+    <p class="card-text">{{ org_activity.bookings.count }} REGISTERED</p>
+    </div>
+</div>
+{% endfor %}

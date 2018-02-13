@@ -138,7 +138,7 @@
             
             <h6 class="card-title">LOCATION</h6>
             {% if activitydraft.location %}
-            <p class="card-text" id="address">{{ activitydraft.location }}</p>
+            <p class="card-text" id="address">{{ activitydraft.location }} {{ activitydraft.postcode }}</p>
             <p class="card-text small"><a href=# id="address2">Open in Google Maps</a></p>
             {% else %}
             <p class="card-text small"><i>Location hasn't been specified</i></p>

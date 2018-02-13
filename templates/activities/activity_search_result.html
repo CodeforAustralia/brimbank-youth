@@ -10,9 +10,34 @@
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials.css'%}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/jssocials-theme-flat.css'%}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/swiper.css'%}" />
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 
     <style>
+    .swiper-container {
+      width: 100%;
+      height: 100%;
+    }
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+      /* Center slide text vertically */
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      -webkit-justify-content: center;
+      justify-content: center;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+    }
+
+
     .jumbotron {
         position: relative;
         background-color: transparent !important;
@@ -76,11 +101,11 @@
 <div class="float-sm">
     <div class="fl-fl float-sms">
         <!-- <button type="submit" id="id_share_text" class="btn btn-success btn-circle" name="search" value="share"><div style="font-size: 2em;"><i class="far fa-comment-alt"></i></div></button> -->
-        <a id="share-text" class="btn btn-success btn-circle" target="_blank" href="#"><img src="{% static 'img/icons/sms.png' %}" style="width:55px;"></a>
+        <a id="share-text" class="btn btn-circle" target="_blank" href="#" style="background:#ffc600;"><img src="{% static 'img/icons/sms.png' %}" style="width:55px;"></a>
     </div>
     <div class="fl-fl float-email">
         <!-- <button type="submit" id="id_share_mobile" class="btn btn-success btn-circle" name="search" value="email"><div style="font-size: 2em;"><i class="far fa-envelope"></i></div></button> -->
-        <a id="share-email" class="btn btn-success btn-circle" target="_blank" href="#"><img src="{% static 'img/icons/envelope.png' %}" style="width:50px;"></a>
+        <a id="share-email" class="btn btn-circle" href="#" style="background:rgb(128, 128, 128);"><img src="{% static 'img/icons/envelope.png' %}" style="width:50px;"></a>
     </div>
 </div>
 <!-- Floating sharing button ends -->
@@ -104,10 +129,12 @@
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
     {% endif %}
     <div class="top">
+        <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
+        <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
         <a href="{% url 'activity_detail' latest_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
     <div class="card-body select" id=card_{{ latest_activity.pk }} value="{{ latest_activity.pk }}" style="padding-left:0;padding-right:0;">
-        <p id="b" class="card-text bold-text">{{ latest_activity.activity_type|upper }} - <a name="address" style="display:none;">{{ latest_activity.location }}</a>
+        <p id="b" class="card-text bold-text">{{ latest_activity.activity_type|upper }} - {{ latest_activity.suburb|upper }}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ latest_activity.id }}" value="{% url 'activity_detail' latest_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
         <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
         </button></p>
@@ -178,7 +205,7 @@
         <a href="{% url 'activity_detail' activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
     <div class="card-body select" id=card_{{ activity.pk }} value="{{ activity.pk }}" style="padding-left:0;padding-right:0;">
-        <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - <a name="address" style="display:none;">{{ activity.location }}</a>
+        <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - {{ activity.suburb|upper }}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
         <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
         </button></p>
@@ -232,7 +259,7 @@
         <!-- End of bookmark button -->
     <!-- </div> -->
     </div>
-    
+
     {% else %}
     <div class="card hover-card">
     {% if activity.activity_img %}
@@ -246,7 +273,7 @@
         <a href="{% url 'activity_detail' activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
     <div class="card-body" id=card_{{ activity.pk }} style="padding-left:0;padding-right:0;">
-    <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - <a name="address" style="display:none;">{{ activity.location }}</a>
+    <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - {{ activity.suburb|upper }}
     <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
     <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
     </button></p>
@@ -280,12 +307,11 @@
 </div>
 
 <!-- THE MODAL FOR SHARING URL -->
-<!-- <div class="container-fluid"> -->
 <div class="modal fade" id="modal_{{ activity.id }}">
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Share the link</h4>
+            <h4 class="modal-title">Share this activity</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -294,23 +320,20 @@
             <!-- <div class="addthis_inline_share_toolbox" data-url="http://{{ domain }}{% url 'activity_detail' activity.pk %}"></div> -->
             <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' activity.pk %}" 
             data-title="{{ activity.name }}" data-description="Test" data-message="test message"></div>
-            <!-- <a target="_self" class="btn btn-circle-2 ml-2" href="mailto:?Subject=Check this out!&amp;Body=Check this out:http://{{ domain }}{% url 'activity_detail' activity.pk %}"
+            <a target="_self" class="btn btn-circle-2 ml-2" href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' activity.pk %}"
             style="background:grey;width:49px;height:49px;border-radius:100%;color:white;">
-            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-top:5px;"></a> -->
+            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-top:1px;"></a>
         </div>
-        <div class="row mt-2 ml-3 mr-1">
-        <input style="width:85%;" class="form-control mr-2" readonly type="text" id="textshow_{{ activity.id }}" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
-        <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ activity.id }}"><i class="far fa-copy"></i></button>
+        <div class="row mt-3 ml-3 mr-1">
+        <input class="form-control text-center mr-2" type="text" id="textshow_{{ activity.id }}" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
+        <!-- <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ activity.id }}"><i class="far fa-copy"></i></button> -->
         </div>
         <div class="row ml-3 mt-1">
         <p class="small" id="input_{{ activity.id }}"></p>
         </div>
-        <!-- </div> -->
-    <!-- </div> -->
     </div>
     </div>
 </div>
-<!-- </div> -->
 {% endfor %}
 </div>
 
@@ -349,7 +372,7 @@
         <a href="{% url 'activity_detail' other_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
     <div class="card-body" id=card_{{ other_activity.pk }} style="padding-left:0;padding-right:0;">
-        <p id="b" class="card-text bold-text">{{ other_activity.activity_type|upper }} - <a name="address" style="display:none;">{{ other_activity.location }}</a>
+        <p id="b" class="card-text bold-text">{{ other_activity.activity_type|upper }} - {{ other_activity.suburb|upper }}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ other_activity.id }}" value="{% url 'activity_detail' other_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
         <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
         </button></p>
@@ -387,7 +410,7 @@
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-        <h4 class="modal-title">Share the link</h4>
+        <h4 class="modal-title">Share this activity</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
@@ -410,10 +433,13 @@
             <!-- <div class="addthis_inline_share_toolbox"></div> -->
             <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' other_activity.id %}" 
             data-title="{{ other_activity.name }}" data-description="Test" data-message="test message"></div>
+            <a target="_self" class="btn btn-circle-2 ml-2" href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' other_activity.pk %}"
+            style="background:grey;width:49px;height:49px;border-radius:100%;color:white;">
+            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-top:1px;"></a>
         </div>
-        <div class="row mt-2 ml-3 mr-1">
-        <input style="width:85%;" class="form-control mr-2" readonly type="text" id="textshow_{{ other_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' other_activity.pk %}">
-        <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ other_activity.id }}"><i class="far fa-copy"></i></button>
+        <div class="row mt-3 ml-3 mr-1">
+        <input class="form-control text-center mr-2" type="text" id="textshow_{{ other_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' other_activity.pk %}">
+        <!-- <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ other_activity.id }}"><i class="far fa-copy"></i></button> -->
         </div>
         <div class="row ml-3 mt-1">
         <p class="small" id="input_{{ other_activity.id }}"></p>
@@ -450,7 +476,7 @@
         <a href="{% url 'activity_detail' not_my_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
     <div class="card-body select" id=card_{{ not_my_activity.pk }} value="{{ not_my_activity.pk }}" style="padding-left:0;padding-right:0;">
-        <p id="b" class="card-text bold-text">{{ not_my_activity.activity_type|upper }} - <a name="address" style="display:none;">{{ not_my_activity.location }}</a>
+        <p id="b" class="card-text bold-text">{{ not_my_activity.activity_type|upper }} - {{ not_my_activity.suburb|upper }}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ not_my_activity.id }}" value="{% url 'activity_detail' not_my_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
         <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
         </button></p>
@@ -502,7 +528,7 @@
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
-        <h4 class="modal-title">Share the link</h4>
+        <h4 class="modal-title">Share this activity</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
@@ -510,10 +536,13 @@
         <div class="row justify-content-center mt-3">
             <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' not_my_activity.id %}" 
             data-title="{{ not_my_activity.name }}" data-description="Test" data-message="test message" data-subject="test"></div>
+            <a class="btn btn-circle-2 ml-2" href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}"
+            style="background:grey;width:49px;height:49px;border-radius:100%;color:white;">
+            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-top:1px;"></a>
         </div>
-        <div class="row mt-2 ml-3 mr-1">
-        <input style="width:85%;" class="form-control mr-2" readonly type="text" id="textshow_{{ not_my_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}">
-        <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ not_my_activity.id }}"><i class="far fa-copy"></i></button>
+        <div class="row mt-3 ml-3 mr-1">
+        <input class="form-control text-center mr-2" type="text" id="textshow_{{ not_my_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}">
+        <!-- <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn_{{ not_my_activity.id }}"><i class="far fa-copy"></i></button> -->
         </div>
         <div class="row ml-3 mt-1">
         <p class="small" id="input_{{ not_my_activity.id }}"></p>
@@ -532,16 +561,40 @@
 {% block javascript %}
 <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a2f1bb7fce9e20013a73372&product=inline-share-buttons"></script>
 <!-- <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5a435c987240088a"></script> -->
-<script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a7c1b21bd04be00137829e6&product=custom-share-buttons"></script>
+<!-- <script type="text/javascript" src="//platform-api.sharethis.com/js/sharethis.js#property=5a7c1b21bd04be00137829e6&product=custom-share-buttons"></script> -->
 <script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script src="{% static 'activities/js/bookmarks.js' %}"></script>
+<script src="{% static 'js/swiper.js' %}"></script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
 
 <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
 <script src="{% static 'js/jssocials.js' %}"></script>
 <script>
+var swiper = new Swiper('.swiper-container', {
+    slidesPerView: 6,
+    spaceBetween: 30,
+    breakpoints: {
+        1024: {
+          slidesPerView: 6,
+          spaceBetween: 40,
+        },
+        768: {
+          slidesPerView: 3,
+          spaceBetween: 30,
+        },
+        640: {
+          slidesPerView: 3,
+          spaceBetween: 15,
+        },
+        320: {
+          slidesPerView: 1,
+          spaceBetween: 10,
+        }
+    }
+});
+
 function markActivity(clicked_id) {
     var url_dest = '/activity/bookmark/'+clicked_id+'/'
     $.ajax({
@@ -664,15 +717,11 @@ var shareBtns = document.getElementsByClassName("st-btn");
 // for (var i = 0; i < shareBtns.length; i++) {
 //     console.log(shareBtns[i]);
 // }
-
-$('.email').click(function() {
-    console.log($('.email').attr("href"));
-})
     
 $( function() {
    // Add Google Maps URL
-   var addressElements = document.getElementsByName("address");
-   var geocoder = new google.maps.Geocoder();
+//    var addressElements = document.getElementsByName("address");
+//    var geocoder = new google.maps.Geocoder();
 
 //    for (var i = 0; i < addressElements.length; i++) {
 //        var address = $(addressElements[i]).text();
@@ -681,43 +730,42 @@ $( function() {
 //        $(addressElements[i]).attr("href", full_url);
 //    }
 
-function getSuburb(addressElement, address) {
-    var suburb = '';
+// function getSuburb(addressElement, address) {
+//     var suburb = '';
 
-    geocoder.geocode({'address': address}, function(results, status) {
-    if (status === 'OK') {
+//     geocoder.geocode({'address': address}, function(results, status) {
+//     if (status === 'OK') {
 
-    var addressComponents = results[0].address_components;
+//     var addressComponents = results[0].address_components;
 
-    console.log(addressComponents);
+//     console.log(addressComponents);
 
-    for (var k=0; k<addressComponents.length; k++) {
-        var types = addressComponents[k].types;
-        for (var j=0; j<types.length; j++) {
-            if (types[j] == "locality")  {
-                suburb = addressComponents[k].long_name;
-                addressElement.innerHTML = suburb.toUpperCase();
-                addressElement.style.display = 'inline';
-                break;
-            }
-        }
-        if (suburb != '') {
-            break;
-        }
-    }
-    } else {
-        console.log('Geocode was not successful for the following reason: ' + status);
-    }
-    return suburb;
-    });
-}
+//     for (var k=0; k<addressComponents.length; k++) {
+//         var types = addressComponents[k].types;
+//         for (var j=0; j<types.length; j++) {
+//             if (types[j] == "locality")  {
+//                 suburb = addressComponents[k].long_name;
+//                 addressElement.innerHTML = suburb.toUpperCase();
+//                 addressElement.style.display = 'inline';
+//                 break;
+//             }
+//         }
+//         if (suburb != '') {
+//             break;
+//         }
+//     }
+//     } else {
+//         console.log('Geocode was not successful for the following reason: ' + status);
+//     }
+//     return suburb;
+//     });
+// }
 
-for (var i = 0; i < addressElements.length; i++) {
-    var addressElement = addressElements[i];
-    var address = addressElement.innerHTML;
-    getSuburb(addressElement, address);
-}
-
+// for (var i = 0; i < addressElements.length; i++) {
+//     var addressElement = addressElements[i];
+//     var address = addressElement.innerHTML;
+//     getSuburb(addressElement, address);
+// }
 
    // Change apperance of bookmark button when clicked
     $( ".active" ).each(function() {
@@ -763,6 +811,7 @@ for (var i = 0; i < addressElements.length; i++) {
   $('#id_name').tooltip();
 
   var checkbox_arr = [];
+  var activities_arr = [];
 
   // Dynamically display checkboxes
   $('.top').click( function() {
@@ -775,39 +824,70 @@ for (var i = 0; i < addressElements.length; i++) {
         $(this).css('background-color', 'transparent');
     }
 
-    
-
     //Change the background colour of card-body
     $(this).siblings(".card-body.select").toggleClass('on');
 
     var val = $(this).siblings(".card-body.select").attr('value');
+    var activity_url;
+
+    var ori_url = (window.location.href).toString();
+    var web_url = (ori_url.substr(0, ori_url.indexOf('?')));
+    var ori_url_2 = (ori_url.substr(0, ori_url.indexOf('#')));
+
+    if (web_url != '') {
+        activity_url = web_url + "activity/detail/";
+    } else {
+        if ( ori_url_2 != '' ){
+            activity_url = ori_url_2 + "activity/detail/";
+        } else {
+            activity_url = ori_url + "activity/detail/";
+        }
+    }
 
     if ($(this).siblings(".card-body.select").hasClass('on')) {
-    if (!checkbox_arr.includes(val)) {
-        checkbox_arr.push(val);
-    }
+        if (!checkbox_arr.includes(val)) {
+            checkbox_arr.push(val);
+            activities_arr.push(activity_url + val + "/");
+        } else {
+            if (checkbox_arr.includes(val)) {
+            var index = checkbox_arr.indexOf(val);
+            var index_activity = checkbox_arr.indexOf(activity_url + val + "/");
+            checkbox_arr.splice(index, 1);
+            activities_arr.splice(index_activity,1);
+        }
+        }
     } else {
         if (checkbox_arr.includes(val)) {
             var index = checkbox_arr.indexOf(val);
+            var index_activity = checkbox_arr.indexOf(activity_url + val + "/");
             checkbox_arr.splice(index, 1);
+            activities_arr.splice(index_activity,1);
         }
     }
     var href;
     var sms_url, email_url;
+    var activity_url_final;
+
+    // Codes for Mailgun/Twilio sharing
     if (checkbox_arr != []) {
         href = checkbox_arr.join('_');
     }
 
-    var ori_url = (window.location.href).toString();
-    var web_url = (ori_url.substr(0, ori_url.indexOf('?')));
-
-
+    // Codes for Mailgun/Twilio sharing
     if (href != '') {
-    sms_url = web_url + "sms_create/" + href + "/";
-    email_url = web_url + "email_create/" + href + "/";
+        sms_url = web_url + "sms_create/" + href + "/";
+        // email_url = web_url + "email_create/" + href + "/";
     } else {
-    sms_url = "#";
-    email_url = "#";
+        sms_url = "#";
+        // email_url = "#";
+    }
+
+    activity_url_final = activities_arr.join('%0D%0A');
+
+    if (activity_url_final != '') {
+        email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A" + activity_url_final;
+    } else {
+        email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A";
     }
     
     $("#share-text").attr("href", sms_url);
@@ -819,18 +899,28 @@ for (var i = 0; i < addressElements.length; i++) {
       //Change the background colour of card-body
       $(this).toggleClass('on');
       var val = $(this).attr('value');
+      var activity_url;
+      var ori_url = (window.location.href).toString();
+      var web_url = (ori_url.substr(0, ori_url.indexOf('?')));
+
+    if (web_url != '') {
+        activity_url = web_url + "activity/detail/";
+    } else {
+        activity_url = ori_url + "activity/detail/";
+    }
 
       if ($(this).hasClass('on')) {
         if (!checkbox_arr.includes(val)) {
             checkbox_arr.push(val);
+            activities_arr.push(activity_url + val + "/");
         }
-        console.log(checkbox_arr);
       } else {
             if (checkbox_arr.includes(val)) {
                 var index = checkbox_arr.indexOf(val);
+                var index_activity = checkbox_arr.indexOf(activity_url + val + "/");
                 checkbox_arr.splice(index, 1);
+                activities_arr.splice(index_activity,1);
         }
-        console.log(checkbox_arr);
       }
 
       var href;
@@ -838,23 +928,24 @@ for (var i = 0; i < addressElements.length; i++) {
       if (checkbox_arr != []) {
           href = checkbox_arr.join('_');
       }
-      console.log(href);
-
-      var ori_url = (window.location.href).toString();
-      var web_url = (ori_url.substr(0, ori_url.indexOf('?')));
-
-      console.log(web_url);
 
       if (href != '') {
         sms_url = web_url + "sms_create/" + href + "/";
-        email_url = web_url + "email_create/" + href + "/";
+        // email_url = web_url + "email_create/" + href + "/";
       } else {
         sms_url = "#";
-        email_url = "#";
+        // email_url = "#";
       }
-      
+
+    var activity_url_final = activities_arr.join('%0D%0A');
+
+    if (activity_url_final != '') {
+        email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A" + activity_url_final;
+    } else {
+        email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A";
+    }
       $("#share-text").attr("href", sms_url);
-      $("#share-email").attr("href", email_url);
+    //   $("#share-email").attr("href", email_url);
 
       //change opacity of card-img-top
       $(this).siblings(".card-img-top.select").toggleClass('on');

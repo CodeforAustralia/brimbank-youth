@@ -1,0 +1,15 @@
+<!-- Send Reminder button -->
+{% if not available %}
+{% if not activity.reminder_sent %}
+<button id="send-reminder" onclick="sendReminder(this.value)" value="{{ activity.id }}" type="button" class="btn btn-lg btn-success mb-2" 
+aria-pressed="false" autocomplete="off" 
+data-toggle="tooltip" data-placement="top" title="WARNING: Reminder can only be sent ONCE.">
+Send reminder
+</button>
+<div id="reminder-message" class="mb-3" style="display:none;color:green;">REMINDER HAS BEEN SENT</div>
+{% endif %}
+{% endif %}
+{% if activity.reminder_sent %}
+<div id="reminder-message" class="mb-3" style="color:green;">Reminder has been sent for this event.</div>
+{% endif %}
+<!-- End of Send Reminder button -->

@@ -1,0 +1,25 @@
+{% for recommended_activity in recommended_activities %}
+<!-- THE MODAL FOR SHARING ACTIVITY URL -->
+<div class="modal fade" id="modal_{{ recommended_activity.id }}">
+  <div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Share this activity</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' recommended_activity.pk %}" 
+        data-title="{{ recommended_activity.name }}" data-description="Test" data-message="test message"></div>
+    </div>
+    <div class="row mt-3 ml-3 mr-3">
+    <input class="form-control text-center" type="text" id="textshow_{{ recommended_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' recommended_activity.id %}">
+    </div>
+    <div class="row ml-3 mt-1">
+    <p class="small" id="input_{{ recommended_activity.id }}"></p>
+    </div>
+  </div>
+  </div>
+</div>
+{% endfor %}

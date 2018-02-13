@@ -34,6 +34,28 @@
         {% endif %}
     </div>
 
+    {% if field.label == "Where is the location ?" %}
+    <!-- <div class="form-group row address-details">
+      <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
+        <input class="form-control" name="locality" type="text" value="" placeholder="Suburb">
+      </div>
+      <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
+        <input class="form-control" name="postal_code" type="text" value="" placeholder="Postcode">
+      </div>
+    </div> -->
+    <div class="row address-details">
+        <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
+          <label class="col-form-label">{{ form.suburb.label_tag }}</label>
+          {% render_field form.suburb class="form-control" %}
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
+          <label class="col-form-label">{{ form.postcode.label_tag }}</label>
+          {% render_field form.postcode class="form-control" %}
+        </div>
+    </div>
+      
+    {% endif %}
+    
     {% endif %}
 
 {% endfor %}
