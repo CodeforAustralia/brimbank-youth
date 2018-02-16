@@ -13,19 +13,38 @@ class ContactGroupForm(forms.ModelForm):
         }
 
 class SMSMemberForm(forms.ModelForm):
-    group = forms.ModelChoiceField(queryset=ContactGroup.objects.all())
+    # group = forms.ModelChoiceField(queryset=ContactGroup.objects.all())
     class Meta:
         model = SMSMember
-        fields = ('group', 'name', 'mobile', )
+        fields = ('name', 'mobile', )
 
 class EmailGroupForm(forms.ModelForm):
-    description = forms.CharField(widget=forms.Textarea)
+    # description = forms.CharField(widget=forms.Textarea)
     class Meta:
         model = EmailGroup
-        fields = ('name', 'description', )
+        fields = ('name', )
 
 class EmailMemberForm(forms.ModelForm):
-    group = forms.ModelChoiceField(queryset=EmailGroup.objects.all())
+    age = forms.CharField(error_messages={'required': 'Required'})
     class Meta:
         model = EmailMember
-        fields = ('group', 'name', 'email', )
+        fields = ('first_name', 'last_name', 'email', 'gender', 'age', 'mobile', 'language', )
+        labels = {
+            'gender': _('M or F'),
+            'mobile': _('Mobile no'),
+            'language': _('Languages Spoken'),
+        }
+        error_messages = {
+            'first_name': {
+                'required': _('Required'),
+            },
+            'last_name': {
+                'required': _('Required'),
+            },
+            'email': {
+                'required': _('Required'),
+            },
+            'mobile': {
+                'required': _('Required'),
+            },
+        }

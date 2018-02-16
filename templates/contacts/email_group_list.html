@@ -2,20 +2,29 @@
 
 {% load static %}
 
-{% block title %} Email Group {% endblock %}
+{% block title %} My Contacts Group {% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/contacts/contacts.css'%}" />
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-4">
+<div class="container mt-4 mb-4">
+  <div class="row">
+  <div class="col-12">
+  <a class="btn btn-green btn-lg float-right" href="#" role="button" 
+  aria-haspopup="true" aria-expanded="false">ADD CONTACTS</a></div></div>
+
   <!-- BUTTON TO TRIGGER THE ACTION -->
-  <a class="btn btn-primary btn-sm js-create-email-group ml-4" href="#" data-url="{% url 'email_group_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
-      New Group
-  </a>
-  <a class="ml-2" href="{% url 'email_contact_list' %}" role="button" aria-haspopup="true" aria-expanded="false">
-    Add Contact
-  </a>
+  <div class="row mt-2">
+  <a class="js-create-email-group signature-green" href="#" data-url="{% url 'email_group_create' %}" role="button" 
+  aria-haspopup="true" aria-expanded="false" style="font-weight:300;">
+  <span style="font-size:20px;margin-top:-1px;"><i class="fas fa-lg fa-plus-circle mr-2 ml-3"></i>
+  Create a new group of contacts</span></a></div>
+  
 </div>
 
-<div class="container-fluid mt-4">
+<!-- <div class="container-fluid mt-4">
   <div id="accordion" class="row justify-content-center" role="tablist">
     <div class="card" style="width: 95%;">
       <div id="group">
@@ -23,15 +32,21 @@
       </div>
     </div>
   </div>
+</div> -->
+
+<div class="container" style="margin-top:2%;overflow-x:auto;width:100%;">
+  <div id="group" class="mt-4">
+  {% include 'contacts/includes/partial_email_group_list.html' %}
+  </div>
 </div>
 
-  <!-- THE MODAL WE WILL BE USING -->
-  <div class="modal fade" id="modal-group">
-    <div class="modal-dialog">
-      <div class="modal-content">
-      </div>
+<!-- THE MODAL WE WILL BE USING -->
+<div class="modal fade" id="modal-group">
+  <div class="modal-dialog">
+    <div class="modal-content">
     </div>
   </div>
+</div>
 
 </div>
 {% endblock %}

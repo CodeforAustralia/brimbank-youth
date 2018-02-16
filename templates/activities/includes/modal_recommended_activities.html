@@ -1,3 +1,5 @@
+{% load static %}
+
 {% for recommended_activity in recommended_activities %}
 <!-- THE MODAL FOR SHARING ACTIVITY URL -->
 <div class="modal fade" id="modal_{{ recommended_activity.id }}">
@@ -12,7 +14,15 @@
     <div class="row justify-content-center mt-3">
         <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' recommended_activity.pk %}" 
         data-title="{{ recommended_activity.name }}" data-description="Test" data-message="test message"></div>
-    </div>
+        <a target="_self" class="btn btn-circle-2 ml-2" 
+        href="sms:?&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' recommended_activity.pk %}"
+        style="background:#ffc600;width:49px;height:49px;border-radius:100%;color:white;padding-top:11px;padding-right:5px;">
+        <img src="{% static 'img/icons/sms.png' %}" style="width:28px;margin-top:-2px;margin-bottom:1px;margin-right:10px;margin-left:-2px;"></a>
+        <a target="_self" class="btn btn-circle-2 ml-2" 
+        href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' recommended_activity.pk %}"
+        style="background:grey;width:49px;height:49px;border-radius:100%;color:white;padding-top:10px;">
+        <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-bottom:1px;"></a>
+      </div>
     <div class="row mt-3 ml-3 mr-3">
     <input class="form-control text-center" type="text" id="textshow_{{ recommended_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' recommended_activity.id %}">
     </div>

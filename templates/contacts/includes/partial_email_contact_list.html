@@ -1,21 +1,29 @@
-{% for email_member in email_members %}
+{% for member in email_members %}
     <tr>
-    <td>{{ email_member.group }}</td>
-    <td>{{ email_member.name }}</td>
-    <td>{{ email_member.email }}</td>
-    <td>
+    <td>{{ member.first_name }}&nbsp;{{ member.last_name }}</td>
+    <td style="text-align:center;">{{ member.mobile }}</td>
+    <td style="text-align:center;">{{ member.email }}</td>
+    <td style="text-align:center;">{{ member.gender }}</td>
+    <td style="text-align:center;">{{ member.age }}</td>
+    <td style="text-align:center;">{{ member.language }}</td>
+    <td style="text-align:center;">
+        <div class="row justify-content-center">
         <button type="button"
-                class="btn btn-warning btn-sm js-update-email-member"
-                data-url="{% url 'email_member_update' email_member.id %}">Edit
+                class="btn btn-grey btn-sm js-update-email-member mr-2 mt-1 mb-1"
+                data-url="{% url 'email_member_update' member.id %}">EDIT
         </button>
+        <a class="btn btn-sm btn-grey mr-2 mt-1 mb-1" 
+        data-url="#"
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">SHARE ACTIVITY</a>
         <button type="button"
-                class="btn btn-danger btn-sm js-delete-email-member"
-                data-url="{% url 'email_member_delete' email_member.id %}">Delete
+                class="btn btn-danger btn-sm js-delete-email-member mt-1 mb-1"
+                data-url="{% url 'email_member_delete' member.id %}">DELETE
         </button>
+        </div>
     </td>
     </tr>
 {% empty %}
     <tr>
-    <td colspan="7" class="text-center bg-warning">No member yet</td>
+    <td colspan="7" class="text-center">No member yet</td>
     </tr>
 {% endfor %}

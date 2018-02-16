@@ -17,10 +17,10 @@ var loadForm = function () {
 
 var saveForm = function () {
   var form = $(this);
-  var group_id = "#table_" + form.attr("id") + " tbody";
+  // var group_id = "#table_" + form.attr("id") + " tbody";
   $.ajax({
-    // url: form.attr("action"),
-    url: '/sms_members/' + form.attr("id") + '/create/',
+    url: form.attr("action"),
+    // url: '/sms_members/' + form.attr("id") + '/create/',
     data: form.serialize(),
     type: form.attr("method"),
     dataType: 'json',
@@ -31,7 +31,7 @@ var saveForm = function () {
         // change sms_member_create function in views.py to receive group.pk
         
         // $("#contact-table tbody").html(data.html_sms_member_list);
-        $(group_id).html(data.html_sms_member_list);
+        $('#contact-list').html(data.html_sms_member_list);
         $("#modal-contact").modal("hide");
       }
       else {

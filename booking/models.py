@@ -12,7 +12,7 @@ class Registration(models.Model):
     surname = models.CharField(max_length=40)
     email = models.EmailField()
     mobile_number = models.CharField(max_length=15, blank=True, null=True)
-    gender = models.CharField(max_length=15, choices=GENDER, default='F')
+    gender = models.CharField(max_length=6, choices=GENDER, default='F')
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE, related_name='bookings')
     age = models.PositiveSmallIntegerField(null=True, blank=True)
     language = models.CharField(max_length=60, null=True, blank=True)

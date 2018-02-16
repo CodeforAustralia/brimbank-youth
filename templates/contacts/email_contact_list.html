@@ -2,28 +2,65 @@
 
 {% load static %}
 
+{% block title %}{{ group_name }}{% endblock %}
+
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/contacts/contacts.css'%}" />
+<style>
+    .invalid-feedback {display: inline;padding-left:0;} 
+    .fa-search { 
+        position: relative;;
+        z-index: 1;
+        left: 10px;
+        top: 30px;
+        color: #7B7B7B;
+        cursor: pointer;
+        width: 0;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid mt-4">
-    <!-- BUTTON TO TRIGGER THE ACTION -->
-    <a class="btn btn-primary js-create-email-member" href="#" data-url="{% url 'email_member_create' %}" role="button" aria-haspopup="true" aria-expanded="false">
-        New contact
-    </a>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-8">
+        <h2 class="mt-3" style="font-size:36px;font-weight:bolder;color:#484848;">{{ group_name }}</h2>
+        </div>
+        <div class="col-4">
+        <!-- BUTTON TO TRIGGER THE ACTION -->
+        <a class="btn btn-green js-create-email-member mt-4 float-right" href="#" data-url="{% url 'member_create' group_pk %}" 
+        role="button" aria-haspopup="true" aria-expanded="false">ADD CONTACTS</a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-sm-6 col-12">
+        <i class="fas fa-search"></i>
+        <input type="text" name="name" placeholder="Search" style="padding-left:35px;" 
+        maxlength="150" class="form-control" id="id_name"/></div>
+    </div>
+    
 </div>
 
-<div class="container-fluid mt-4">
-    <table class="table" id="contact-table">
+<div class="container" style="width:100%;margin-top:2%;overflow-x:auto;">
+    <div class="mt-4">
+        <table class="table" id="contact-table" style="width:100%;">
         <thead>
         <tr>
-            <th>Group</th>
             <th>Name</th>
+            <th>Mobile</th>
             <th>Email</th>
-            <th></th>
+            <th>M or F</th>
+            <th>Age</th>
+            <th>Languages</th>
+            <th width="300px;">ACTIONS</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="contact-list">
         {% include 'contacts/includes/partial_email_contact_list.html' %}
         </tbody>
-    </table>   
+        </table>
+    </div>  
 </div>
 
 <!-- THE MODAL WE WILL BE USING -->

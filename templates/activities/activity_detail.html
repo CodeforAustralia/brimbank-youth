@@ -277,7 +277,6 @@
   {% if activity.background %} <span class="light-text">{{ activity.background }}</span><br />{% endif %}
   
   <span class="light-text">
-  {% if activity.gender == 'B' %}Both females and males<br />{% endif %}
   {% if activity.gender == 'F' %}Only females<br />{% endif %}
   {% if activity.gender == 'M' %}Only males<br />{% endif %}
   </span>
@@ -314,7 +313,9 @@
   {% if user.is_authenticated %}
   {% if activity.created_by == user %}
   <a id="edit_btn_url" href="{% url 'edit_activity' activity.pk %}" 
-  class="btn btn-success btn-lg mt-4" style="width:20%;">EDIT</a>
+  class="btn btn-success btn-lg mt-4" style="width:30%;">EDIT</a>
+  <a id="edit_btn_url" href="{% url 'delete_activity' activity.pk %}" 
+  class="btn btn-danger btn-lg mt-4 ml-2" style="width:15%;">DELETE</a>
   {% endif %}
   {% else %}
   <a id="edit_btn_url" href="{% url 'edit_activity' activity.pk %}" style="display:none;"></a>
@@ -384,6 +385,14 @@
     <div class="row justify-content-center mt-3">
         <!-- <div class="addthis_inline_share_toolbox"></div> -->
         <div class="sharethis-inline-share-buttons"></div>
+        <a target="_self" class="btn btn-circle-2 ml-2" 
+        href="sms:?&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' activity.pk %}"
+        style="background:#ffc600;width:49px;height:49px;border-radius:100%;color:white;padding-top:11px;padding-right:5px;">
+        <img src="{% static 'img/icons/sms.png' %}" style="width:28px;margin-top:-2px;margin-bottom:1px;margin-right:10px;margin-left:-2px;"></a>
+        <a target="_self" class="btn btn-circle-2 ml-2" 
+        href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' activity.pk %}"
+        style="background:grey;width:49px;height:49px;border-radius:100%;color:white;padding-top:10px;">
+        <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-bottom:1px;"></a>
     </div>
     <div class="row mt-3 ml-3 mr-3">
     <input class="form-control mr-2 text-center" type="text" id="id_share_url" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">

@@ -175,7 +175,7 @@ class ActivityDetailView(DetailView):
                 available = False
             else:
                 available = True
-        print("available? ", available)
+        # print("available? ", available)
         context['available'] = available
         context['attendees_no'] = attendees_no
         return context
@@ -220,7 +220,7 @@ class ActivityUpdateView(UpdateView):
 @method_decorator(login_required, name='dispatch')
 class ActivityDeleteView(DeleteView):
     model = Activity
-    success_url = reverse_lazy('home')
+    # success_url = reverse_lazy('home')
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -228,49 +228,98 @@ class ActivityDeleteView(DeleteView):
             messages.add_message(self.request, messages.ERROR, 'Activity can only be deleted by the organiser', extra_tags='danger')
             return redirect('activity_detail', self.object.id )
         return super(ActivityDeleteView, self).get(request, *args, **kwargs)
+    
+    def get_success_url(self):
+        messages.add_message(self.request, messages.SUCCESS, 'The activity has been deleted.')
+        return reverse('home')
 
-def search_logic(request, location_key, name_key, category):
+def search_logic(request, location_key, postcode, name_key, category):
     if category is None:
         category = ''
 
-    activities = Activity.objects.filter(
-        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
+    if postcode == '':
+        activities = Activity.objects.filter(
+        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key) |
+        Q(suburb__icontains=location_key) | Q(postcode__icontains=location_key), 
+            
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
-    )
+        )
+    else:
+        activities = Activity.objects.filter(
+        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key) |
+        Q(suburb__icontains=location_key) | Q(postcode__icontains=location_key) | Q(postcode__icontains=postcode), 
+        
+        Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+        Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
+        )
+    
     activities = activities.filter(end_date__gte=datetime.date.today())
     activities = activities.order_by('end_date')
     return activities
 
-def search_others(request, location_key, name_key, category):
+def search_others(request, location_key, postcode, name_key, category):
     if category is None:
         category = ''
-        
-    other_activities = Activity.objects.filter(
-        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
+    
+    if postcode == '':
+        other_activities = Activity.objects.filter(
+        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key) |
+        Q(suburb__icontains=location_key) | Q(postcode__icontains=location_key), 
+
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)).exclude(
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
+    
+    else:
+        other_activities = Activity.objects.filter(
+        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key) |
+        Q(suburb__icontains=location_key) | Q(postcode__icontains=location_key) | Q(postcode__icontains=postcode),
+
+        Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)).exclude(
+        Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
+    
     other_activities = other_activities.filter(start_date__gte=datetime.date.today())
     other_activities = other_activities.order_by('end_date')
     return other_activities
 
-def search_my_activities(request, location_key, name_key, category, mine):
+def search_my_activities(request, location_key, postcode, name_key, category, mine):
     if mine:
-        activities = Activity.objects.filter(created_by=request.user)
-        activities = activities.filter(
-        Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
-        Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
-        Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
-        )
+        if postcode == '':
+            activities = Activity.objects.filter(created_by=request.user)
+            activities = activities.filter(
+            Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key) |
+            Q(suburb__icontains=location_key) | Q(postcode__icontains=location_key), 
+
+            Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+            Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
+        else:
+            activities = Activity.objects.filter(created_by=request.user)
+            activities = activities.filter(
+            Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key) |
+            Q(suburb__icontains=location_key) | Q(postcode__icontains=location_key) | Q(postcode__icontains=postcode),
+
+            Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+            Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
+
         activities = activities.filter(start_date__gte=datetime.date.today()) # filter activities that occur today or later than today
         activities = activities.order_by('end_date')
     else:
-        activities = Activity.objects.exclude(created_by=request.user)
-        activities = activities.filter(
-            Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key), 
-            Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
-            Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category),
-        )
+        if postcode == '':
+            activities = Activity.objects.exclude(created_by=request.user)
+            activities = activities.filter(
+                Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key) |
+                Q(suburb__icontains=location_key) | Q(postcode__icontains=location_key), 
+
+                Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+                Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
+        else:
+            activities = Activity.objects.exclude(created_by=request.user)
+            activities = activities.filter(
+                Q(location__istartswith=location_key) | Q(location__iendswith=location_key) | Q(location__icontains=location_key) |
+                Q(suburb__icontains=location_key) | Q(postcode__icontains=location_key) | Q(postcode__icontains=postcode),
+
+                Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
+                Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
         activities = activities.filter(start_date__gte=datetime.date.today())
         activities = activities.order_by('end_date')[0:6]
     return activities
@@ -292,7 +341,7 @@ def search_logic_drafts(request, location_key, name_key, category):
     return activities
 
 def search_events(request):
-    activities = search_logic(request, '', '', '')
+    activities = search_logic(request, '', '', '', '')
 
     # Recharge sms_limit & email_limit on the 1st day of each month
     if not request.user.is_anonymous():
@@ -338,7 +387,7 @@ def search_events(request):
     not_my_activities = None
     latest_activity = None
     if request.method == 'GET':
-        location_key = request.GET.get('location') # 'location' is the name of the input field
+        location_query = request.GET.get('location') # 'location' is the name of the input field
         name_key = request.GET.get('name')
         list_of_input_ids=request.GET.getlist('checkboxes')
         str1 = '_'.join(list_of_input_ids)
@@ -349,19 +398,34 @@ def search_events(request):
 
         if name_key is None:
             name_key = ''
-        if location_key is None:
-            location_key =''
+        if location_query is None:
+            location_query =''
         if category is None:
             category =''
+        
+        if ', VIC' in location_query:
+            location_query = location_query.split(', VIC ')
+            
+            if len(location_query) > 1:
+                location_key = location_query[0]
+                postcode = location_query[1]
+        
+        elif ', VIC' not in location_query:
+            location_key = location_query
+            postcode = ''
+        
+        else:
+            location_key = ''
+            postcode = ''
 
         if request.user.is_anonymous():
-            activities = search_logic(request, location_key, name_key, category)
-            other_activities = search_others(request, location_key, name_key, category)
+            activities = search_logic(request, location_key, postcode, name_key, category)
+            other_activities = search_others(request, location_key, postcode, name_key, category)
 
         # if request.user.is_anonymous() == False:
         if not request.user.is_anonymous():
-            activities = search_my_activities(request, location_key, name_key, category, True)
-            not_my_activities = search_my_activities(request, location_key, name_key, category, False)
+            activities = search_my_activities(request, location_key, postcode, name_key, category, True)
+            not_my_activities = search_my_activities(request, location_key, postcode, name_key, category, False)
             # Display the latest_activity (for the most recent published activity)
             staff_activities = Activity.objects.filter(created_by=request.user)
             if staff_activities:

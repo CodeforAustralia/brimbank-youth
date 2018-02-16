@@ -86,7 +86,7 @@
         display: none;
         border-radius: 0;
     }
-    .hover-card.select .vertical-button {
+    .hover-card .vertical-button, .hover-card.select .vertical-button {
         margin-left: 50px;
     }
     .vertical-button:hover {
@@ -96,15 +96,18 @@
     .top:hover .vertical-button {
         display: inline-block;
     }
+    .signature-green {
+      color: #5DAE69;
+    }
 
   </style>
 	{% block stylesheet %}{% endblock %}  <!-- ADD CUSTOMISED STYLESHEET for PARTICULAR PAGES -->
   </head>
   <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="{% url 'home' %}" style="color:green;">
+      <a class="navbar-brand" href="{% url 'home' %}" style="color:#5DAE69;">
           <!-- <img src="{% static 'img/angel.png' %}" width="60" height="60" alt="Test"> -->
-          YouthPoster
+          YouShare
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -157,7 +160,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
               <!-- <a class="dropdown-item" href="{% url 'view_activity_drafts' %}">Your Activities</a> -->
-              <a class="dropdown-item" href="{% url 'sms_group_list' %}">Contacts</a>
+              <a class="dropdown-item" href="{% url 'email_group_list' %}">Contacts</a>
               <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
               <a class="dropdown-item" href="#">Change password</a>    
             </div>

@@ -1,0 +1,49 @@
+#contact-table thead th {
+    text-align: center;
+    vertical-align: middle;
+    color: #999999;
+  }
+  #contact-table tbody td {
+    vertical-align: middle;
+    color: #999999;
+  }
+  #contact-table {
+    -moz-border-radius:5px;
+    -webkit-border-radius:5px;
+    border-radius:5px;
+    border-collapse: collapse;
+    border-style: hidden; /* hide standard table (collapsed) border */
+    box-shadow: 0 0 0 1px #999999; /* this draws the table border  */ 
+  }
+  #contact-table tr:last-child td:first-child {
+    border-bottom-left-radius: 20px;
+  }
+  #contact-table tr:last-child td:last-child {
+    border-bottom-right-radius: 20px;
+  }
+  /* #contact-table tr:nth-child(even){background-color: #f2f2f2;} */
+  #contact-table tr, #contact-table td, #contact-table th {
+    border-bottom: 1px solid #999999;
+    border-top: 1px solid #999999;
+    border-collapse: collapse;
+  }
+  .btn-grey {
+    background: #999999;
+    color:#ffffff;
+  }
+  .btn-grey:hover {
+    background: #757575;
+    color:#ffffff;
+  }
+  a.signature-green:hover {
+    color: green;
+    text-decoration: none;
+  }
+  .btn-green {
+    background-color: #5DAE69;
+    color: #ffffff;
+  }
+  .btn-green:hover {
+    background-color: rgb(56, 105, 63);
+    color: #ffffff;
+  }

@@ -114,10 +114,14 @@ urlpatterns = [
     url(r'^sms_groups/(?P<pk>\d+)/delete/$', contacts_views.sms_group_delete, name='sms_group_delete'),
 
     # --- Email groups ---
-    url(r'^email_groups/$', contacts_views.email_group_list, name='email_group_list'),
+    url(r'^groups/$', contacts_views.email_group_list, name='email_group_list'),
     url(r'^email_groups/create/$', contacts_views.email_group_create, name='email_group_create'),
     url(r'^email_groups/(?P<pk>\d+)/update/$', contacts_views.email_group_update, name='email_group_update'),
     url(r'^email_groups/(?P<pk>\d+)/delete/$', contacts_views.email_group_delete, name='email_group_delete'),
+
+    # --- Contacts ---
+    url(r'^group/(?P<pk>\d+)/contacts/$', contacts_views.contact_list, name='contact_list'),
+    url(r'^group/(?P<pk>\d+)/contacts/create/$', contacts_views.member_create, name='member_create'),
 
     # --- Email contacts ---
     url(r'^email_contacts/group/$', contacts_views.email_contact_list, name='email_contact_list'),

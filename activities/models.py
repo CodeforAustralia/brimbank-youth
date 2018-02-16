@@ -75,12 +75,12 @@ class ActivityType(models.Model):
         return self.name
     
 class Activity(models.Model):
-    name = models.CharField(max_length=150)
-    activity_type = models.CharField(max_length=100, choices=ACTIVITY_TYPES, blank=True, default='Sport')
+    name = models.CharField(max_length=150, db_index=True)
+    activity_type = models.CharField(max_length=100, choices=ACTIVITY_TYPES, blank=True, default='Sport', db_index=True)
     term = models.CharField(max_length=50, choices=TERMS, blank=True, default='Once')
-    location = models.CharField(max_length=150, blank=True, null=True)
-    suburb = models.CharField(max_length=50, blank=True, null=True)
-    postcode = models.CharField(max_length=4, blank=True, null=True)
+    location = models.CharField(max_length=150, blank=True, null=True, db_index=True)
+    suburb = models.CharField(max_length=50, blank=True, null=True, db_index=True)
+    postcode = models.CharField(max_length=4, blank=True, null=True, db_index=True)
     organiser = models.CharField(max_length=150, blank=True, null=True)
     contact_number = models.CharField(max_length=15, blank=True, null=True)
     description = models.TextField(max_length=500, blank=True, null=True)
@@ -102,7 +102,7 @@ class Activity(models.Model):
     cost_choice = models.CharField(max_length=50, choices=COST_OPTIONS, default='N')
     space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Unlimited')
     listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
-    created_by = models.ForeignKey(User, related_name='activities', null=True)
+    created_by = models.ForeignKey(User, related_name='activities', null=True, db_index=True)
     published = models.BooleanField(default=True)
     bookmarked = models.BooleanField(default=False)
     bookmarked_users = models.ManyToManyField(User, related_name='bookmarked_activities')
@@ -113,6 +113,9 @@ class Activity(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        index_together = ["name", "activity_type", "location", "suburb", "postcode", "created_by"]
 
     # class Meta:
     #     ordering = ['-activity_date', '-start_date']

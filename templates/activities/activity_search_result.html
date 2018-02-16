@@ -37,7 +37,6 @@
       align-items: center;
     }
 
-
     .jumbotron {
         position: relative;
         background-color: transparent !important;
@@ -68,18 +67,6 @@
     .card {
         border: transparent;
     }
-    .h1, .p {
-        font-family: sans-serif;
-    }
-    .st-custom-button[data-network] {
-        background-color: #0adeff;
-        display: inline-block;
-        padding: 5px 10px;
-        cursor: pointer;
-        font-weight: bold;
-        color: #fff;
-    }
-   }
     </style>
 
 {% endblock %}
@@ -94,14 +81,11 @@
 
 {% include 'activities/includes/search_box.html' %}
 
-{% if activities %}
-{% if user.is_authenticated %}
-
 <!-- Floating sharing button starts -->
 <div class="float-sm">
     <div class="fl-fl float-sms">
         <!-- <button type="submit" id="id_share_text" class="btn btn-success btn-circle" name="search" value="share"><div style="font-size: 2em;"><i class="far fa-comment-alt"></i></div></button> -->
-        <a id="share-text" class="btn btn-circle" target="_blank" href="#" style="background:#ffc600;"><img src="{% static 'img/icons/sms.png' %}" style="width:55px;"></a>
+        <a id="share-text" class="btn btn-circle" href="#" style="background:#ffc600;"><img src="{% static 'img/icons/sms.png' %}" style="width:55px;"></a>
     </div>
     <div class="fl-fl float-email">
         <!-- <button type="submit" id="id_share_mobile" class="btn btn-success btn-circle" name="search" value="email"><div style="font-size: 2em;"><i class="far fa-envelope"></i></div></button> -->
@@ -110,6 +94,8 @@
 </div>
 <!-- Floating sharing button ends -->
 
+{% if activities %}
+{% if user.is_authenticated %}
 <div class="container">
 <h2>Your activities & events</h2>
 {% else %}
@@ -118,9 +104,9 @@
 {% endif %}
 <div class="row justify-content-center" style="margin-top:40px;">
 {% if latest_activity and user.is_authenticated %}
-<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12" id="latest_activity" style="display:none; background:mistyrose;">
+<div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12" id="latest_activity" style="display:none;">
     <div class="latest_activity_{{ latest_activity.id }}" id="latest_activity_val" style="display:none;"> </div>
-    <div class="card hover-card select">
+    <div class="card hover-card select" style="box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2), 0 10px 20px 0 rgba(0, 0, 0, 0.19);">
     {% if latest_activity.activity_img %}
         <img class="card-img-top select" src="{{ latest_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
@@ -131,9 +117,10 @@
     <div class="top">
         <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
         <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
-        <a href="{% url 'activity_detail' latest_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+        <a href="{% url 'activity_detail' latest_activity.pk %}" 
+        class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
-    <div class="card-body select" id=card_{{ latest_activity.pk }} value="{{ latest_activity.pk }}" style="padding-left:0;padding-right:0;">
+    <div class="card-body select" id=card_{{ latest_activity.pk }} value="{{ latest_activity.pk }}" style="padding-left:8px;padding-right:8px;">
         <p id="b" class="card-text bold-text">{{ latest_activity.activity_type|upper }} - {{ latest_activity.suburb|upper }}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ latest_activity.id }}" value="{% url 'activity_detail' latest_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
         <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
@@ -157,7 +144,6 @@
         <p class="card-text smaller">EVERY DAY UNTIL {{ latest_activity.end_date|date:'D, d M' }}  {{ latest_activity.start_time|time:'g:iA' }}</p>
         {% endif %}
         {% endif %}
-
         <input class="selected" style="display:none;" type="checkbox" id=activity_{{ latest_activity.pk }} name ="checkboxes" value={{ latest_activity.pk }}>
         <!-- <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span>
         <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span> -->
@@ -237,7 +223,6 @@
         {% endif %}
 
         <p class="card-text smaller">{{ activity.bookings.count }} REGISTERED</p>
-
         <input class="selected" style="display:none;" type="checkbox" id=activity_{{ activity.pk }} name ="checkboxes" value={{ activity.pk }}>
         <!-- <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span> -->
         <!-- <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span> -->
@@ -270,9 +255,11 @@
         <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% endif %}
     <div class="top">
+        <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
+        <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
         <a href="{% url 'activity_detail' activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
-    <div class="card-body" id=card_{{ activity.pk }} style="padding-left:0;padding-right:0;">
+    <div class="card-body select" id=card_{{ activity.pk }} value="{{ activity.pk }}" style="padding-left:0;padding-right:0;">
     <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - {{ activity.suburb|upper }}
     <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" value="{% url 'activity_detail' activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
     <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
@@ -320,9 +307,14 @@
             <!-- <div class="addthis_inline_share_toolbox" data-url="http://{{ domain }}{% url 'activity_detail' activity.pk %}"></div> -->
             <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' activity.pk %}" 
             data-title="{{ activity.name }}" data-description="Test" data-message="test message"></div>
-            <a target="_self" class="btn btn-circle-2 ml-2" href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' activity.pk %}"
+            <a target="_self" class="btn btn-circle-2 ml-2" 
+            href="sms:?&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' activity.pk %}"
+            style="background:#ffc600;width:49px;height:49px;border-radius:100%;color:white;padding:0;">
+            <img src="{% static 'img/icons/sms.png' %}" style="width:28px;margin-top:0px;margin-right:-2px;margin-bottom:1px;"></a>
+            <a target="_self" class="btn btn-circle-2 ml-2" 
+            href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' activity.pk %}"
             style="background:grey;width:49px;height:49px;border-radius:100%;color:white;">
-            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-top:1px;"></a>
+            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-bottom:1px;"></a>
         </div>
         <div class="row mt-3 ml-3 mr-1">
         <input class="form-control text-center mr-2" type="text" id="textshow_{{ activity.id }}" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
@@ -369,9 +361,11 @@
         <a href="{% url 'activity_detail' other_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% endif %}
     <div class="top">
+        <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
+        <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
         <a href="{% url 'activity_detail' other_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
-    <div class="card-body" id=card_{{ other_activity.pk }} style="padding-left:0;padding-right:0;">
+    <div class="card-body select" id=card_{{ other_activity.pk }} value="{{ other_activity.pk }}" style="padding-left:0;padding-right:0;">
         <p id="b" class="card-text bold-text">{{ other_activity.activity_type|upper }} - {{ other_activity.suburb|upper }}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ other_activity.id }}" value="{% url 'activity_detail' other_activity.id %}" type="button" class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;">
         <img src="{% static 'img/icons/share.svg' %}" height="25"> Share
@@ -394,7 +388,6 @@
         <p class="card-text smaller">EVERY DAY UNTIL {{ other_activity.end_date|date:'D, d M' }}  {{ other_activity.start_time|time:'g:iA' }}</p>
         {% endif %}
         {% endif %}
-
         <input class="selected" type="checkbox" style="display:none" id=activity_{{ other_activity.pk }} name ="checkboxes" value={{ other_activity.pk }} />
     </div>
     <!-- <div class="card-footer">
@@ -433,9 +426,13 @@
             <!-- <div class="addthis_inline_share_toolbox"></div> -->
             <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' other_activity.id %}" 
             data-title="{{ other_activity.name }}" data-description="Test" data-message="test message"></div>
+            <a target="_self" class="btn btn-circle-2 ml-2" 
+            href="sms:?&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' other_activity.pk %}"
+            style="background:#ffc600;width:49px;height:49px;border-radius:100%;color:white;padding:0;">
+            <img src="{% static 'img/icons/sms.png' %}" style="width:28px;margin-top:0px;margin-right:-2px;margin-bottom:1px;"></a>
             <a target="_self" class="btn btn-circle-2 ml-2" href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' other_activity.pk %}"
             style="background:grey;width:49px;height:49px;border-radius:100%;color:white;">
-            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-top:1px;"></a>
+            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-bottom:1px;"></a>
         </div>
         <div class="row mt-3 ml-3 mr-1">
         <input class="form-control text-center mr-2" type="text" id="textshow_{{ other_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' other_activity.pk %}">
@@ -473,7 +470,8 @@
     <div class="top">
         <span class="far fa-heart fa-2x float-right tickbox mt-2 mr-2"></span>
         <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mt-2 mr-2"></span>
-        <a href="{% url 'activity_detail' not_my_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+        <a href="{% url 'activity_detail' not_my_activity.pk %}" 
+        class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
     <div class="card-body select" id=card_{{ not_my_activity.pk }} value="{{ not_my_activity.pk }}" style="padding-left:0;padding-right:0;">
         <p id="b" class="card-text bold-text">{{ not_my_activity.activity_type|upper }} - {{ not_my_activity.suburb|upper }}
@@ -536,9 +534,13 @@
         <div class="row justify-content-center mt-3">
             <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' not_my_activity.id %}" 
             data-title="{{ not_my_activity.name }}" data-description="Test" data-message="test message" data-subject="test"></div>
+            <a target="_self" class="btn btn-circle-2 ml-2" 
+            href="sms:?&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}"
+            style="background:#ffc600;width:49px;height:49px;border-radius:100%;color:white;padding:0;">
+            <img src="{% static 'img/icons/sms.png' %}" style="width:28px;margin-top:0px;margin-right:-2px;margin-bottom:1px;"></a>
             <a class="btn btn-circle-2 ml-2" href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}"
             style="background:grey;width:49px;height:49px;border-radius:100%;color:white;">
-            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-top:1px;"></a>
+            <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-bottom:1px;"></a>
         </div>
         <div class="row mt-3 ml-3 mr-1">
         <input class="form-control text-center mr-2" type="text" id="textshow_{{ not_my_activity.id }}" value="http://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}">
@@ -610,14 +612,14 @@ function markActivity(clicked_id) {
     });
 };
 
-window.fbAsyncInit = function() {
-FB.init({
-    appId            : '1943348669252986',
-    autoLogAppEvents : true,
-    xfbml            : true,
-    version          : 'v2.11'
-});
-};
+// window.fbAsyncInit = function() {
+// FB.init({
+//     appId            : '1943348669252986',
+//     autoLogAppEvents : true,
+//     xfbml            : true,
+//     version          : 'v2.11'
+// });
+// };
 
 (function(d, s, id){
      var js, fjs = d.getElementsByTagName(s)[0];
@@ -627,16 +629,16 @@ FB.init({
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 
-function sendDialog(id) {
-    var url_arr = id.split("send_dialog_/");
-    var url = url_arr[1];
-    var url_final = window.location.href + url;
+// function sendDialog(id) {
+//     var url_arr = id.split("send_dialog_/");
+//     var url = url_arr[1];
+//     var url_final = window.location.href + url;
 
-    FB.ui({
-      method: 'send',
-      link: url_final
-    });
-}
+//     FB.ui({
+//       method: 'send',
+//       link: url_final
+//     });
+// }
 
 function getURL(id, value) {
     var text_input_arr = id.split("sharebutton_");
@@ -650,45 +652,45 @@ function getURL(id, value) {
 
     $(".st-btn").show();
 
-    var share = "#share_" + activity_id;
-    var share2 = "#share2_" + activity_id;
-    var share3 = "#share3_" + activity_id;
-    var share4 = "#share4_" + activity_id;
-    var share5 = "#share5_" + activity_id;
+    // var share = "#share_" + activity_id;
+    // var share2 = "#share2_" + activity_id;
+    // var share3 = "#share3_" + activity_id;
+    // var share4 = "#share4_" + activity_id;
+    // var share5 = "#share5_" + activity_id;
 
-    var url_val = value.substring(1);
-    var url_final = window.location.href + url_val;
+    // var url_val = value.substring(1);
+    // var url_final = window.location.href + url_val;
 
-    $(share).jsSocials({
-      shares: ["messenger"],
-      showLabel: false,
-      shareIn: "popup",
-      url: url_final,
-    });
-    $(share2).jsSocials({
-        shares: ["facebook"],
-        showLabel: false,
-        shareIn: "popup",
-        url: url_final,
-    });
-    $(share3).jsSocials({
-        shares: ["email"],
-        showLabel: false,
-        shareIn: "popup",
-        url: url_final,
-    });
-    $(share4).jsSocials({
-        shares: ["whatsapp"],
-        showLabel: false,
-        shareIn: "popup",
-        url: url_final,
-    });
-    $(share5).jsSocials({
-        shares: ["sms"],
-        showLabel: false,
-        shareIn: "popup",
-        url: url_final,
-    });
+    // $(share).jsSocials({
+    //   shares: ["messenger"],
+    //   showLabel: false,
+    //   shareIn: "popup",
+    //   url: url_final,
+    // });
+    // $(share2).jsSocials({
+    //     shares: ["facebook"],
+    //     showLabel: false,
+    //     shareIn: "popup",
+    //     url: url_final,
+    // });
+    // $(share3).jsSocials({
+    //     shares: ["email"],
+    //     showLabel: false,
+    //     shareIn: "popup",
+    //     url: url_final,
+    // });
+    // $(share4).jsSocials({
+    //     shares: ["whatsapp"],
+    //     showLabel: false,
+    //     shareIn: "popup",
+    //     url: url_final,
+    // });
+    // $(share5).jsSocials({
+    //     shares: ["sms"],
+    //     showLabel: false,
+    //     shareIn: "popup",
+    //     url: url_final,
+    // });
 }
 
 function copyURL(id) {
@@ -717,9 +719,23 @@ var shareBtns = document.getElementsByClassName("st-btn");
 // for (var i = 0; i < shareBtns.length; i++) {
 //     console.log(shareBtns[i]);
 // }
-    
+
+// Autocomplete on search location box
 $( function() {
-   // Add Google Maps URL
+var options = {
+    url :"/static/activities/json/suburbs-list.json",
+    getValue: function (element) { 
+        return $(element).prop("placeName") + ", " + $(element).prop("adminCode1") + " " + $(element).prop("postalcode");
+    },
+    list: {
+        match: {
+            enabled: true
+        }
+    }
+};
+$('#id_location').easyAutocomplete(options);
+
+// Add Google Maps URL
 //    var addressElements = document.getElementsByName("address");
 //    var geocoder = new google.maps.Geocoder();
 
@@ -807,8 +823,8 @@ $( function() {
     }
 
   // Add Tooltips on search boxes
-  $('#id_location').tooltip();
-  $('#id_name').tooltip();
+//   $('#id_location').tooltip();
+//   $('#id_name').tooltip();
 
   var checkbox_arr = [];
   var activities_arr = [];
@@ -864,6 +880,9 @@ $( function() {
             activities_arr.splice(index_activity,1);
         }
     }
+
+
+
     var href;
     var sms_url, email_url;
     var activity_url_final;
@@ -874,20 +893,22 @@ $( function() {
     }
 
     // Codes for Mailgun/Twilio sharing
-    if (href != '') {
-        sms_url = web_url + "sms_create/" + href + "/";
+    // if (href != '') {
+        // sms_url = web_url + "sms_create/" + href + "/";
         // email_url = web_url + "email_create/" + href + "/";
-    } else {
-        sms_url = "#";
+    // } else {
+        // sms_url = "#";
         // email_url = "#";
-    }
+    // }
 
     activity_url_final = activities_arr.join('%0D%0A');
 
     if (activity_url_final != '') {
         email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A" + activity_url_final;
+        sms_url = "sms:?&body=Check%20these%20out:%20" + activity_url_final;
     } else {
         email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A";
+        sms_url = "sms:?&body=Check%20these%20out:%20";
     }
     
     $("#share-text").attr("href", sms_url);

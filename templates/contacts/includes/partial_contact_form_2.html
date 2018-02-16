@@ -1,0 +1,70 @@
+{% load form_tags widget_tweaks %}
+
+{% if form.non_field_errors %}
+  <div class="alert alert-danger" role="alert">
+    {% for error in form.non_field_errors %}
+      <p class="mb-0">{% if forloop.last %}{{ error }}{% endif %}</p>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<div class="form-group row">
+    <div class="col-6">
+        <label class="col-form-label">{{ form.first_name.label_tag }}</label>
+        {% render_field form.first_name class="form-control" %}
+        {% for error in form.first_name.errors %}
+        <div class="col-6 invalid-feedback">{{ error }}</div>
+        {% endfor %}
+        {% if form.first_name.help_text %}
+        <small class="form-text text-muted">
+        {{ form.first_name.help_text|safe }}
+        </small>
+        {% endif %}
+    </div>
+    <div class="col-6">
+        <label class="col-form-label">{{ form.last_name.label_tag }}</label>
+        {% render_field form.last_name class="form-control" %}
+        {% for error in form.last_name.errors %}
+        <div class="col-6 invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-6">
+        <label class="col-form-label">{{ form.email.label_tag }}</label>
+        {% render_field form.email class="form-control" %}
+        {% for error in form.email.errors %}
+        <div class="col-6 invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="col-4">
+        <label class="col-form-label">{{ form.gender.label_tag }}</label>
+        {% render_field form.gender class="form-control" %}
+        {% for error in form.gender.errors %}
+        <div class="col-6 invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="col-2">
+        <label class="col-form-label">{{ form.age.label_tag }}</label>
+        {% render_field form.age class="form-control" %}
+        {% for error in form.age.errors %}
+        <div class="col-6 invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-6">
+        <label class="col-form-label">{{ form.mobile.label_tag }}</label>
+        {% render_field form.mobile class="form-control" %}
+        {% for error in form.mobile.errors %}
+        <div class=" col-6 invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+    <div class="col-6">
+        <label class="col-form-label">{{ form.language.label_tag }}</label>
+        {% render_field form.language class="form-control" %}
+        {% for error in form.language.errors %}
+        <div class=" col-6 invalid-feedback">{{ error }}</div>
+        {% endfor %}
+    </div>
+</div>

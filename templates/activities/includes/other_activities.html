@@ -9,7 +9,7 @@
     <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
     {% endif %}
     <div class="top">
-        <a href="{% url 'activity_detail' org_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+        <a href="{% url 'activity_detail' org_activity.pk %}" class="btn btn-dark btn-lg vertical-button" style="margin-left:0;">VIEW ACTIVITY</a>
     </div>
     <div class="card-body">
     <p class="card-text bold-text">{{ org_activity.activity_type|upper }} - <span name="address" style="display:none;color:#484848;">{{ org_activity.suburb }}</span>
