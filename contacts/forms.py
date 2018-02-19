@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from .models import SMSMember, ContactGroup, EmailGroup, EmailMember
+from activities.models import Activity
 
 class ContactGroupForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea)
@@ -48,3 +49,6 @@ class EmailMemberForm(forms.ModelForm):
                 'required': _('Required'),
             },
         }
+
+class ActivityListForm(forms.Form):
+    activities = forms.ModelMultipleChoiceField(queryset=Activity.objects.all())

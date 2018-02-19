@@ -1,12 +1,19 @@
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.views.generic import CreateView, UpdateView, ListView, DetailView, DeleteView
+from copy import deepcopy
 
 from .models import SMSMember, ContactGroup, EmailGroup, EmailMember
-from .forms import SMSMemberForm, ContactGroupForm, EmailGroupForm, EmailMemberForm
+from .forms import SMSMemberForm, ContactGroupForm, EmailGroupForm, EmailMemberForm, ActivityListForm
+from sendsms.forms import ShareActivitiesEmailForm, ShareActivitiesSMSForm
+from sendsms.views import send_email, send_sms
+from accounts.models import Profile
+
+import arrow
 
 @login_required
 def sms_group_list(request):
@@ -144,6 +151,139 @@ def email_group_delete(request, pk):
             context,
             request=request,
         )
+    return JsonResponse(data)
+
+@login_required
+def group_copy(request, pk):
+    group = get_object_or_404(EmailGroup, pk=pk)
+    data = dict()
+    new_group = deepcopy(group)
+    new_group.id = None
+    today = arrow.now('Australia/Melbourne')
+    new_group.created_time = today
+    new_group.save()
+    # print("New: ", new_group.created_time)
+    print("Old: ", group.created_time)
+    members = EmailMember.objects.filter(group=group)
+    for member in members:
+        new_member = deepcopy(member)
+        new_member.id = None
+        new_member.group = new_group
+        new_member.save()
+    groups = EmailGroup.objects.filter(staff=request.user).order_by('name')
+    data['html_group_list'] = render_to_string('contacts/includes/partial_email_group_list.html', {
+        'groups': groups,
+    })
+    return JsonResponse(data)
+
+@login_required
+def share_activities(request, pk):
+    data = dict()
+    group = get_object_or_404(EmailGroup, pk=pk)
+    form = ActivityListForm
+    context = {
+        'form': form,
+        'group': group,
+    }
+    data['html_form'] = render_to_string('contacts/includes/partial_share_activities.html', context, request=request)
+    return JsonResponse(data)
+
+def create_html(request, pk, form, template_name):
+    data = dict()
+    member = get_object_or_404(EmailMember, pk=pk)
+    context = {
+        'form': form,
+        'member': member,
+    }
+    # data['html_form'] = render_to_string('contacts/includes/partial_share_activities_contacts.html', context, request=request)
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    return JsonResponse(data)
+
+@login_required
+def share_activities_contacts(request, pk):
+    form = ShareActivitiesEmailForm
+    return create_html(request, pk, form, 'contacts/includes/partial_share_activities_contacts.html')
+
+@login_required
+def share_activities_contacts_sms(request, pk):
+    form = ShareActivitiesSMSForm
+    return create_html(request, pk, form, 'contacts/includes/partial_share_activities_sms.html')
+
+@login_required
+def post_shared_activities_contacts(request, pk):
+    data = dict()
+    member = get_object_or_404(EmailMember, pk=pk)
+    if request.method == 'POST':
+        form = ShareActivitiesEmailForm(request.POST)
+        if form.is_valid():
+            activities = form.cleaned_data.get('activity_list')
+            current_site = get_current_site(request)
+            subject = 'Check these out'
+            message = form.cleaned_data.get('message')
+            sender = form.cleaned_data.get('sender')
+            msg_html = render_to_string('sendsms/email.html',
+                    {'activities': activities,
+                    'domain':current_site.domain,
+                    })
+            send_email(request,subject,message,sender,
+                [member.email],
+                msg_html)
+            data['form_is_valid'] = True
+    else:
+        form = ShareActivitiesEmailForm()
+    context = {
+        'form': form,
+        'member': member,
+    }
+    data['html_form'] = render_to_string('contacts/includes/partial_share_activities_contacts.html', context, request=request)
+    return JsonResponse(data)
+
+@login_required
+def post_shared_activities_sms(request, pk):
+    data = dict()
+    member = get_object_or_404(EmailMember, pk=pk)
+    domain = get_current_site(request).domain
+    if request.method == 'POST':
+        form = ShareActivitiesSMSForm(request.POST)
+        if form.is_valid():
+            activities = form.cleaned_data.get('activity_list')
+            message = form.cleaned_data.get('message')
+            for activity in activities:
+                message = str(message + "\n" + activity.name + " http://" + str(domain) + "/activity/detail/" + str(activity.pk) +"/")
+            send_sms(message, member.mobile)
+            data['form_is_valid'] = True
+    else:
+        profile = Profile.objects.get(user=request.user)
+        if (profile.sms_limit == 0):
+            data['limit_exceeded'] = True
+        else:
+            form = ShareActivitiesSMSForm()
+    context = {
+        'form': form,
+        'member': member,
+    }
+    data['html_form'] = render_to_string('contacts/includes/partial_share_activities_sms.html', context, request=request)
+    return JsonResponse(data)
+
+@login_required
+def get_shared_activities_contacts(request, pk):
+    data = dict()
+    member = get_object_or_404(EmailMember, pk=pk)
+    data['email'] = member.email
+    data['mobile_no'] = member.mobile
+    return JsonResponse(data)
+
+@login_required
+def get_shared_activities(request, pk):
+    data = dict()
+    email_list = []
+    mobileno_list = []
+    members = EmailMember.objects.filter(group=EmailGroup.objects.get(pk=pk))
+    for member in members:
+        email_list.append(member.email)
+        mobileno_list.append(member.mobile)
+    data['email_list'] = email_list
+    data['mobileno_list'] = mobileno_list
     return JsonResponse(data)
 
 @login_required

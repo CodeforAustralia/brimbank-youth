@@ -85,6 +85,29 @@ class ActivityDraftUpdateView(UpdateView):
 @method_decorator(login_required, name='dispatch')
 class ActivityDraftDetailView(DetailView):
     model = ActivityDraft
+    context_object_name = 'activity'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['org_activities'] = Activity.objects.filter(created_by=self.object.created_by).exclude(id=self.object.pk).order_by('name')
+        recommended_activities_full = Activity.objects.filter(activity_type=self.object.activity_type).exclude(id=self.object.pk).order_by('name')
+        if recommended_activities_full.count() > 1:
+            recommended_activities = recommended_activities_full[1:]
+        else:
+            recommended_activities = recommended_activities_full
+        context['recommended_activities'] = recommended_activities
+        current_site = get_current_site(self.request)
+        domain = current_site.domain
+        context['domain'] = domain
+        if self.object.space_choice == 'Unlimited':
+            available = True
+        if self.object.space_choice == 'Limited':
+            if self.object.space <= 0:
+                available = False
+            else:
+                available = True
+        context['available'] = available
+        return context
 
 @login_required
 def submit_activity(request, pk):
@@ -143,17 +166,12 @@ def submit_activity(request, pk):
             activity.save()
         draft.delete()
         messages.add_message(request, messages.SUCCESS, 'The activity has been published.')
-        # return render(request, 'activities/activity_detail.html', {
-        #     'pk': pk,
-        #     'activity': activity,
-        # })
         return redirect('home')
 
 class ActivityDetailView(DetailView):
     model = Activity
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         context['org_activities'] = Activity.objects.filter(created_by=self.object.created_by).exclude(id=self.object.pk).order_by('name')
         recommended_activities_full = Activity.objects.filter(activity_type=self.object.activity_type).exclude(id=self.object.pk).order_by('name')
@@ -201,7 +219,6 @@ class ActivityUpdateView(UpdateView):
     
     def get_success_url(self):
         published = True
-#        return reverse('activity_detail',args=(self.object.id,))
         return reverse('activity_detail',kwargs={'pk': self.object.id,})
 
     def form_invalid(self, form):
@@ -443,6 +460,7 @@ def search_events(request):
         if (str1 == '' and search == 'share') or (str1 == '' and search == 'email'):
             messages.add_message(request, messages.ERROR, 'Please select at least one activity.', extra_tags='danger')
         
+        activities_count = activities.count()
         activities = show_page_numbers(request, activities)
 
         url = "&name=" + name_key + "&location=" + location_key + "&category=" + category + "&search=search"
@@ -458,7 +476,10 @@ def search_events(request):
                       'latest_activity': latest_activity,
                       'name': name_key,
                       'url': url,
-                      'domain': domain
+                      'domain': domain,
+                      'activities_count': activities_count,
+                      'category': category,
+                      'name_key': name_key,
                       })
 
 def show_page_numbers(request, result):

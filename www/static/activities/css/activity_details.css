@@ -1,0 +1,79 @@
+.swiper-container {
+    width: 100%;
+    height: 100%;
+}
+.card {
+  border: none;
+}
+.card-body {
+  padding-left:0;
+  padding-right:0;
+}
+#map {
+  height: 500px;
+  width: 100%;
+}
+#fb_desktop {
+  border-radius: 0%;
+}
+button {
+  cursor: pointer;
+}
+.btn:focus,.btn:active {
+  outline: none !important;
+  box-shadow: none;
+}
+#id_others {
+  padding-top: 0.5em;
+}
+.btn.focus {
+  outline-color: transparent;
+}
+.js-bookmark-article.active {
+  background-color:rgb(92,184,92);
+}
+.js-bookmark-article {
+  background: transparent;
+  border-color: grey;
+}
+#edit_btn {
+  background: lightgrey;
+  color: rgba(128, 128, 128, 0.842);
+  border-color: transparent;
+}
+.tooltip-inner
+{ background-color:red;}
+
+.tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before, .tooltip.bs-tooltip-bottom .arrow::before 
+{ border-bottom-color: red;}
+
+.bold-text {
+  font-weight: bold;
+  color: #484848;
+}
+.light-text {
+  font-weight: 300;
+  color: #484848;
+}
+.card-text {
+  color: #484848;
+}
+/* Table Style */
+#contact-table {
+  border-collapse: collapse;
+}
+#contact-table tbody tr:hover {
+  background-color: #fafafa;
+}
+#contact-table thead th {
+  text-align: center;
+  vertical-align: middle;
+}
+th, td {
+  font-weight: 300;
+  font-size: 18px;
+  color: #999999;
+}
+#contact-table th {
+  font-weight: 600;
+}

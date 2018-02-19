@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from .models import SendSMS, SendEmail
+from activities.models import Activity
 
 class SendSMSForm(forms.ModelForm):
     message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Enter additional message here...'}))
@@ -48,3 +49,13 @@ class SendEmailForm(forms.ModelForm):
             self.add_error('recipients','')
             self.add_error('recipient_group','')
             raise forms.ValidationError(msg)
+
+class ShareActivitiesEmailForm(forms.Form):
+    sender = forms.EmailField(required=True, label='Your Email', 
+    widget=forms.TextInput(attrs={'placeholder': 'Enter email address'}))
+    activity_list = forms.ModelMultipleChoiceField(queryset=Activity.objects.all(), label='Select Activities')
+    message = forms.CharField(required=False, initial='Hi! I thought this might be something that you’d be interested in. Just click on the link if you’d like to know more details about it or you can give me a call. You can also register your interest if you wanna come. Hope to see you there!', widget=forms.Textarea())
+
+class ShareActivitiesSMSForm(forms.Form):
+    activity_list = forms.ModelMultipleChoiceField(queryset=Activity.objects.all(), label='Select Activities')
+    message = forms.CharField(required=False, initial='Hi! I thought this might be something that you’d be interested in. Just click on the link if you’d like to know more details about it or you can give me a call. You can also register your interest if you wanna come. Hope to see you there!', widget=forms.Textarea())

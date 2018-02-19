@@ -185,3 +185,8 @@ vertical-align: center!important;
     top: 450px;
 }
 /* Floating Social Media Bar Style Ends Here */
+
+#share-text, #share-email {
+    -webkit-transition: all 2s ease 0ms; /* Safari */
+    transition: all 2s ease 0ms;
+}

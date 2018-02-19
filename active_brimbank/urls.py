@@ -107,17 +107,25 @@ urlpatterns = [
     url(r'^sms_members/(?P<pk>\d+)/update/$', contacts_views.sms_member_update, name='sms_member_update'),
     url(r'^sms_members/(?P<pk>\d+)/delete/$', contacts_views.sms_member_delete, name='sms_member_delete'),
 
-    # --- SMS groups ---
+    # --- SMS groups (NOT USED) ---
     url(r'^sms_groups/$', contacts_views.sms_group_list, name='sms_group_list'),
     url(r'^sms_groups/create/$', contacts_views.group_create, name='group_create'),
     url(r'^sms_groups/(?P<pk>\d+)/update/$', contacts_views.sms_group_update, name='sms_group_update'),
     url(r'^sms_groups/(?P<pk>\d+)/delete/$', contacts_views.sms_group_delete, name='sms_group_delete'),
 
-    # --- Email groups ---
+    # --- Email groups (USED) ---
     url(r'^groups/$', contacts_views.email_group_list, name='email_group_list'),
     url(r'^email_groups/create/$', contacts_views.email_group_create, name='email_group_create'),
     url(r'^email_groups/(?P<pk>\d+)/update/$', contacts_views.email_group_update, name='email_group_update'),
     url(r'^email_groups/(?P<pk>\d+)/delete/$', contacts_views.email_group_delete, name='email_group_delete'),
+    url(r'^groups/(?P<pk>\d+)/copy/$', contacts_views.group_copy, name='group_copy'),
+    url(r'^groups/(?P<pk>\d+)/share_activities/$', contacts_views.share_activities, name='share_activities'),
+    url(r'^groups/(?P<pk>\d+)/share_activities_to_group/$', contacts_views.get_shared_activities, name='get_shared_activities'),
+    url(r'^groups/(?P<pk>\d+)/share_activities_contacts/$', contacts_views.share_activities_contacts, name='share_activities_contacts'),
+    url(r'^groups/(?P<pk>\d+)/share_activities_sms/$', contacts_views.share_activities_contacts_sms, name='share_activities_contacts_sms'),
+    url(r'^groups/(?P<pk>\d+)/share_activities_to_group_contacts/$', contacts_views.get_shared_activities_contacts, name='get_shared_activities_contacts'),
+    url(r'^contacts/(?P<pk>\d+)/share_activities/$', contacts_views.post_shared_activities_contacts, name='post_shared_activities_contacts'),
+    url(r'^contacts/(?P<pk>\d+)/share_activities_sms/$', contacts_views.post_shared_activities_sms, name='post_shared_activities_sms'),
 
     # --- Contacts ---
     url(r'^group/(?P<pk>\d+)/contacts/$', contacts_views.contact_list, name='contact_list'),

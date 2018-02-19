@@ -12,319 +12,13 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/swiper.css'%}" />
 <!-- <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css" /> -->
 <!-- <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-flat.css" /> -->
+<link rel="stylesheet" type="text/css" href="{% static 'activities/css/activity_details.css'%}" />
 
-<style>
-  .swiper-container {
-      width: 100%;
-      height: 100%;
-  }
-  .card {
-    border: none;
-  }
-  .card-body {
-    padding-left:0;
-    padding-right:0;
-  }
-  #map {
-    height: 500px;
-    width: 100%;
-  }
-  #fb_desktop {
-    border-radius: 0%;
-  }
-  button {
-    cursor: pointer;
-  }
-  .btn:focus,.btn:active {
-    outline: none !important;
-    box-shadow: none;
-  }
-  #id_others {
-    /* background-color: rgb(233, 227, 227); */
-    padding-top: 0.5em;
-    /* padding-bottom: 2em; */
-  }
-  .btn.focus {
-    outline-color: transparent;
-  }
-  .js-bookmark-article.active {
-    background-color:rgb(92,184,92);
-  }
-  .js-bookmark-article {
-    background: transparent;
-    border-color: grey;
-  }
-  #edit_btn {
-    background: lightgrey;
-    color: rgba(128, 128, 128, 0.842);
-    border-color: transparent;
-  }
-  .tooltip-inner
-  { background-color:red;}
-
-  .tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before, .tooltip.bs-tooltip-bottom .arrow::before 
-  { border-bottom-color: red;}
-
-  .bold-text {
-    font-weight: bold;
-    color: #484848;
-  }
-  .light-text {
-    font-weight: 300;
-    color: #484848;
-  }
-  .card-text {
-    color: #484848;
-  }
-  /* Table Style */
-  #contact-table {
-    border-collapse: collapse;
-  }
-  #contact-table tbody tr:hover {
-    background-color: #fafafa;
-  }
-  #contact-table thead th {
-    text-align: center;
-    vertical-align: middle;
-  }
-  th, td {
-    font-weight: 300;
-    font-size: 18px;
-    color: #999999;
-  }
-  #contact-table th {
-    font-weight: 600;
-  }
-
-</style>
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-<div class="card">
-  <div class="row">
-    <div class="col-md-8">
-      {% if activity.activity_img %}
-      <img class="card-img-top select" src="{{ activity.activity_img.url }}" 
-      alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/770x560?text=Image not available';" 
-      style="object-fit:cover;margin:auto;height:560px;display:inline;border-radius:2%;">
-      {% else %}
-      <img class="card-img-top select" src="http://via.placeholder.com/770x568?text=Image not available" 
-      alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:560px;border-radius:2%;">
-      {% endif %}
-    </div>
-    <div class="col-md-4">
-      <h4 class="mt-5" style="font-size:28px;color:#666666;">{{ activity.name }}</h4>
-      <p style="margin-top:38px;" class="card-text"><img src="http://via.placeholder.com/60x50?text=" alt="Not Found" height="50px" width="60px">&nbsp;&nbsp;&nbsp;
-         By {{ activity.created_by.profile.organisation_name }}</p>
 
-      <hr style="margin-bottom:38px;">
-
-      <!-- LOCATION -->
-      {% if activity.location %}
-      <p class="card-text" id="address">{{ activity.location }} {{ activity.postcode }}</p>
-      <p class="card-text"><a href=# id="address2" style="color:#5DAE69;">Open in Google Maps</a></p>
-      {% else %}
-      <p class="card-text"><i>Location hasn't been specified</i></p>
-      {% endif %}
-
-      <!-- DATE AND TIME -->
-      <!--    Activities that only occur once -->
-      {% if activity.term == 'Once' %}
-      {% if activity.activity_date %}
-      <p class="card-text">{{ activity.activity_date|date:'D, d F Y' }} 
-          {{ activity.start_time|time:'g:i A'|lower }} - {{ activity.end_time|time:'g:i A'|lower }}
-      </p>
-      {% endif %}
-      {% endif %}
-      <!--      Daily, weekly, fortnightly, monthly activities-->
-      {% if activity.term != 'Once' %}
-      {% if activity.term != 'Daily' %}
-      <p class="card-text">Every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d F Y' }} to {{ activity.end_date|date:'D, d F Y' }} 
-          {{ activity.start_time|time:'g:i A'|lower }} - {{ activity.end_time|time:'g:i A'|lower }}
-      </p>
-      {% else %}
-      <p class="card-text">Every day from {{ activity.start_date|date:'D, d M Y' }} to {{ activity.end_date|date:'D, d F Y' }} 
-          {{ activity.start_time|time:'g:i A'|lower }} - {{ activity.end_time|time:'g:i A'|lower }}
-      </p>
-      {% endif %}
-      {% endif %}
-
-      <hr style="margin-bottom:35px;margin-top:35px;">
-
-      <h6 class="card-title">Contact Organiser</h6>
-      {% if activity.organiser %}
-      <p class="card-text">{{ activity.organiser }} {{ activity.contact_number }}</p>
-      {% else %}
-      <p class="card-text small"><i>Organiser contact hasn't been specified</i></p>
-      {% endif %}
-
-      {% if activity.cost_choice == 'N' %}
-        <h6 class="card-text mt-5">FREE!</h6>
-      {% endif %}
-      {% if activity.cost_choice == 'Y' %}
-        <h6 class="card-text mt-5">AUD {{ activity.cost }}</h6>
-      {% endif %}
-    </div>
-  </div>
-
-  <div class="row justify-content-center mt-4">
-    {% if activity.created_by == user %}
-    <div class="col-sm-2 col-6 justify-content-center mb-4" style="padding-left:0;">
-      <a href="#collapseExample" data-toggle="collapse" role="button" aria-expanded="false" 
-      aria-controls="collapseExample" class="btn" style="color:#484848;">
-      <img src="{% static 'img/icons/people.svg' %}" height="45">&nbsp;&nbsp;
-      <img src="{% static 'img/icons/down-arrow.svg' %}" height="25">
-      <!-- <span id="attendees_no"> {{ attendees_no }}</span>  -->
-      &nbsp;Attendees</a>
-      <div class="collapse" id="collapseExample" style="z-index:1;position:absolute; 
-      border:solid #0f0f0fa9 0.5px;background:#FFFFFF;border-radius:1%;padding:20px;">
-        <div class="mt-2 mb-2" style="overflow-x:auto;">
-          <span id="send-reminder-btn">
-          {% include 'booking/includes/send_reminder_btn.html' %}
-          </span>
-          <table class="table" id="contact-table">
-          {% include 'booking/includes/partial_attendee_list.html' %}
-          </table>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-    {% if activity.created_by == user %}
-    <div class="col-6 col-sm-2 mb-4">
-    {% else %}
-    <div class="col-6 col-sm-4 mb-4">
-    {% endif %}
-      <div class="row justify-content-center">
-      <a href="#" class="btn js-share-url">
-      <img src="{% static 'img/icons/share.svg' %}" height="45"></a>
-      <a href="#" class="btn js-share-url" style="color:#484848;margin-left:-5px;margin-top:10px;">Share</a>
-      {% if user.is_authenticated %}
-      <!-- <a href="{% url 'sms_create' activity.pk %}" target="_blank" class="btn btn-outline-primary mt-1 mr-1"><i class="fas fa-mobile-alt"></i> SMS</a>
-      <a href="{% url 'email_create' activity.pk %}" target="_blank" class="btn btn-outline-primary mt-1 mr-1"><i class="far fa-envelope"></i> Email</a> -->
-      {% endif %}
-      </div>
-    </div>
-
-    {% if activity.created_by == user %}
-    <div class="col-6 col-sm-2 mb-2">
-      <div class="row justify-content-center">
-      {% if attendees_no > 0 %}
-      <img src="{% static 'img/icons/checklist.svg' %}" height="45">
-      <a href="{% url 'print_attendee_list' activity.pk %}" class="btn" style="color:#484848;">
-      Print Attendees<br />List</a>
-      {% else %}
-      <img src="{% static 'img/icons/checklist.svg' %}" height="45">
-      <a href="#" class="btn disabled" style="color:#484848;">
-      No Attendees<br />Yet</a>
-      {% endif %}
-      </div>
-    </div>
-    {% endif %}
-
-    {% if activity.created_by == user %}
-    <div class="col-6 col-sm-2 mb-2">
-    {% else %}
-    <div class="col-6 col-sm-4 mb-4">
-    {% endif %}
-      <div class="row justify-content-center">
-      <img src="{% static 'img/icons/advertising.svg' %}" height="45">
-      {% if activity.flyer %}
-      <a href="{{ activity.flyer.url }}" class="btn" style="color:#484848;">
-      Print Activity <br/> Flyer</a>
-      {% endif %}
-      {% if not activity.flyer %}
-      <a href="#" class="btn disabled" style="color:#484848;">
-      Print Activity <br/> Flyer</a>
-      {% endif %}
-      </div>
-    </div>
-    <div class="col-12 col-sm-4">
-        {% if user.is_authenticated %}
-        <button class="btn btn-lg btn-block disabled">I'M COMING!</button>
-        {% else %}
-        {% if available %}
-        <a href="{% url 'register_activity' activity.pk %}" class="btn btn-success btn-lg btn-block mt-2" style="vertical-align:middle;display: inline-block;">I'M COMING!</a>
-        {% else %}
-        <button class="btn btn-lg btn-block disabled">Fully booked</button>
-        {% endif %}
-        {% endif %}
-      </div>
-  </div>
-</div>
-</div>
-
-<div class="container-fluid" 
-    style="padding-left:15px;margin-top:30px;background:#FAFAFA;
-    padding-top:80px;padding-bottom:80px;">
-  <div class="container">
-  <div class="col-md-8">
-  <h6 class="bold-text" style="margin-top:10%;margin-bottom:5%;">Description</h6>
-  <p class="light-text" style="margin-bottom:5%;">{{ activity.description }}</p>
-  <h6 class="bold-text" style="margin-top:10%;margin-bottom:5%;">Eligibility</h6>
-  {% if activity.min_age and activity.max_age %}
-  <span class="light-text">{{ activity.min_age }} to {{ activity.max_age }} years of age</span><br />
-  {% endif %}
-
-  {% if activity.max_age and not activity.min_age %}
-  <span class="light-text">Maximum: {{ activity.max_age }} years old </span><br />
-  {% endif %}
-
-  {% if activity.min_age and not activity.max_age %}
-  <span class="light-text">Minimum: {{ activity.min_age }} years old </span><br />
-  {% endif %}
-
-  {% if activity.background %} <span class="light-text">{{ activity.background }}</span><br />{% endif %}
-  
-  <span class="light-text">
-  {% if activity.gender == 'F' %}Only females<br />{% endif %}
-  {% if activity.gender == 'M' %}Only males<br />{% endif %}
-  </span>
-  {% if activity.living_duration != 'Open' %}
-  <span class="light-text">Living in Australia for {{ activity.living_duration|lower }} than 5 years </span>      
-  {% endif %}
-
-  <h6 class="bold-text" style="margin-top:10%;margin-bottom:5%;">Space & Cost</h6>
-  <!--      Number of available spaces-->
-  {% if activity.space_choice == 'Limited' %}
-  <span class="light-text">Available space: <span id="available_space">{{ activity.space }}</span><br /></span>
-  {% endif %}
-  <!--      Activity cost-->
-  
-  {% if activity.cost_choice == 'N' %}<span class="light-text">Free of charge</span>
-  {% else %}<span class="light-text">AUD {{ activity.cost }}</span>{% endif %}
-
-  <h6 class="bold-text" style="margin-top:10%;margin-bottom:5%;">About the Organiser</h6>
-  <p class="light-text">{{ activity.created_by.profile.organisation_name }}</p>
-  {% if activity.created_by.profile.description %}
-  <p class="light-text">{{ activity.created_by.profile.description }}</p>
-  {% else %}
-  <p class="light-text">No description about the organiser</p>
-  {% endif %}
-  
-  <h6 class="light-text" style="margin-top:5%;">Contact Organiser</h6>
-  {% if activity.organiser %}
-  <p class="light-text">{{ activity.organiser }} {{ activity.contact_number }}</p>
-  {% else %}
-  <p class="light-text small"><i>Organiser contact hasn't been specified</i></p>
-  {% endif %} 
-
-  <p class="card-text" style="text-align:right;">
-  {% if user.is_authenticated %}
-  {% if activity.created_by == user %}
-  <a id="edit_btn_url" href="{% url 'edit_activity' activity.pk %}" 
-  class="btn btn-success btn-lg mt-4" style="width:30%;">EDIT</a>
-  <a id="edit_btn_url" href="{% url 'delete_activity' activity.pk %}" 
-  class="btn btn-danger btn-lg mt-4 ml-2" style="width:15%;">DELETE</a>
-  {% endif %}
-  {% else %}
-  <a id="edit_btn_url" href="{% url 'edit_activity' activity.pk %}" style="display:none;"></a>
-  {% endif %}
-  </p>
-</div>
-</div>
-</div>
-
+{% include 'activities/includes/partial_activity_details.html' %}
 <br />
 
 {% if org_activities %}
@@ -431,6 +125,11 @@
 
 <script>
 $(function() {
+
+$('#main-share').click(function(){
+    $('#share-text').toggle();
+    $('#share-email').toggle();
+});
   // $('.multiple-items').slick({
   //   infinite: true,
   //   slidesToShow: 3,
@@ -567,7 +266,6 @@ for (var i = 0; i < addressElements.length; i++) {
 for (var i = 0; i < addressElements2.length; i++) {
     var addressElement2 = addressElements2[i];
     var address = addressElement2.innerHTML;
-    // console.log(address);
     getSuburb(addressElement2, address);
 }
 
@@ -586,7 +284,6 @@ var loadForm = function () {
       if (data.fully_booked) {
         $("#modal-register").modal("hide");
         location.reload();
-        // $("#modal-test").modal("show");
       }
     }
   });
@@ -637,11 +334,9 @@ var loadForm = function () {
     },
     success: function (data) {
       $("#modal-register .modal-content").html(data.html_form);
-      console.log(data);
       if (data.fully_booked) {
         $("#modal-register").modal("hide");
         location.reload();
-        // $("#modal-test").modal("show");
       }
     }
   });

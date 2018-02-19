@@ -12,9 +12,12 @@
                 class="btn btn-grey btn-sm js-update-email-member mr-2 mt-1 mb-1"
                 data-url="{% url 'email_member_update' member.id %}">EDIT
         </button>
-        <a class="btn btn-sm btn-grey mr-2 mt-1 mb-1" 
-        data-url="#"
-        href="#" role="button" aria-haspopup="true" aria-expanded="false">SHARE ACTIVITY</a>
+        <a class="share-activities-btn-contacts-sms btn btn-sm btn-grey mr-2 mt-1 mb-1" 
+            data-url="{% url 'share_activities_contacts_sms' member.id %}"
+            href="#" role="button" aria-haspopup="true" aria-expanded="false">SMS</a>
+        <a class="share-activities-btn-contacts btn btn-sm btn-grey mr-2 mt-1 mb-1" 
+        data-url="{% url 'share_activities_contacts' member.id %}"
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">EMAIL</a>
         <button type="button"
                 class="btn btn-danger btn-sm js-delete-email-member mt-1 mb-1"
                 data-url="{% url 'email_member_delete' member.id %}">DELETE

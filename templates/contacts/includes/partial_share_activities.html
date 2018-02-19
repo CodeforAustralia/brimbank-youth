@@ -1,0 +1,16 @@
+<form method="get" action="{% url 'share_activities' group.id %}" class="" novalidate>
+    {% csrf_token %}
+    <div class="modal-header">
+        <h4 class="modal-title">Share Activities</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        {% include 'contacts/includes/partial_contact_form.html' %}
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="share-btn btn btn-green" data-url="{% url 'get_shared_activities' group.id %}">Share</button>
+    </div>
+</form>

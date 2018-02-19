@@ -85,14 +85,27 @@
 <div class="float-sm">
     <div class="fl-fl float-sms">
         <!-- <button type="submit" id="id_share_text" class="btn btn-success btn-circle" name="search" value="share"><div style="font-size: 2em;"><i class="far fa-comment-alt"></i></div></button> -->
-        <a id="share-text" class="btn btn-circle" href="#" style="background:#ffc600;"><img src="{% static 'img/icons/sms.png' %}" style="width:55px;"></a>
+        <!-- <a id="share-text" class="btn btn-circle" href="#" style="background:#ffc600;"><img src="{% static 'img/icons/sms.png' %}" style="width:55px;"></a> -->
     </div>
     <div class="fl-fl float-email">
         <!-- <button type="submit" id="id_share_mobile" class="btn btn-success btn-circle" name="search" value="email"><div style="font-size: 2em;"><i class="far fa-envelope"></i></div></button> -->
-        <a id="share-email" class="btn btn-circle" href="#" style="background:rgb(128, 128, 128);"><img src="{% static 'img/icons/envelope.png' %}" style="width:50px;"></a>
+        <!-- <a id="share-email" class="btn btn-circle" href="#" style="background:rgb(128, 128, 128);">
+            <img src="{% static 'img/icons/envelope.png' %}" style="width:50px;"></a> -->
     </div>
 </div>
 <!-- Floating sharing button ends -->
+
+{% if category != '' %}
+<div class="container" style="margin-bottom:2%;">
+<p class="lead">{{ activities_count }} result{{ activities|pluralize }} found for <strong>{{category}}</strong></p>
+</div>
+{% endif %}
+
+{% if name_key != '' %}
+<div class="container" style="margin-bottom:2%;">
+<p class="lead">{{ activities_count }} result{{ activities|pluralize }} found for <strong>{{name_key}}</strong></p>
+</div>
+{% endif %}
 
 {% if activities %}
 {% if user.is_authenticated %}
@@ -334,14 +347,14 @@
 {% include 'includes/pagination_2.html' %}
 
 {% else %}
-<div class="container">
+<!-- <div class="container">
     {% if user.is_authenticated %}
     <h2>Your activities & events</h2>
     {% else %}
     <h2>Activities & events</h2>
     {% endif %}
     <p class="lead" style="text-align:center;">No activity that matches the search query</p>
-</div>
+</div> -->
 {% endif %}
 </form>
 
@@ -735,6 +748,11 @@ var options = {
 };
 $('#id_location').easyAutocomplete(options);
 
+$('#main-share').click(function(){
+    $('#share-text').toggle();
+    $('#share-email').toggle();
+});
+
 // Add Google Maps URL
 //    var addressElements = document.getElementsByName("address");
 //    var geocoder = new google.maps.Geocoder();
@@ -844,8 +862,8 @@ $('#id_location').easyAutocomplete(options);
     $(this).siblings(".card-body.select").toggleClass('on');
 
     var val = $(this).siblings(".card-body.select").attr('value');
+    
     var activity_url;
-
     var ori_url = (window.location.href).toString();
     var web_url = (ori_url.substr(0, ori_url.indexOf('?')));
     var ori_url_2 = (ori_url.substr(0, ori_url.indexOf('#')));
@@ -880,8 +898,6 @@ $('#id_location').easyAutocomplete(options);
             activities_arr.splice(index_activity,1);
         }
     }
-
-
 
     var href;
     var sms_url, email_url;
