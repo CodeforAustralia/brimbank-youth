@@ -130,40 +130,6 @@ $('#main-share').click(function(){
     $('#share-text').toggle();
     $('#share-email').toggle();
 });
-  // $('.multiple-items').slick({
-  //   infinite: true,
-  //   slidesToShow: 3,
-  //   slidesToScroll: 1,
-  //   mobileFirst: true,
-  //   prevArrow: "<button type=\"button\" class=\"slick-prev\"><i class=\"fas fa-arrow-left\"></i></button>",
-  //   responsive: [
-  //   {
-  //     breakpoint: 1024,
-  //     settings: {
-  //       slidesToShow: 3,
-  //       slidesToScroll: 1,
-  //       infinite: true
-  //     }
-  //   },
-  //   {
-  //     breakpoint: 600,
-  //     settings: {
-  //       slidesToShow: 2,
-  //       slidesToScroll: 1
-  //     }
-  //   },
-  //   {
-  //     breakpoint: 300,
-  //     settings: {
-  //       slidesToShow: 1,
-  //       slidesToScroll: 1
-  //     }
-  //   }
-  //   // You can unslick at a given breakpoint now by adding:
-  //   // settings: "unslick"
-  //   // instead of a settings object
-  //   ],
-  // });
 
 var swiper = new Swiper('.swiper-container', {
   slidesPerView: 3,
@@ -222,52 +188,6 @@ var swiper = new Swiper('.swiper-container', {
     $("#modal-share-url").modal("show");
     $(".st-btn").show();
   });
-
-// Change displayed address
-var addressElements = document.getElementsByName("address");
-var addressElements2 = document.getElementsByName("address2");
-var geocoder = new google.maps.Geocoder();
-
-function getSuburb(addressElement, address) {
-    var suburb = '';
-
-    geocoder.geocode({'address': address}, function(results, status) {
-    if (status === 'OK') {
-
-    var addressComponents = results[0].address_components;
-
-    for (var k=0; k<addressComponents.length; k++) {
-        var types = addressComponents[k].types;
-        for (var j=0; j<types.length; j++) {
-            if (types[j] == "locality")  {
-                suburb = addressComponents[k].long_name;
-                addressElement.innerHTML = suburb.toUpperCase();
-                addressElement.style.display = 'inline';
-                break;
-            }
-        }
-        if (suburb != '') {
-            break;
-        }
-    }
-    } else {
-        console.log('Geocode was not successful for the following reason: ' + status);
-    }
-    return suburb;
-    });
-}
-
-for (var i = 0; i < addressElements.length; i++) {
-    var addressElement = addressElements[i];
-    var address = addressElement.innerHTML;
-    getSuburb(addressElement, address);
-}
-
-for (var i = 0; i < addressElements2.length; i++) {
-    var addressElement2 = addressElements2[i];
-    var address = addressElement2.innerHTML;
-    getSuburb(addressElement2, address);
-}
 
 var loadForm = function () {
   var btn = $(this);
@@ -350,8 +270,8 @@ $(document).on('click', '.js-register-client', loadForm);
   //   var map = new google.maps.Map(document.getElementById('map'));
     
   //   Populate addresses from GMaps on address input
-  //   var address = $('#address').text();
-  //   geocodeAddress(geocoder, map);
+    // var address = $('#address').text();
+    // geocodeAddress(geocoder, map);
 
   //   Populate GMaps URL on the address link
   //   var map_url = "https://www.google.com/maps/search/?api=1&query=";
@@ -360,10 +280,10 @@ $(document).on('click', '.js-register-client', loadForm);
   // }, 1000);
 
 //   Populate addresses from GMaps on address input
-// var address = $('#address').text();
-// var map_url = "https://www.google.com/maps/search/?api=1&query=";
-// var full_url = map_url + address;
-// $("#address2").attr("href", full_url);
+var address = $('#address').text();
+var map_url = "https://www.google.com/maps/search/?api=1&query=";
+var full_url = map_url + address;
+$("#address2").attr("href", full_url);
 
 // function geocodeAddress(geocoder, resultsMap) {
 //   var address = $('#address').text();

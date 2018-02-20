@@ -3,23 +3,23 @@
 <div class="jumbotron">
     <div class="img"></div>
     <div class="container text-center search-box">
-    <div id="search-box" style="padding-top:20px;padding-bottom:25px;">
+    <div id="search-box" style="padding-top:27px;padding-bottom:13px;">
         <!-- <h1 class="display-4">Youth Poster</h1> -->
       <h1>Share activities and events with youth</h1>
       <form method="get" id="id_form" class="justify-content-center mt-4" novalidate>
           <div class="form-row justify-content-center">
-          <div class="form-group col-sm-4 mr-4">
+          <div class="form-group col-sm-4 col-12 mr-3 text-center">
               <label class="sr-only" for="id_name">Activity name</label>
-              <input type="text" name="name" placeholder="Swimming, African Dance, Soccer..." maxlength="150" 
-              class="form-control mr-sm-4" id="id_name" title="Enter the activity name" />
+              <input type="text" name="name" placeholder="Search anything" maxlength="150" 
+              class="form-control mr-2 ml-2" id="id_name" title="Enter the activity name" />
           </div>
-          <div class="col-sm-4 mr-4 mb-2">
+          <div class="col-sm-4 col-12 ml-3 mr-3 mb-2 text-center">
               <label class="sr-only" for="id_location">Location</label>
-              <input type="text" name="location" placeholder="Sunshine or 3040 " maxlength="150" 
+              <input type="text" name="location" placeholder="Sunshine or 3040    " maxlength="150" 
               class="form-control mr-4 mb-2" id="id_location" title="Enter an adress" />
           </div>
-          <div class="col-sm-1">
-              <button type="submit" id="id_search" class="btn btn-success mr-sm-4 mb-2" 
+          <div class="col-sm-1 col-12" style="margin-top:-2px;">
+              <button type="submit" id="id_search" class="btn btn-green btn-lg mr-sm-4" 
               name="search" value="search">Search</button>
           </div>
           </div>
@@ -67,42 +67,48 @@
     </div>
 </div> -->
 <!-- Swiper -->
-<div class="swiper-container">
+<div class="container swiper-container" style="margin-bottom:3%;margin-top:5%;">
     <div class="swiper-wrapper">
         <div class="swiper-slide">
             <button type="submit" name="category" value="sport" class="btn mr-4 mb-2 transparent-background" style="text-align:center;">
-                <span><img src="{% static 'img/activities/sport.svg' %}" class="mt-2" height="60px;"></span>
-                <p class="lead mt-3">SPORT</p>
+                <span><img src="{% static 'img/activities/sport.svg' %}" class="mt-2" height="80px;"></span>
+                <p class="category mt-3">SPORT</p>
+                {% if category == 'sport' %}<hr class="indicator"/>{% endif %}
             </button>
         </div>
         <div class="swiper-slide">
             <button type="submit" name="category" value="learn" class="btn mr-4 mb-2 transparent-background">
-                <span><img src="{% static 'img/activities/pan.svg' %}" class="mt-2" height="60px;"></span>
-                <p class="lead mt-3">LEARN</p>
+                <span><img src="{% static 'img/activities/pan.svg' %}" class="mt-2" height="80px;"></span>
+                <p class="category mt-3">LEARN</p>
+                {% if category == 'learn' %}<hr class="indicator" style="margin-left:-10px;width:120%;"/>{% endif %}
             </button>
         </div>
         <div class="swiper-slide">
             <button type="submit" name="category" value="school holidays" class="btn mr-4 mb-2 transparent-background">
-                <img src="{% static 'img/activities/tent.svg' %}" class="mt-2" height="60px;"><br />
-                <p class="lead mt-3">SCHOOL<br />HOLIDAYS</p>
+                <img src="{% static 'img/activities/tent.svg' %}" class="mt-2" height="80px;"><br />
+                <p class="category mt-3">SCHOOL<br />HOLIDAYS</p>
+                {% if category == 'school holidays' %}<hr class="indicator"/>{% endif %}
             </button>
         </div>
         <div class="swiper-slide">
             <button type="submit" name="category" value="culture" class="btn mr-4 mb-2 transparent-background">
-                <img src="{% static 'img/activities/culture.svg' %}" class="mt-2" height="60px;"><br />
-                <p class="lead mt-3">ART &<br />CULTURE</p>
-            </button>
+                <img src="{% static 'img/activities/culture.svg' %}" class="mt-2" height="80px;"><br />
+                <p class="category mt-3">ART &<br />CULTURE</p>
+                {% if category == 'culture' %}<hr class="indicator"/>{% endif %}
+            </button>   
         </div>
         <div class="swiper-slide">
             <button type="submit" name="category" value="career" class="btn mr-4 mb-2 transparent-background">
-                <img src="{% static 'img/activities/diploma.svg' %}" class="mt-2" height="60px;"><br />
-                <p class="lead mt-3">CAREER</p>
+                <img src="{% static 'img/activities/diploma.svg' %}" class="mt-2" height="80px;"><br />
+                <p class="category mt-3">CAREER</p>
+                {% if category == 'career' %}<hr class="indicator"/>{% endif %}
             </button>
         </div>
         <div class="swiper-slide">
             <button type="submit" name="category" value="" class="btn mr-4 mb-2 transparent-background">
-                <img src="{% static 'img/activities/more.svg' %}" class="mt-2" height="60px;"><br />
-                <p class="lead mt-3">ALL<br />CATEGORIES</p>
+                <img src="{% static 'img/activities/rock-and-roll.svg' %}" class="mt-2" height="83px;"><br />
+                <p class="category mt-3">ALL<br />CATEGORIES</p>
+                {% if category == '' %}<hr class="indicator"/>{% endif %}
             </button>
         </div>
     </div>

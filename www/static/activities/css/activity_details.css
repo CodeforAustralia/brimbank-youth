@@ -77,3 +77,9 @@ th, td {
 #contact-table th {
   font-weight: 600;
 }
+.btn-blue {
+  background:#A9DFF8; color:#FFFFFF;
+}
+.btn-blue:hover {
+  background:rgb(26, 128, 175); color:#FFFFFF;
+}
