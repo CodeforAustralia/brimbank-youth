@@ -1,32 +1,37 @@
+{% load static %}
+
 <table class="table" id="contact-table" style="width:100%;">
     <thead>
     <tr>
-        <th>NAME</th>
+        <th style="text-align:left;">Name</th>
         <th>#</th>
-        <th>CREATED</th>
-        <th width="400px;">ACTIONS</th>
+        <th>Created</th>
+        <th width="400px;">Actions</th>
     </tr>
     </thead>
     <tbody>
 {% for group in groups %}
     <tr>
-    <td><a class="signature-green" href="{% url 'contact_list' group.pk %}">{{ group.name }}</a></td>
+    <td><a href="{% url 'contact_list' group.pk %}">{{ group.name }}</a></td>
     <td style="text-align:center;">{{ group.members.count }}</td>
     <td style="text-align:center;">{{ group.created_time|date:'d/m/y' }}</td>
     <td style="text-align:center;">
     <div class="row justify-content-center">
-    <a class="btn btn-sm btn-grey js-update-email-group mt-1 mb-1 mr-2"
+    <div class="offset-1 col-2">
+    <a class="js-update-email-group mt-1 mb-1 mr-4"
         data-url="{% url 'email_group_update' group.id %}"
-        href="#" role="button" aria-haspopup="true" aria-expanded="false">EDIT</a>
-    <a class="share-activities-btn btn btn-sm btn-grey mr-2 mt-1 mb-1" 
-        data-url="{% url 'share_activities' group.id %}"
-        href="#" role="button" aria-haspopup="true" aria-expanded="false">SHARE ACTIVITY</a>
-    <a class="copy-group-btn btn btn-sm btn-grey mr-2 mt-1 mb-1"
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <img src="{% static 'img/icons/edit.svg' %}" style="width:38px;"></a></div>
+    <div class="offset-1 col-2">
+    <a class="copy-group-btn mr-4 mt-1 mb-1"
         data-url="{% url 'group_copy' group.id %}"
-        href="#" role="button" aria-haspopup="true" aria-expanded="false">COPY</a>
-    <a class="btn btn-danger btn-sm js-delete-email-group mt-1 mb-1 mr-2" 
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <img src="{% static 'img/icons/copy.svg' %}" style="width:38px;"></a></div>
+    <div class="offset-1 col-2">
+    <a class="js-delete-email-group mt-1 mb-1 mr-4" 
         data-url="{% url 'email_group_delete' group.id %}"
-        href="#" role="button" aria-haspopup="true" aria-expanded="false">DELETE</a>
+        href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        <img src="{% static 'img/icons/delete.svg' %}" style="width:38px;"></a></div>
     </div>
     </td>
     </tr>

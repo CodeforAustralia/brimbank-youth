@@ -1,7 +1,7 @@
 <form method="post" action="{% url 'email_group_delete' group.id %}" class="js-sms-group-delete-form">
         {% csrf_token %}
-        <div class="modal-header">
-            <h4 class="modal-title">Confirm deletion</h4>
+        <div class="modal-header" style="border:none;padding-bottom:0;">
+            <h4 class="modal-title">Confirm Delete Group</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
             </button>
@@ -9,8 +9,7 @@
         <div class="modal-body">
             <p class="lead">Are you sure you want to delete <strong>{{ group.name }}</strong>?</p>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-danger">Delete</button>
+        <div class="modal-footer" style="border:none;padding-top:0;">
+            <button type="submit" class="btn btn-block btn-lg btn-danger">Delete</button>
         </div>
     </form>

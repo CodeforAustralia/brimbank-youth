@@ -18,8 +18,8 @@
             <!--    Activities that only occur once -->
             {% if activity.term == 'Once' %}
             {% if activity.activity_date %}
-            <h4 class="card-text mt-4">{{ activity.activity_date|date:'M' }}</h4>
-            <h4 class="card-text">{{ activity.activity_date|date:'d' }}</h4>
+            <h3 class="side-title mt-4">{{ activity.activity_date|date:'M' }}</h3>
+            <h3 class="side-title">{{ activity.activity_date|date:'d' }}</h3>
 
             <!-- <h4 class="card-text mt-4">{{ activity.activity_date|date:'D, d F Y' }} 
                 {{ activity.start_time|time:'g:i A'|lower }} - {{ activity.end_time|time:'g:i A'|lower }}
@@ -28,8 +28,8 @@
             {% endif %}
             <!--      Daily, weekly, fortnightly, monthly activities-->
             {% if activity.term != 'Once' %}
-            <h4 class="card-text mt-4">{{ activity.start_date|date:'M' }}</h4>
-            <h4 class="card-text">{{ activity.start_date|date:'d' }}</h4>
+            <h4 class="mt-4 side-title">{{ activity.start_date|date:'M' }}</h4>
+            <h4 class="side-title">{{ activity.start_date|date:'d' }}</h4>
             <!-- <p class="card-text">Every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d F Y' }} to {{ activity.end_date|date:'D, d F Y' }} 
                 {{ activity.start_time|time:'g:i A'|lower }} - {{ activity.end_time|time:'g:i A'|lower }}
             </p> -->
@@ -38,22 +38,26 @@
             </p> -->
             {% endif %}
 
-            <h4 class="mt-5" style="font-size:28px;color:#666666;">
+            <h4 class="mt-5" style="font-size:36px;color:#666666;font-weight:bold;">
                 {{ activity.name }} - {{ activity.suburb }}
             </h4>
 
+            <div style="margin-top:30%;">
             {% if activity.organiser %}
             <p class="card-text">Organiser - {{ activity.organiser }} {{ activity.contact_number }}</p>
             {% else %}
             <p class="card-text small"><i>Organiser contact hasn't been specified</i></p>
             {% endif %}
-    
+            </div>
+            
+            <div style="margin-top:15%;">
             {% if activity.cost_choice == 'N' %}
-            <h6 class="card-text mt-5">FREE!</h6>
+            <h6 class="card-text" style="font-size:16px;">FREE!</h6>
             {% endif %}
             {% if activity.cost_choice == 'Y' %}
-            <h6 class="card-text mt-5">AUD {{ activity.cost }}</h6>
+            <h6 class="card-text" style="font-size:16px;">AUD {{ activity.cost }}</h6>
             {% endif %}
+            </div>
         </div>
         </div>
     
@@ -61,10 +65,13 @@
 
         {% if activity.created_by == user %}
         <div class="col-sm-2 col-6 justify-content-center mb-4">
+            <span class="d-inline-block info-tooltip" tabindex="0" 
+            data-toggle="tooltip" data-placement="bottom" title="Attendees">
             <a href="#collapseExample" data-toggle="collapse" role="button" aria-expanded="false" 
             aria-controls="collapseExample" class="btn" style="color:#484848;margin-left:25px;">
             <img src="{% static 'img/icons/people.svg' %}" height="45">&nbsp;&nbsp;
             <img src="{% static 'img/icons/down-arrow.svg' %}" height="25"></a>
+            </span>
             <div class="collapse" id="collapseExample" style="z-index:1;position:absolute; 
             border:solid #0f0f0fa9 0.5px;background:#FFFFFF;border-radius:1%;padding:20px;">
             <div class="mt-2 mb-2" style="overflow-x:auto;">
@@ -85,22 +92,27 @@
         <div class="col-4 mb-4">
         {% endif %}
         <div class="row justify-content-center">
-        <a href="#" class="btn js-share-url">
+        <a href="#" class="btn js-share-url info-tooltip"
+        data-toggle="tooltip" data-placement="bottom" title="Share">
             <img src="{% static 'img/icons/share.svg' %}" height="45"></a>
         <a href="#" class="btn js-share-url" style="color:#484848;margin-top:10px;"></a>
         </div>
         </div>
         
-    
         {% if activity.created_by == user %}
         <div class="col-6 col-sm-2 mb-4">
             <div class="row justify-content-center">
             {% if attendees_no > 0 %}
-            <img src="{% static 'img/icons/checklist.svg' %}" height="45">
-            <a href="{% url 'print_attendee_list' activity.pk %}" class="btn" style="color:#484848;"></a>
+            <a href="{% url 'print_attendee_list' activity.pk %}" 
+            class="btn info-tooltip" style="color:#484848;" 
+            data-toggle="tooltip" data-placement="bottom" title="Print Attendees">
+            <img src="{% static 'img/icons/checklist.svg' %}" height="45"></a>
             {% else %}
-            <img src="{% static 'img/icons/checklist.svg' %}" height="45">
-            <a href="#" class="btn disabled" style="color:#484848;"></a>
+            <span class="d-inline-block info-tooltip" tabindex="0" 
+            data-toggle="tooltip" data-placement="bottom" title="No Attendee Yet">
+            <a href="#" class="btn disabled" style="color:#484848;">
+            <img src="{% static 'img/icons/checklist.svg' %}" height="45"></a>
+            </span>
             {% endif %}
             </div>
         </div>
@@ -112,12 +124,19 @@
         <div class="col-4 mb-4">
         {% endif %}
             <div class="row justify-content-center">
-            <img src="{% static 'img/icons/advertising.svg' %}" height="45">
             {% if activity.flyer %}
-            <a href="{{ activity.flyer.url }}" class="btn" style="color:#484848;"></a>
+            <a href="{{ activity.flyer.url }}" class="btn info-tooltip" style="color:#484848;"
+            data-toggle="tooltip" data-placement="bottom" title="Print Flyer">
+                <img src="{% static 'img/icons/agreement.svg' %}" height="45">
+            </a>
             {% endif %}
             {% if not activity.flyer %}
-            <a href="#" class="btn disabled" style="color:#484848;"></a>
+            <span class="d-inline-block info-tooltip" tabindex="0" 
+            data-toggle="tooltip" data-placement="bottom" title="No Flyer is Available">
+            <a href="#" class="btn disabled" style="color:#484848;">
+                <img src="{% static 'img/icons/agreement.svg' %}" height="45">
+            </a>
+            </span>
             {% endif %}
             </div>
         </div>
@@ -137,12 +156,13 @@
     </div>
     </div>
     
-    <div class="container" style="padding-bottom:80px;">
+    <div class="container" style="padding-bottom:80px;margin-top:4%;">
         <div class = "row">
         <div class="col-md-8">
-        <h6 class="bold-text" style="margin-top:2%;margin-bottom:5%;">Description</h6>
-        <p class="light-text" style="margin-bottom:5%;">{{ activity.description }}</p>
-        <h6 class="bold-text" style="margin-top:10%;margin-bottom:5%;">Eligibility</h6>
+        <h6 class="bold-text">Description</h6>
+        <span class="light-text">{{ activity.description }}</span>
+        <br />
+        <h6 class="bold-text" style="margin-top:12%;">Eligibility</h6>
         {% if activity.min_age and activity.max_age %}
         <span class="light-text">{{ activity.min_age }} to {{ activity.max_age }} years of age</span><br />
         {% endif %}
@@ -165,12 +185,14 @@
         <span class="light-text">Living in Australia for {{ activity.living_duration|lower }} than 5 years </span>      
         {% endif %}
     
-        <h6 class="bold-text" style="margin-top:10%;margin-bottom:5%;">Space & Cost</h6>
+        <h6 class="bold-text" style="margin-top:12%;">Space & Cost</h6>
         <!--      Number of available spaces-->
         {% if activity.space_choice == 'Limited' %}
         <span class="light-text">Available space: <span id="available_space">{{ activity.space }}</span><br /></span>
         {% endif %}
 
+
+        <div style="margin-top:12%;">
         <p class="light-text mt-4">
             <img src="http://via.placeholder.com/60x50?text=" alt="Not Found" height="50px" width="60px">
             &nbsp;&nbsp;&nbsp;&nbsp;{{ activity.created_by.profile.organisation_name }}</p>
@@ -179,6 +201,7 @@
         {% else %}
         <p class="light-text">No description about the organiser</p>
         {% endif %}
+        </div>
     
         <p class="card-text">
         {% if user.is_authenticated %}
@@ -203,44 +226,43 @@
 
     <div class="col-md-4">
         <!-- DATE AND TIME -->
-        <h6 class="bold-text" style="margin-top:5%;">Date and Time</h6>
+        <h6 class="bold-text">Date and Time</h6>
         <!--    Activities that only occur once -->
         {% if activity.term == 'Once' %}
         {% if activity.activity_date %}
-        <h6>{{ activity.activity_date|date:'D, d F Y' }}</h6>
+        <span class="light-text">{{ activity.activity_date|date:'D, d F Y' }}</span>
         {% endif %}
         {% endif %}
         <!--      Daily, weekly, fortnightly, monthly activities-->
         {% if activity.term != 'Once' %}
         {% if activity.term != 'Daily' %}
-        <h6>Every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d F Y' }} to {{ activity.end_date|date:'D, d F Y' }}</h6>
+        <span class="light-text">Every {{ activity.activity_day }} from {{ activity.start_date|date:'D, d F Y' }} to {{ activity.end_date|date:'D, d F Y' }}</span>
         {% else %}
-        <h6>Every day from {{ activity.start_date|date:'D, d M Y' }} to {{ activity.end_date|date:'D, d F Y' }}</h6>
+        <span class="light-text">Every day from {{ activity.start_date|date:'D, d M Y' }} to {{ activity.end_date|date:'D, d F Y' }}</span>
         {% endif %}
         {% endif %}
-        <h6>{{ activity.start_time|time:'g:iA'|lower }} - {{ activity.end_time|time:'g:iA'|lower }}</h6>
+        <br/><span class="light-text">{{ activity.start_time|time:'g:iA'|lower }} - {{ activity.end_time|time:'g:iA'|lower }}</span>
 
         <!-- LOCATION -->
-        <h6 class="bold-text mt-4">Location</h6>
+        <h6 class="bold-text" style="margin-top:25%;">Location</h6>
         {% if activity.location %}
-        <h6 id="address">{{ activity.location }} {{ activity.postcode }}</h6>
-        <h6><a href=# id="address2" style="color:#5DAE69;">Open in Google Maps</a></h6>
+        <span id="address" class="light-text">{{ activity.location }} {{ activity.postcode }}</span>
+        <br/><span><a href=# id="address2" style="color:#5DAE69;">Open in Google Maps</a></span>
         {% else %}
-        <h6><i>Location hasn't been specified</i></h6>
+        <span><i>Location hasn't been specified</i></span>
         {% endif %}
 
         <!-- ORGANISER -->
-        <h6 class="bold-text mt-4">Contact Organiser</h6>
+        <h6 class="bold-text" style="margin-top:25%;">Contact Organiser</h6>
         {% if activity.organiser %}
-        <p class="light-text">{{ activity.organiser }} {{ activity.contact_number }}</p>
+        <span class="light-text">{{ activity.organiser }} {{ activity.contact_number }}</span>
         {% else %}
-        <p class="light-text small"><i>Organiser contact hasn't been specified</i></p>
+        <span class="light-text small"><i>Organiser contact hasn't been specified</i></span>
         {% endif %}
-
+        <br/>
         <!-- COST -->
-        {% if activity.cost_choice == 'N' %}<span class="bold-text">FREE!</span>
-        {% else %}<span class="bold-text">AUD {{ activity.cost }}</span>{% endif %}
-
+        {% if activity.cost_choice == 'N' %}<div class="bold-text" style="margin-top:25%;font-size:16px;">FREE!</div>
+        {% else %}<div class="bold-text" style="margin-top:25%;font-size:16px;">AUD {{ activity.cost }}</div>{% endif %}
     </div>
     </div>
 </div>

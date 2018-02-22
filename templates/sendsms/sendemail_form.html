@@ -45,7 +45,6 @@
 
 {% block javascript %}
 <script>
-  // $("#test").on("submit", function() {
   $("#email-form").on("submit", function() {
     var form = $(this);
     $.ajax({ 
@@ -54,28 +53,18 @@
       data: form.serialize(),
       dataType: 'json',
       beforeSend: function () {
-        // window.location = form.attr("action");
-        // Show loading indicator / modal box
-        // $('.loading').appendTo('body');
         $('.loading').show();
-        // $('#overlay').show();
       },
       success: function(data) {
-        console.log(data);
         window.location = window.location.href;
       },
       error: function(data, textStatus) {
         // Close loading indicator
         $('.loading').hide();
-        // $('#overlay').hide();
-
-        // $('#loading').hide();
-        // $('#loading').modal("toggle");
         if (data.responseText) {
           var errors = $.parseJSON(data.responseText);
         }
         if (errors.__all__) {
-          console.log(errors.__all__);
           $(".main-alert").show();
           $("#id_recipients").addClass("is-invalid");
           $("#id_recipient_group").addClass("is-invalid");
@@ -86,7 +75,6 @@
         }
 
         if (errors.message) {
-          console.log(errors.message);
           $(".message-alert").show();
           $("#id_message").addClass("is-invalid");
         } else {

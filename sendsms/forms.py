@@ -2,12 +2,20 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from .models import SendSMS, SendEmail
+from contacts.models import EmailGroup
 from activities.models import Activity
 
 class SendSMSForm(forms.ModelForm):
     message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Enter additional message here...'}))
     activity_list = forms.CharField(widget=forms.Textarea(attrs={'readonly':'readonly'}))
-    # recipient_no = forms.CharField(widget=forms.TextInput(attrs={'type':'number'}))
+    recipient_group = forms.ModelMultipleChoiceField(queryset=EmailGroup.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        staff = kwargs.pop('staff', None)
+        super(SendSMSForm, self).__init__(*args, **kwargs)
+
+        if staff:
+            self.fields['recipient_group'].queryset = EmailGroup.objects.filter(staff=staff)
     
     class Meta:
         model = SendSMS
@@ -31,6 +39,15 @@ class SendSMSForm(forms.ModelForm):
 class SendEmailForm(forms.ModelForm):
     message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Enter additional message here...'}))
     activity_list = forms.CharField(widget=forms.Textarea(attrs={'readonly':'readonly'}))
+    recipient_group = forms.ModelMultipleChoiceField(queryset=EmailGroup.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        staff = kwargs.pop('staff', None)
+        super(SendEmailForm, self).__init__(*args, **kwargs)
+
+        if staff:
+            self.fields['recipient_group'].queryset = EmailGroup.objects.filter(staff=staff)
+
     class Meta:
         model = SendEmail
         fields = ['sender', 'recipients', 'recipient_group', 'subject', 'message', 'activity_list',]

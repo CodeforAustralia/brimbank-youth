@@ -41,15 +41,25 @@ button {
   color: rgba(128, 128, 128, 0.842);
   border-color: transparent;
 }
-.tooltip-inner
+/* .tooltip-inner
 { background-color:red;}
 
 .tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before, .tooltip.bs-tooltip-bottom .arrow::before 
-{ border-bottom-color: red;}
+{ border-bottom-color: red;} */
+
+.tooltip-inner
+{ background-color: #A9DFF8;}
+
+.tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before, .tooltip.bs-tooltip-bottom .arrow::before 
+{ border-bottom-color: #A9DFF8;} 
+
+.side-title {
+  font-size:28px;color:#666666;
+}
 
 .bold-text {
-  font-weight: bold;
   color: #484848;
+  font-size: 20px;
 }
 .light-text {
   font-weight: 300;
@@ -57,6 +67,7 @@ button {
 }
 .card-text {
   color: #484848;
+  font-size: 18px;
 }
 /* Table Style */
 #contact-table {

@@ -8,72 +8,15 @@ from django.contrib import messages
 from django.contrib.messages import constants as messages_const
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 
 from .models import SendSMS, SendEmail
 from .forms import SendSMSForm, SendEmailForm
 from activities.models import Activity
 from accounts.models import Profile
+from contacts.models import EmailGroup
 
 from twilio.rest import Client
-
-class SMSCreateView(CreateView):
-    model = SendSMS
-    form_class = SendSMSForm
-
-    def get(self, request, *args, **kwargs):
-        profile = Profile.objects.get(user=self.request.user)
-        if (profile.sms_limit == 0):
-            messages.add_message(self.request, messages.ERROR, 'You have exceeded your monthly limit for sending SMS.', extra_tags='danger')
-            return redirect('home')
-        return super(SMSCreateView, self).get(request, *args, **kwargs)
-    
-    def get_success_url(self):
-        text_msg = str(self.object.message + '\n' + self.object.activity_list)
-        if self.object.recipient_group is not None:
-            recipient_no_group = self.object.recipient_group.sms_members.all()
-            if recipient_no_group:
-                for member in recipient_no_group:
-                    send_sms(text_msg, member.mobile)
-
-        if self.object.recipient_no != '':
-            recipient_no_list = self.object.recipient_no.split(',')
-            for index, recipient_no in enumerate(recipient_no_list):
-                send_sms(text_msg, recipient_no)
-                
-        # send_sms(text_msg, self.object.recipient_no)
-        # send_sms(self.object.message, self.object.recipient_no)
-        messages.add_message(self.request, messages.SUCCESS, 'Your text has been sent')
-
-        # Decrease the limit of text message by 1
-        profile = Profile.objects.get(user=self.request.user)
-        profile.sms_limit -= 1
-        profile.save()
-        return reverse('search_activity')
-    
-    def get_initial(self):
-        """
-        Returns the initial data to use for forms on this view.
-        """
-        initial = super(CreateView, self).get_initial()
-        activity_pk_list = self.kwargs['pk']
-        activity_pk_list = activity_pk_list.split('_')
-        activity_url = ''
-        for index, pk in enumerate(activity_pk_list):
-            activity = Activity.objects.get(pk=pk)
-            activity_pk = activity.pk
-            name = activity.name
-            current_site = get_current_site(self.request)
-            domain = current_site.domain
-#            activity_url_temp = name + ' http://localhost:8000'+str(reverse('activity_detail', args=[activity_pk]))
-            activity_url_temp = name + ': http://'+ domain +str(reverse('activity_detail', args=[activity_pk]))
-            if (activity_url != ''):
-                activity_url = str(activity_url + '\n' + activity_url_temp)
-            else:
-                activity_url = str(activity_url_temp)
-        initial['activity_list'] = activity_url
-        profile = Profile.objects.get(user=self.request.user)
-        return initial
 
 class AjaxableResponseMixin:
     """
@@ -95,9 +38,6 @@ class AjaxableResponseMixin:
             return response
 
     def form_valid(self, form):
-        # We make sure to call the parent's form_valid() method because
-        # it might do some processing (in the case of CreateView, it will
-        # call form.save() for example).
         response = super().form_valid(form)
         if self.request.is_ajax():
             data = {
@@ -106,6 +46,73 @@ class AjaxableResponseMixin:
             return JsonResponse(data)
         else:
             return response
+
+class SMSCreateView(AjaxableResponseMixin, CreateView):
+    model = SendSMS
+    form_class = SendSMSForm
+    template_name = 'sendsms/sendsms_form.html'
+
+    def get(self, request, *args, **kwargs):
+        profile = Profile.objects.get(user=self.request.user)
+        if (profile.sms_limit == 0):
+            messages.add_message(self.request, messages.ERROR, 
+            'You have exceeded your monthly limit for sending SMS.', extra_tags='danger')
+            return redirect('home')
+        return super(SMSCreateView, self).get(request, *args, **kwargs)
+    
+    def get_success_url(self):
+        text_msg = str(self.object.message + '\n' + self.object.activity_list)
+        if self.object.recipient_group is not None:
+            for group in self.object.recipient_group.all():
+                recipient_no_group = group.members.all()
+                if recipient_no_group:
+                    for member in recipient_no_group:
+                        send_sms(text_msg, member.mobile)
+
+        if self.object.recipient_no != '':
+            recipient_no_list = self.object.recipient_no.split(',')
+            for index, recipient_no in enumerate(recipient_no_list):
+                send_sms(text_msg, recipient_no)
+                
+        messages.add_message(self.request, messages.SUCCESS, 'Your text has been sent')
+
+        # Decrease the limit of text message by 1
+        profile = Profile.objects.get(user=self.request.user)
+        profile.sms_limit -= 1
+        profile.save()
+        return reverse('search_activity')
+    
+    def get_initial(self):
+        initial = super(CreateView, self).get_initial()
+        activity_pk_list = self.kwargs['pk']
+        activity_pk_list = activity_pk_list.split('_')
+        activity_url = ''
+        for index, pk in enumerate(activity_pk_list):
+            activity = Activity.objects.get(pk=pk)
+            activity_pk = activity.pk
+            name = activity.name
+            current_site = get_current_site(self.request)
+            domain = current_site.domain
+            activity_url_temp = name + ': http://'+ domain +str(reverse('activity_detail', args=[activity_pk]))
+            if (activity_url != ''):
+                activity_url = str(activity_url + '\n' + activity_url_temp)
+            else:
+                activity_url = str(activity_url_temp)
+        initial['activity_list'] = activity_url
+        profile = Profile.objects.get(user=self.request.user)
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_list = self.kwargs['pk']
+        context['pk_list'] = pk_list
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super(SMSCreateView, self).get_form_kwargs()
+        kwargs['staff'] = self.request.user
+        return kwargs
+
     
 class EmailCreateView(AjaxableResponseMixin, CreateView):
     model = SendEmail
@@ -136,15 +143,16 @@ class EmailCreateView(AjaxableResponseMixin, CreateView):
             sender = 'noreply@youthposter.com'
 
         if self.object.recipient_group is not None:
-            recipient_email_group = self.object.recipient_group.email_members.all()
-            if recipient_email_group:
-                for member in recipient_email_group:
-                    send_email(self.request, 
-                               self.object.subject, 
-                               self.object.message, 
-                               sender,
-                               member.email.split(','),
-                               msg_html)
+            for group in self.object.recipient_group.all():
+                recipient_email_group = group.members.all()
+                if recipient_email_group:
+                    for member in recipient_email_group:
+                        send_email(self.request, 
+                                self.object.subject, 
+                                self.object.message, 
+                                sender,
+                                member.email.split(','),
+                                msg_html)
 
         if self.object.recipients != '':
             send_email(self.request, 
@@ -173,7 +181,6 @@ class EmailCreateView(AjaxableResponseMixin, CreateView):
             current_site = get_current_site(self.request)
             domain = current_site.domain
             activity_url_temp = name + ': http://'+ domain +str(reverse('activity_detail', args=[activity_pk]))
-#            activity_url_temp = name + ' http://localhost:8000'+str(reverse('activity_detail', args=[activity_pk]))
             if (activity_url != ''):
                 activity_url = str(activity_url + '\n' + activity_url_temp)
             else:
@@ -189,6 +196,11 @@ class EmailCreateView(AjaxableResponseMixin, CreateView):
         pk_list = self.kwargs['pk']
         context['pk_list'] = pk_list
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super(EmailCreateView, self).get_form_kwargs()
+        kwargs['staff'] = self.request.user
+        return kwargs
     
 def convert_number(number):
     number_temp = ''

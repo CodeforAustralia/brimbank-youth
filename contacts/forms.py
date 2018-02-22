@@ -20,10 +20,16 @@ class SMSMemberForm(forms.ModelForm):
         fields = ('name', 'mobile', )
 
 class EmailGroupForm(forms.ModelForm):
-    # description = forms.CharField(widget=forms.Textarea)
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(EmailGroupForm, self).__init__(*args, **kwargs)
+        
     class Meta:
         model = EmailGroup
         fields = ('name', )
+        labels = {
+            'name': _('Group Name'),
+        }
 
 class EmailMemberForm(forms.ModelForm):
     age = forms.CharField(error_messages={'required': 'Required'})

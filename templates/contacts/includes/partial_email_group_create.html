@@ -1,7 +1,7 @@
 <form method="post" action="{% url 'email_group_create' %}" class="js-group-create-form" novalidate>
     {% csrf_token %}
-    <div class="modal-header">
-        <h4 class="modal-title">Create a new group</h4>
+    <div class="modal-header" style="border:none;padding-bottom:0;">
+        <h4 class="modal-title">Create Group</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
@@ -9,8 +9,7 @@
     <div class="modal-body">
         {% include 'contacts/includes/partial_contact_form.html' %}
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Create group</button>
+    <div class="modal-footer" style="border:none;padding-top:0;">
+        <button type="submit" class="btn btn-lg btn-block btn-success">Create</button>
     </div>
 </form>

@@ -1,11 +1,26 @@
 #contact-table thead th {
     text-align: center;
     vertical-align: middle;
-    color: #999999;
+    color: #484848;
+    font-size: 20px;
+    font-weight: 300;
+    padding: 20px;
   }
   #contact-table tbody td {
     vertical-align: middle;
-    color: #999999;
+    color: #484848;
+    font-size: 20px;
+    font-weight: 300;
+  }
+  #contact-table tbody td a{
+    color: #484848;
+  }
+  #contact-table tbody td a:hover{
+    color: #484848;
+    text-decoration: none;
+  }
+  #contact-table tbody tr:hover {
+    background: #ececec;
   }
   #contact-table {
     -moz-border-radius:5px;

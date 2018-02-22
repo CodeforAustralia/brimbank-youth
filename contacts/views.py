@@ -162,8 +162,6 @@ def group_copy(request, pk):
     today = arrow.now('Australia/Melbourne')
     new_group.created_time = today
     new_group.save()
-    # print("New: ", new_group.created_time)
-    print("Old: ", group.created_time)
     members = EmailMember.objects.filter(group=group)
     for member in members:
         new_member = deepcopy(member)

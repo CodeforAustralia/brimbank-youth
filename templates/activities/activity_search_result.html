@@ -748,6 +748,11 @@ $('#main-share').click(function(){
     $('#share-email').toggle();
 });
 
+$('#main-share-logged-in').click(function() {
+    $('#share-twilio').toggle();
+    $('#share-mailgun').toggle();
+});
+
 // Add Google Maps URL
 //    var addressElements = document.getElementsByName("address");
 //    var geocoder = new google.maps.Geocoder();
@@ -896,6 +901,7 @@ $('#main-share').click(function(){
 
     var href;
     var sms_url, email_url;
+    var twilio_url, mailgun_url;
     var activity_url_final;
 
     // Codes for Mailgun/Twilio sharing
@@ -904,13 +910,13 @@ $('#main-share').click(function(){
     }
 
     // Codes for Mailgun/Twilio sharing
-    // if (href != '') {
-        // sms_url = web_url + "sms_create/" + href + "/";
-        // email_url = web_url + "email_create/" + href + "/";
-    // } else {
-        // sms_url = "#";
-        // email_url = "#";
-    // }
+    if (href != '') {
+        twilio_url = web_url + "sms_create/" + href + "/";
+        mailgun_url = web_url + "email_create/" + href + "/";
+    } else {
+        twilio_url = "#";
+        mailgun_url = "#";
+    }
 
     activity_url_final = activities_arr.join('%0D%0A');
 
@@ -922,8 +928,21 @@ $('#main-share').click(function(){
         sms_url = "sms:?&body=Check%20these%20out:%20";
     }
     
+    // Free share button
     $("#share-text").attr("href", sms_url);
     $("#share-email").attr("href", email_url);
+
+    // Mailgun / Twilio button
+    $("#share-twilio").click(function() {
+        window.open(twilio_url, 'newwindow', 'width=500,height=900');
+    });
+
+    $("#share-mailgun").click(function() {
+        window.open(mailgun_url, 'newwindow', 'width=500,height=900');
+    });
+
+    // $("#share-twilio").attr("href", twilio_url);
+    // $("#share-mailgun").attr("href", mailgun_url);
   });
 
 
@@ -976,7 +995,7 @@ $('#main-share').click(function(){
     } else {
         email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A";
     }
-      $("#share-text").attr("href", sms_url);
+    //   $("#share-text").attr("href", sms_url);
     //   $("#share-email").attr("href", email_url);
 
       //change opacity of card-img-top
