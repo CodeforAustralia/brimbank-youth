@@ -146,7 +146,9 @@
             <button class="btn btn-lg btn-block disabled">Register</button>
             {% else %}
             {% if available %}
-            <a href="{% url 'register_activity' activity.pk %}" class="btn btn-success btn-lg btn-block mt-2" style="vertical-align:middle;display: inline-block;">I'M COMING!</a>
+            <a href="#" class="btn btn-success btn-lg btn-block register mt-2" 
+            data-url="{% url 'register_youth' activity.pk %}"
+            style="vertical-align:middle;display: inline-block;">Register</a>
             {% else %}
             <button class="btn btn-lg btn-block disabled">Fully booked</button>
             {% endif %}

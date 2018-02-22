@@ -63,6 +63,7 @@
         $('.loading').hide();
         if (data.responseText) {
           var errors = $.parseJSON(data.responseText);
+          console.log(errors);
         }
         if (errors.__all__) {
           $(".main-alert").show();

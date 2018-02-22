@@ -126,9 +126,60 @@ def save_form(request, form, template_name, activity_pk, full):
     data['fully_booked'] = full
     return JsonResponse(data)
 
+def save_form_youth(request, form, template_name, activity_pk, full):
+    data = dict()
+    activity = Activity.objects.get(pk=activity_pk)
+    if request.method == 'POST':
+        if form.is_valid():
+            data['form_is_valid'] = True
+            data['hide_error_msg'] = True
+            registration = form.save(commit=False)
+            registration.activity = activity
+            registration.save()
+            registration = Registration.objects.get(pk=registration.pk)
+            registration_pk = registration.pk
+            if activity.space_choice == 'Limited':
+                activity.space -= 1
+                activity.save()
+            
+            attendees = Registration.objects.filter(activity=activity)
+            attendees_no = attendees.count()
+            available = True
+            if activity.space <= 0 and activity.space_choice == 'Limited':
+                available = False
+            else:
+                available = True
+        else:
+            data['form_is_valid'] = False
+            data['hide_error_msg'] = False
+    context = {
+        'form': form,
+        'activity': activity,
+    }
+    data['html_form'] = render_to_string(template_name, context, request=request)
+    data['fully_booked'] = full
+    return JsonResponse(data)
+
+def register_youth(request, pk):
+    activity_pk = pk
+    pk = {'activity_pk': activity_pk}
+    full = False
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST, **pk)
+    else:
+        activity = Activity.objects.get(pk=activity_pk)
+        if activity.space_choice == 'Limited' and activity.space <= 0:
+            messages.info(request, 'Sorry, this activity is fully booked.')
+            form = RegistrationForm(**pk)
+            full = True
+        else:
+            form = RegistrationForm(**pk)
+    return save_form_youth(request, form, 'booking/includes/partial_registration_youth_form.html', activity_pk, full)
+
 @login_required
 def register_client(request, pk):
     activity_pk = pk
+    print(activity_pk)
     pk = {'activity_pk': activity_pk}
     full = False
     if request.method == 'POST':

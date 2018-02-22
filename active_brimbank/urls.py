@@ -73,6 +73,7 @@ urlpatterns = [
     # Activities
     url(r'^activity/search/$', search_events, name='search_activity'),
     url(r'^create_activity/$', ActivityCreateView.as_view(), name='create_activity'),
+    
     # url(r'^activity/$', ActivityListView.as_view(), name='activity_list'),
     url(r'^activity/detail/(?P<pk>\d+)/$', ActivityDetailView.as_view(), name='activity_detail'),
     url(r'^activity/publish/(?P<pk>\d+)/$', ActivityDraftDetailView.as_view(), name='activity_publish'),
@@ -95,6 +96,7 @@ urlpatterns = [
     url(r'^activity/(?P<pk>\d+)/register/$', booking_views.register, name='register_activity'),
     url(r'^registration/detail/(?P<pk>\d+)/$', booking_views.RegistrationDetailView.as_view(), name='registration_detail'),
     url(r'^activity/(?P<pk>\d+)/add_new_attendee/$', booking_views.register_client, name='register_client'),
+    url(r'^activity/(?P<pk>\d+)/register-activity/$', booking_views.register_youth, name='register_youth'),
 
     # Print attendee list
     url(r'^activity/(?P<pk>\d+)/attendee_list/$', booking_views.print_attendee_list, name='print_attendee_list'),
@@ -127,15 +129,17 @@ urlpatterns = [
     url(r'^contacts/(?P<pk>\d+)/share_activities/$', contacts_views.post_shared_activities_contacts, name='post_shared_activities_contacts'),
     url(r'^contacts/(?P<pk>\d+)/share_activities_sms/$', contacts_views.post_shared_activities_sms, name='post_shared_activities_sms'),
 
-    # --- Contacts ---
+    # --- Contacts (USED) ---
     url(r'^group/(?P<pk>\d+)/contacts/$', contacts_views.contact_list, name='contact_list'),
     url(r'^group/(?P<pk>\d+)/contacts/create/$', contacts_views.member_create, name='member_create'),
-
-    # --- Email contacts ---
-    url(r'^email_contacts/group/$', contacts_views.email_contact_list, name='email_contact_list'),
-    url(r'^email_members/create/$', contacts_views.email_member_create, name='email_member_create'),
     url(r'^email_members/(?P<pk>\d+)/update/$', contacts_views.email_member_update, name='email_member_update'),
     url(r'^email_members/(?P<pk>\d+)/delete/$', contacts_views.email_member_delete, name='email_member_delete'),
+    url(r'^group/(?P<pk>\d+)/contacts/download/$', contacts_views.download_contacts, name='download_contacts'),
+
+    # --- Email contacts (NOT USED) ---
+    url(r'^email_contacts/group/$', contacts_views.email_contact_list, name='email_contact_list'),
+    url(r'^email_members/create/$', contacts_views.email_member_create, name='email_member_create'),
+    
 
     # Background tasks
     url(r'^testing/$', accounts_views.testing, name='background_test'),

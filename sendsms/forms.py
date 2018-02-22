@@ -8,7 +8,7 @@ from activities.models import Activity
 class SendSMSForm(forms.ModelForm):
     message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Enter additional message here...'}))
     activity_list = forms.CharField(widget=forms.Textarea(attrs={'readonly':'readonly'}))
-    recipient_group = forms.ModelMultipleChoiceField(queryset=EmailGroup.objects.all())
+    recipient_group = forms.ModelMultipleChoiceField(queryset=EmailGroup.objects.all(),required=False)
 
     def __init__(self, *args, **kwargs):
         staff = kwargs.pop('staff', None)
@@ -16,6 +16,7 @@ class SendSMSForm(forms.ModelForm):
 
         if staff:
             self.fields['recipient_group'].queryset = EmailGroup.objects.filter(staff=staff)
+            self.fields['recipient_group'].required = False
     
     class Meta:
         model = SendSMS
@@ -30,7 +31,7 @@ class SendSMSForm(forms.ModelForm):
         # Validation: either recipient_group or recipient_no must be entered
         recipient_no = cleaned_data.get("recipient_no")
         recipient_group = cleaned_data.get("recipient_group")
-        if recipient_no == '' and recipient_group is None:
+        if recipient_no == '' and not recipient_group:
             msg = "Either recipient number or recipient group must be entered."
             self.add_error('recipient_no','')
             self.add_error('recipient_group','')
@@ -39,7 +40,7 @@ class SendSMSForm(forms.ModelForm):
 class SendEmailForm(forms.ModelForm):
     message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Enter additional message here...'}))
     activity_list = forms.CharField(widget=forms.Textarea(attrs={'readonly':'readonly'}))
-    recipient_group = forms.ModelMultipleChoiceField(queryset=EmailGroup.objects.all())
+    recipient_group = forms.ModelMultipleChoiceField(queryset=EmailGroup.objects.all(),required=False)
 
     def __init__(self, *args, **kwargs):
         staff = kwargs.pop('staff', None)
@@ -47,6 +48,21 @@ class SendEmailForm(forms.ModelForm):
 
         if staff:
             self.fields['recipient_group'].queryset = EmailGroup.objects.filter(staff=staff)
+            self.fields['recipient_group'].required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Validation: either recipient_group or recipient_no must be entered
+        recipients = cleaned_data.get("recipients")
+        recipient_group = cleaned_data.get("recipient_group")
+        print("recipients", recipients)
+        print("recipient_group", recipient_group)
+        if recipients == '' and not recipient_group:
+            msg = "Either recipient number or recipient group must be entered."
+            self.add_error('recipients','')
+            self.add_error('recipient_group','')
+            raise forms.ValidationError(msg)
 
     class Meta:
         model = SendEmail
@@ -54,18 +70,6 @@ class SendEmailForm(forms.ModelForm):
         widgets = {
             'recipients': forms.TextInput(attrs={'placeholder': 'Separate email addresses by comma'}),
         }
-
-    def clean(self):
-        cleaned_data = super().clean()
-        
-        # Validation: either recipients or recipient_no must be entered
-        recipients = cleaned_data.get("recipients")
-        recipient_group = cleaned_data.get("recipient_group")
-        if recipients == '' and recipient_group is None:
-            msg = "Either recipients or recipient group must be entered."
-            self.add_error('recipients','')
-            self.add_error('recipient_group','')
-            raise forms.ValidationError(msg)
 
 class ShareActivitiesEmailForm(forms.Form):
     sender = forms.EmailField(required=True, label='Your Email', 

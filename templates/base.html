@@ -6,7 +6,7 @@
     <meta charset="utf-8">
 <!--  For responsiveness in mobile, include 1 line below -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{% block title %}Youth Future{% endblock %}</title>
+    <title>{% block title %}YouShare{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css?family=Lato:100,200,300,400,700,800,900" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous"> -->
@@ -131,7 +131,7 @@
           YouShare
       </a>
       {% if activities or activity %}
-      {% if user.is_authenticated %}
+      {% if user.is_authenticated and activities %}
       <a href="#" id="main-share-logged-in" class="mr-auto ml-2">
           <img src="{% static 'img/icons/share-2.svg' %}" style="width:40px;"></a>
       <a id="share-twilio" class="ml-3 mr-2" href="#" style="display:none;background:rgb(6, 173, 6);
@@ -139,7 +139,19 @@
         <img src="{% static 'img/icons/sms.svg' %}" style="width:20px;margin-top:12px;"></a>
       <a id="share-mailgun" href="#" style="display:none;" class="mr-auto">
         <img src="{% static 'img/icons/envelope.svg' %}" style="width:40px;"></a>
-      {% else %}
+      {% endif %}
+      {% if user.is_authenticated and activity %}
+      <a href="#" id="main-share-logged-in" class="mr-auto ml-2">
+        <img src="{% static 'img/icons/share-2.svg' %}" style="width:40px;"></a>
+      <a id="share-twilio" class="ml-3 mr-2" href="#" data-url="{% url 'sms_create' activity.pk %}"
+      style="display:none;background:rgb(6, 173, 6);
+      text-align:center;border-radius:100%;width:40px;height:40px;">
+        <img src="{% static 'img/icons/sms.svg' %}" style="width:20px;margin-top:12px;"></a>
+      <a id="share-mailgun" href="#" data-url="{% url 'email_create' activity.pk %}"
+      style="display:none;" class="mr-auto">
+        <img src="{% static 'img/icons/envelope.svg' %}" style="width:40px;"></a>
+      {% endif %}
+      {% if not user.is_authenticated and activities %}
       <a href="#" id="main-share" class="mr-auto ml-2">
           <img src="{% static 'img/icons/share-2.svg' %}" style="width:40px;"></a>
         <a id="share-text" class="ml-3 mr-2" href="#" style="display:none;background:rgb(6, 173, 6);
@@ -147,7 +159,7 @@
           <img src="{% static 'img/icons/sms.svg' %}" style="width:20px;margin-top:12px;"></a>
         <a id="share-email" href="#" style="display:none;" class="mr-auto">
           <img src="{% static 'img/icons/envelope.svg' %}" style="width:40px;"></a>
-      {% endif %}
+      {% endif %}   
       {% endif %}
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

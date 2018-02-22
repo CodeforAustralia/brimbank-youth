@@ -23,21 +23,23 @@
 {% block content %}
 <div class="container mt-4">
     <div class="row">
-        <div class="col-8">
-        <h2 class="mt-3" style="font-size:36px;font-weight:bolder;color:#484848;">{{ group_name }}</h2>
-        </div>
-        <div class="col-4">
-        <!-- BUTTON TO TRIGGER THE ACTION -->
-        <a class="btn btn-green js-create-email-member mt-4 float-right" href="#" data-url="{% url 'member_create' group_pk %}" 
-        role="button" aria-haspopup="true" aria-expanded="false">ADD CONTACTS</a>
+        <div class="col-12">
+        <h2 class="mt-3" style="font-size:36px;font-weight:bolder;color:#484848;">
+        {{ group_name }}&nbsp;&nbsp;
+        <a href="{% url 'download_contacts' group_pk %}">
+            <img src="{% static 'img/icons/download.svg' %}" style="width:38px; margin-top:-12px;">
+        </a></h2>
         </div>
     </div>
     
     <div class="row">
-        <div class="col-sm-6 col-12">
+        <div class="col-6">
         <i class="fas fa-search"></i>
         <input type="text" name="name" placeholder="Search" style="padding-left:35px;" 
         maxlength="150" class="form-control" id="id_name"/></div>
+        <div class="col-6 float-right">
+            <a class="btn btn-green btn-lg js-create-email-member mt-4 float-right" href="#" data-url="{% url 'member_create' group_pk %}" 
+            role="button" aria-haspopup="true" aria-expanded="false">Add Contact</a></div>
     </div>
     
 </div>
@@ -47,12 +49,12 @@
         <table class="table" id="contact-table" style="width:100%;">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Mobile</th>
-            <th>Email</th>
-            <th>M or F</th>
-            <th>Age</th>
-            <th>Languages</th>
+            <th style="text-align:left;">Name</th>
+            <th style="text-align:right;">Mobile</th>
+            <th style="text-align:right;">Email</th>
+            <th style="text-align:right;">M or F</th>
+            <th style="text-align:right;">Age</th>
+            <th style="text-align:right;">Languages</th>
             <th width="300px;">ACTIONS</th>
         </tr>
         </thead>

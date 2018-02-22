@@ -122,6 +122,7 @@
 <!-- <script src="{% static 'js/jssocials.js' %}"></script>
 <script src="{% static 'js/slick.js' %}"></script> -->
 <script src="{% static 'js/swiper.js' %}"></script>
+<script src="{% static 'booking/js/booking.js' %}"></script>
 
 <script>
 $(function() {
@@ -129,6 +130,20 @@ $(function() {
 $('#main-share').click(function(){
     $('#share-text').toggle();
     $('#share-email').toggle();
+});
+
+$('#main-share-logged-in').click(function() {
+    $('#share-twilio').toggle();
+    $('#share-mailgun').toggle();
+});
+
+// Mailgun / Twilio button
+$("#share-twilio").click(function() {
+    window.open($(this).attr("data-url"), 'newwindow', 'width=500,height=900');
+});
+
+$("#share-mailgun").click(function() {
+    window.open($(this).attr("data-url"), 'newwindow', 'width=500,height=900');
 });
 
 $('.info-tooltip').tooltip();
@@ -190,58 +205,6 @@ var swiper = new Swiper('.swiper-container', {
     $("#modal-share-url").modal("show");
     $(".st-btn").show();
   });
-
-var loadForm = function () {
-  var btn = $(this);
-  $.ajax({
-    url: btn.attr("data-url"),
-    type: 'get',
-    dataType: 'json',
-    beforeSend: function () {
-      $("#modal-register").modal("show");
-    },
-    success: function (data) {
-      $("#modal-register .modal-content").html(data.html_form);
-      console.log(data);
-      if (data.fully_booked) {
-        $("#modal-register").modal("hide");
-        location.reload();
-      }
-    }
-  });
-};
-
-var saveForm = function () {
-  var form = $(this);
-  $.ajax({
-    url: form.attr("action"),
-    data: form.serialize(),
-    type: form.attr("method"),
-    dataType: 'json',
-    beforeSend: function () {
-        $('.loading').show();
-    },
-    success: function (data) {
-      $('.loading').hide();
-      if (data.form_is_valid) {
-        $("#modal-register").modal("hide");
-        $("#contact-table").html(data.attendee_list);
-        $("#attendees_no").html(data.attendees_no);
-        $("#available_space").html(data.available_space);
-        $("#send-reminder-btn").html(data.send_reminder_btn);
-        $('[data-toggle="tooltip"]').tooltip();
-      }
-      else {
-        $("#modal-register .modal-content").html(data.html_form);
-      }
-    }
-  });
-  return false;
-};
-
-// Add new attendee
-$(".js-register-client").click(loadForm);
-$("#modal-register").on("submit", ".js-booking-form", saveForm);
 
 });
 
