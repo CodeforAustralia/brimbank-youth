@@ -1,0 +1,42 @@
+.no-border {
+    border:none;padding-bottom:0;
+}
+
+.modal-title {
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.modal-content {
+    width: 85vh;
+    padding-top: 1.5rem;
+}
+
+.col-form-label {
+    font-size: 18px;
+    font-weight: bold;
+    padding:0;
+}
+
+.form-control {
+    border-radius: 0;
+    height: 55px;
+    font-size: 20px;
+}
+
+.modal-header, .modal-body {
+    padding-left: 5rem; padding-right: 5rem; padding-top: 2rem;
+}
+
+.modal-footer {
+    border:none; padding-left: 5rem; padding-right: 5rem; padding-top: 1rem; padding-bottom: 5rem;
+}
+
+button.close {
+    padding-top:0; padding-bottom:10px;
+    padding-right:20px; padding-left:20px;
+}
+
+.addeventatc_icon .atc_node {
+    display:none;
+}

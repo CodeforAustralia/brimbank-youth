@@ -6,6 +6,11 @@ from activities.models import Activity
 
 class ContactGroupForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea)
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(ContactGroupForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = ContactGroup
         fields = ('name', 'description', )
@@ -14,7 +19,10 @@ class ContactGroupForm(forms.ModelForm):
         }
 
 class SMSMemberForm(forms.ModelForm):
-    # group = forms.ModelChoiceField(queryset=ContactGroup.objects.all())
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(SMSMemberForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = SMSMember
         fields = ('name', 'mobile', )
@@ -33,6 +41,11 @@ class EmailGroupForm(forms.ModelForm):
 
 class EmailMemberForm(forms.ModelForm):
     age = forms.CharField(error_messages={'required': 'Required'})
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(EmailMemberForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = EmailMember
         fields = ('first_name', 'last_name', 'email', 'gender', 'age', 'mobile', 'language', )

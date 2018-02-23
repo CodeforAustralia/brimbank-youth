@@ -83,7 +83,7 @@ class Activity(models.Model):
     postcode = models.CharField(max_length=4, blank=True, null=True, db_index=True)
     organiser = models.CharField(max_length=150, blank=True, null=True)
     contact_number = models.CharField(max_length=15, blank=True, null=True)
-    description = models.TextField(max_length=500, blank=True, null=True)
+    description = models.TextField(max_length=1000, blank=True, null=True)
     activity_date = models.DateField(blank=True, null=True) # for one-time activity
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
@@ -101,7 +101,7 @@ class Activity(models.Model):
     space = models.PositiveSmallIntegerField(blank=True, null=True, default=10)
     cost_choice = models.CharField(max_length=50, choices=COST_OPTIONS, default='N')
     space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Unlimited')
-    listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
+    # listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
     created_by = models.ForeignKey(User, related_name='activities', null=True, db_index=True)
     published = models.BooleanField(default=True)
     bookmarked = models.BooleanField(default=False)
@@ -139,7 +139,7 @@ class ActivityDraft(models.Model):
     postcode = models.CharField(max_length=4, blank=True, null=True)
     organiser = models.CharField(max_length=150, blank=True, null=True)
     contact_number = models.CharField(max_length=15, blank=True, null=True)
-    description = models.TextField(max_length=500, blank=True, null=True)
+    description = models.TextField(max_length=1000, blank=True, null=True)
     activity_date = models.DateField(blank=True, null=True) # for one-time activity
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
@@ -157,7 +157,7 @@ class ActivityDraft(models.Model):
     cost_choice = models.CharField(max_length=50, choices=COST_OPTIONS, default='N')
     space_choice = models.CharField(max_length=50, choices=SPACE_OPTIONS, default='Unlimited')
     space = models.PositiveSmallIntegerField(blank=True, null=True, default=0)
-    listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
+    # listing_privacy = models.CharField(max_length=50, choices=LISTING_PRIVACY, default='Public')
     created_by = models.ForeignKey(User, related_name='drafts', null=True)
     published = models.BooleanField(default=True)
     

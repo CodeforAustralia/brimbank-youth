@@ -5,7 +5,7 @@
         <div class="row">
         <div class="col-md-8">
             {% if activity.activity_img %}
-            <img class="card-img-top select" src="{{ activity.activity_img.url }}" 
+            <img class="card-img-top select" src="{{ activity.activity_img.url }}"
             alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/770x560?text=Image not available';" 
             style="object-fit:cover;margin:auto;height:470px;display:inline;border-radius:0;">
             {% else %}
@@ -244,6 +244,10 @@
         {% endif %}
         {% endif %}
         <br/><span class="light-text">{{ activity.start_time|time:'g:iA'|lower }} - {{ activity.end_time|time:'g:iA'|lower }}</span>
+        <br/><span class="mt-2">
+        <!-- Calendar download button -->
+        {% include 'activities/includes/calendar_button.html' %}
+        </span>
 
         <!-- LOCATION -->
         <h6 class="bold-text" style="margin-top:25%;">Location</h6>

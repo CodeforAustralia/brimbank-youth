@@ -13,6 +13,19 @@
 <!-- <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials.css" /> -->
 <!-- <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.4.0/jssocials-theme-flat.css" /> -->
 <link rel="stylesheet" type="text/css" href="{% static 'activities/css/activity_details.css'%}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css'%}" />
+<style>
+  #id_share_url:focus{
+    outline: none;
+  }
+  #id_share_url::selection{
+    background:transparent;
+  }
+  #id_share_url::-moz-selection{
+    background:transparent;
+  }
+  </style>
+
 
 {% endblock %}
 
@@ -69,14 +82,15 @@
 <!-- THE MODAL FOR SHARING ACTIVITY URL -->
 <div class="modal fade" id="modal-share-url">
   <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Share this activity</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+    <div class="modal-content" style="padding-top:1rem;">
+      <div class="modal-header" style="padding-top:0;padding-left:2em;border:none;">
+        <h4 class="modal-title" style="font-weight:400;">Share this activity</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+        style="margin-right:-5rem;margin-top:-1rem;">
+          <span aria-hidden="true">&times;</span>
         </button>
       </div>
-    <div class="row justify-content-center mt-3">
+    <div class="row justify-content-center">
         <!-- <div class="addthis_inline_share_toolbox"></div> -->
         <div class="sharethis-inline-share-buttons"></div>
         <a target="_self" class="btn btn-circle-2 ml-2" 
@@ -88,9 +102,13 @@
         style="background:grey;width:49px;height:49px;border-radius:100%;color:white;padding-top:10px;">
         <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-bottom:1px;"></a>
     </div>
-    <div class="row mt-3 ml-3 mr-3">
-    <input class="form-control mr-2 text-center" type="text" id="id_share_url" value="http://{{ domain }}{% url 'activity_detail' activity.pk %}">
-    <!-- <button class="btn btn-outline-success" type="button" onclick="copyURL(this.id)" id="cpbtn"><i class="far fa-copy"></i></button> -->
+    <input type="text" id="id_share_url" class="offset-2"
+    value="http://{{ domain }}{% url 'activity_detail' activity.pk %}" 
+    style="border:none;height:0;color:transparent;">
+    <div class="row mt-3 ml-3 mr-3 justify-content-center">
+    <button class="btn btn-block mb-3" type="button" onclick="copyURL()" id="cpbtn"
+    style="border-radius:20px;background:#ffc600;color:#ffffff;width:30vh;">
+      Copy link to clipboard</button>
     </div>
     <div class="row ml-3 mt-1">
     <p class="small" id="id_url_text"></p>
@@ -123,6 +141,7 @@
 <script src="{% static 'js/slick.js' %}"></script> -->
 <script src="{% static 'js/swiper.js' %}"></script>
 <script src="{% static 'booking/js/booking.js' %}"></script>
+<script type="text/javascript" src="https://addevent.com/libs/atc/1.6.1/atc.min.js" async defer></script>
 
 <script>
 $(function() {
@@ -204,6 +223,8 @@ var swiper = new Swiper('.swiper-container', {
     $("#id_url_text").html("");
     $("#modal-share-url").modal("show");
     $(".st-btn").show();
+    $('#cpbtn').attr("style", "border-radius:20px;background:#ffc600;color:#ffffff;width:30vh;");
+    $('#cpbtn').text("Copy link to clipboard");
   });
 
 });
@@ -319,12 +340,17 @@ $("#address2").attr("href", full_url);
   //   });
   // }
 
-// function copyURL() {
-//   var copyText = document.getElementById("id_share_url");
-//   copyText.select();
-//   document.execCommand("Copy");
-//   $("#id_url_text").html("Link has been copied!");
-// }
+function copyURL() {
+  var copyText = document.getElementById("id_share_url");
+  var copyBtn = document.getElementById("cpbtn");
+  copyText.select();
+  document.execCommand("Copy");
+  copyBtn.focus();
+  copyBtn.setAttribute("style", "background:#FFFFFF;color:#ffc600;border:1px solid #ffc600;width:30vh;border-radius:20px;");
+  copyBtn.innerText = "Link has been copied";
+};
+
+
 
 // function markActivity(clicked_id) {
 //     var url_dest = '/activity/bookmark/'+clicked_id+'/';

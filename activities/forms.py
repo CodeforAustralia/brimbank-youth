@@ -28,7 +28,7 @@ class ActivityForm(forms.ModelForm):
         fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 
         'activity_date', 'activity_day', 'description','organiser', 'contact_number', 'activity_img', 'flyer', 
         'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 'living_duration', 
-        'listing_privacy', 'suburb', 'postcode')
+        'suburb', 'postcode')
         labels = {
 #            'activity_img': _('Add an event image'),
             'name': _('What is the name of the activity ?'),
@@ -44,10 +44,9 @@ class ActivityForm(forms.ModelForm):
             'cost': _('Cost'),
             'cost_choice': _('Is there a cost ?'),
             'living_duration': _('Living in Australia'),
-            'listing_privacy': _('Listing Privacy'),
+            # 'listing_privacy': _('Listing Privacy'),
             'min_age': _('From age'),
             'max_age': _('To age'),
-            'listing_privacy': _('Listing Privacy'),
             'space_choice':_('Create the number of spaces available'),
             'background':_('Language(s) spoken'),
         }
@@ -56,7 +55,7 @@ class ActivityForm(forms.ModelForm):
             'location': forms.TextInput(attrs={'placeholder': 'Search for an address'}),
             'space_choice': forms.RadioSelect(choices=SPACE_OPTIONS),
             'cost_choice': forms.RadioSelect(choices=COST_OPTIONS),
-            'listing_privacy': forms.RadioSelect(choices=LISTING_PRIVACY),
+            # 'listing_privacy': forms.RadioSelect(choices=LISTING_PRIVACY),
             'min_age': forms.TextInput(attrs={'placeholder': 'Minimum age'}),
             'max_age': forms.TextInput(attrs={'placeholder': 'Maximum age'}),
             'organiser': forms.TextInput(attrs={'placeholder': 'Contact person'}),
@@ -124,7 +123,7 @@ class ActivityDraftForm(forms.ModelForm):
         fields = ('activity_type', 'name', 'location', 'term', 'start_time', 'end_time', 'start_date', 'end_date', 
         'activity_date', 'activity_day', 'description','organiser', 'contact_number', 'activity_img', 'flyer', 
         'space_choice', 'space', 'cost_choice', 'cost', 'min_age', 'max_age', 'background', 'gender', 
-        'living_duration', 'listing_privacy', 'suburb', 'postcode')
+        'living_duration', 'suburb', 'postcode')
         labels = {
 #            'activity_img': _('Add an event image'),
             'name': _('What is the name of the activity ?'),
@@ -140,10 +139,9 @@ class ActivityDraftForm(forms.ModelForm):
             'cost': _('Cost'),
             'cost_choice': _('Is there a cost ?'),
             'living_duration': _('Living in Australia'),
-            'listing_privacy': _('Listing Privacy'),
+            # 'listing_privacy': _('Listing Privacy'),
             'min_age': _('From age'),
             'max_age': _('To age'),
-            'listing_privacy': _('Listing Privacy'),
             'space_choice':_('Create the number of spaces available'),
             'background':_('Language(s) spoken'),
         }
@@ -152,7 +150,7 @@ class ActivityDraftForm(forms.ModelForm):
             'location': forms.TextInput(attrs={'placeholder': 'Search for an address'}),
             'space_choice': forms.RadioSelect(choices=SPACE_OPTIONS),
             'cost_choice': forms.RadioSelect(choices=COST_OPTIONS),
-            'listing_privacy': forms.RadioSelect(choices=LISTING_PRIVACY),
+            # 'listing_privacy': forms.RadioSelect(choices=LISTING_PRIVACY),
             'min_age': forms.TextInput(attrs={'placeholder': 'Minimum age'}),
             'max_age': forms.TextInput(attrs={'placeholder': 'Maximum age'}),
             'organiser': forms.TextInput(attrs={'placeholder': 'Contact person'}),

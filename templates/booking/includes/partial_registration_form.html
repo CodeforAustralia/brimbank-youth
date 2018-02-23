@@ -1,15 +1,15 @@
 <form method="post" action="{% url 'register_client' activity.pk %}" class="js-booking-form" novalidate>
     {% csrf_token %}
-    <div class="modal-header">
-        <h4 class="modal-title">Add new attendee</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
-        </button>
+    </button>
+    <div class="modal-header no-border">
+        <h4 class="modal-title">Add new attendee</h4>
     </div>
     <div class="modal-body">
-        {% include 'contacts/includes/partial_contact_form.html' %}
+        {% include 'booking/includes/partial_booking_form.html' %}
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-dark btn-block">REGISTER&nbsp;&nbsp;<i class="fas fa-sync fa-spin loading" style="display:none;"></i></button>
+        <button type="submit" class="btn btn-green btn-lg btn-block">Register&nbsp;&nbsp;<i class="fas fa-sync fa-spin loading" style="display:none;"></i></button>
     </div>
 </form>

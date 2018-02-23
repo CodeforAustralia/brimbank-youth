@@ -6,24 +6,26 @@ from .models import Registration
 from activities.models import Activity
 
 class RegistrationForm(forms.ModelForm):
+
     class Meta:
         model = Registration
-        fields = ('first_name', 'surname', 'email', 'mobile_number', 'gender', 'age', 'language')
+        fields = ('first_name', 'surname', 'mobile_number', 'email', 'language', 'age', 'gender', )
         labels = {
-            'gender': _('Male or Female'),
-            'language': _('Languages spoken'),
-            'age': _('Your age'),
+            'language': _('Languages'),
+            'first_name': _('First Name'),
+            'surname': _('Last Name'),
+            'mobile_number': _('Mobile'),
         }
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'Type your first name here'}),
-            'surname': forms.TextInput(attrs={'placeholder': 'Type your surname here'}),
             'email': forms.EmailInput(attrs={'placeholder': 'Enter email address'}),
-            'mobile_number': forms.TextInput(attrs={'placeholder': 'Enter your mobile number'}),
+            'language': forms.TextInput(attrs={'placeholder': 'Languages spoken'}),
+            'gender': forms.TextInput(attrs={'placeholder': 'Male or Female'}),
         }
 
     def __init__(self,*args,**kwargs):
         activity_pk = kwargs.pop('activity_pk', None)
         self.activity = Activity.objects.get(pk=activity_pk)
+        kwargs.setdefault('label_suffix', '')
         super(RegistrationForm,self).__init__(*args,**kwargs)
 
     def clean(self):

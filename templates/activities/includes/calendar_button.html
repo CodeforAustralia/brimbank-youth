@@ -1,0 +1,23 @@
+{% load static %}
+
+<div title="Add to Calendar" class="addeventatc" style="border:none;">Add to Calendar
+    <span class="start">{{ activity.start_date|date:'d-m-Y' }} {{ activity.start_time|time:'g:i A' }}</span>
+    {% if activity.term == 'Once' %}
+    <span class="end">{{ activity.start_date|date:'d-m-Y' }} {{ activity.end_time|time:'g:i A' }}</span>
+    {% elif activity.term == 'Daily' %}
+    <span class="recurring">FREQ=DAILY</span>
+    <span class="end">{{ activity.start_date|date:'d-m-Y' }} {{ activity.end_time|time:'g:i A' }}</span>
+    {% elif activity.term == 'Weekly' %}
+    <span class="recurring">FREQ=WEEKLY</span>
+    <span class="end">{{ activity.start_date|date:'d-m-Y' }} {{ activity.end_time|time:'g:i A' }}</span>
+    {% elif activity.term == 'Monthly' %}
+    <span class="recurring">FREQ=MONTHLY</span>
+    <span class="end">{{ activity.start_date|date:'d-m-Y' }} {{ activity.end_time|time:'g:i A' }}</span>
+    {% else %}
+    <span class="end">{{ activity.start_date|date:'d-m-Y' }} {{ activity.end_time|time:'g:i A' }}</span>
+    {% endif %}
+    <span class="title">{{ activity.name }}</span>
+    <span class="description">{{ activity.description }}</span>
+    <span class="location">{{ activity.location }}</span>
+    <span class="calname">use-title</span>
+</div>

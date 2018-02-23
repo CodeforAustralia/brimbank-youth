@@ -54,12 +54,13 @@ var saveYouthForm = function () {
       dataType: 'json',
       success: function (data) {
         if (data.form_is_valid) {
-            $(".js-booking-youth-form")[0].reset();
-            $(".confirm-register").text("Registered !");
-            $(".confirm-register").attr("disabled", "disabled");
+            // $(".js-booking-youth-form")[0].reset();
+            // $(".confirm-register").text("Registered !");
+            // $(".confirm-register").attr("disabled", "disabled");
+            $("#modal-register").modal("hide");
         }
         else {
-          $(".js-booking-youth-form")[0].reset();
+          // $(".js-booking-youth-form")[0].reset();
           $("#modal-register .modal-content").html(data.html_form);
         }
       }

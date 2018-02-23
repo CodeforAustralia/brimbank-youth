@@ -151,20 +151,40 @@
     <div class="latest_activity_{{ latest_activity.id }}" id="latest_activity_val" style="display:none;"> </div>
     <div class="card hover-card select" style="box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2), 0 10px 20px 0 rgba(0, 0, 0, 0.19);">
     {% if latest_activity.activity_img %}
-        <img class="card-img-top select" src="{{ latest_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
+        <img class="card-img-top select" src="{{ latest_activity.activity_img.url }}" alt="Not Found" 
+        onerror="this.onerror=null;this.src='http://via.placeholder.com/363x272?text=Image not available';" 
+        style="height:272px;" href="{% url 'activity_detail' latest_activity.pk %}" >
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
     {% else %}
-        <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
+        <img class="card-img-top select" src="http://via.placeholder.com/363x272?text=Image not available" 
+        alt="Not Found" style="height:272px;" href="{% url 'activity_detail' latest_activity.pk %}" >
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
     {% endif %}
     <div class="top">
         <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
         <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
-        <a href="{% url 'activity_detail' latest_activity.pk %}" 
-        class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+        <!-- <a href="{% url 'activity_detail' latest_activity.pk %}" 
+        class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a> -->
     </div>
     <div class="card-body card-padding select" id=card_{{ latest_activity.pk }} value="{{ latest_activity.pk }}">
-        <p id="b" class="card-text bold-text">{{ latest_activity.activity_type|upper }} - {{ latest_activity.suburb|upper }}
+        {% if latest_activity.activity_type != 'School holidays' %}
+    
+        {% if latest_activity.activity_type == 'Sport' %}
+        <p id="b" class="card-text bold-text" style="color:#484848">
+        {% elif latest_activity.activity_type == 'Learn' %}
+        <p id="b" class="card-text bold-text" style="color:#108AA8">
+        {% elif latest_activity.activity_type == 'Career' %}
+        <p id="b" class="card-text bold-text" style="color:#DBC604">
+        {% else %}
+        <p id="b" class="card-text bold-text" style="color:#A52A03">
+        {{ latest_activity.activity_type|upper }} - {{ latest_activity.suburb|upper }}
+        {% endif %}
+        
+        {% else %}
+        <p id="b" class="card-text bold-text" style="color:#585A3A">
+        Holidays - {{ latest_activity.suburb|upper }}
+
+        {% endif %}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ latest_activity.id }}" 
         value="{% url 'activity_detail' latest_activity.id %}" type="button" class="btn btn-transparent float-right" 
         data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0; color:#484848;">
@@ -200,19 +220,49 @@
     {% if user.is_authenticated %}
     <div class="card hover-card select">
     {% if activity.activity_img %}
-        <img class="card-img-top select" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;margin:auto;height:300px;display:inline;">
+        <img class="card-img-top select img-responsive" src="{{ activity.activity_img.url }}" alt="Not Found" 
+        onerror="this.onerror=null;this.src='http://via.placeholder.com/363x272?text=Image not available';" 
+        style="height:272px;" href="{% url 'activity_detail' activity.pk %}">
+        <!-- style="object-fit:cover;margin:auto;height:272px;display:inline;" -->
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
     {% else %}
-        <img class="card-img-top select" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
+        <img class="card-img-top select img-responsive" src="http://via.placeholder.com/363x272?text=Image not available" 
+        alt="Not Found" style="height:272px;" href="{% url 'activity_detail' activity.pk %}">
         <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
     {% endif %}
+
+    <a href="{% url 'activity_detail' activity.pk %}">
+    <div class="link-top"></div></a>
+    
     <div class="top">
         <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
         <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
-        <a href="{% url 'activity_detail' activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
     </div>
+    <a href="{% url 'activity_detail' activity.pk %}">
+    <div class="link"></div></a>
     <div class="card-body card-padding select" id=card_{{ activity.pk }} value="{{ activity.pk }}">
-        <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - {{ activity.suburb|upper }}
+        {% if activity.activity_type != 'School holidays' and activity.activity_type != 'Culture' %}
+
+        {% if activity.activity_type == 'Sport' %}
+        <p id="b" class="card-text bold-text" style="color:#484848">
+        {% elif activity.activity_type == 'Learn' %}
+        <p id="b" class="card-text bold-text" style="color:#108AA8">
+        {% else %}
+        <p id="b" class="card-text bold-text" style="color:#DBC604">
+        {% endif %}
+        {{ activity.activity_type|upper }} - {{ activity.suburb|upper }}
+        
+        {% else %}
+        
+        {% if activity.activity_type == 'School holidays' %}
+        <p id="b" class="card-text bold-text" style="color:#585A3A">
+        HOLIDAYS - {{ activity.suburb|upper }}
+        {% else %}
+        <p id="b" class="card-text bold-text" style="color:#A52A03">
+        ART & CULTURE - {{ activity.suburb|upper }}
+        {% endif %}
+
+        {% endif %}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" 
         value="{% url 'activity_detail' activity.id %}" type="button" 
         class="btn btn-transparent float-right" data-url="#" data-toggle="button" 
@@ -248,19 +298,43 @@
     {% else %}
     <div class="card hover-card">
     {% if activity.activity_img %}
-        <a href="{% url 'activity_detail' activity.pk %}"><img class="card-img-top" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' activity.pk %}"><img class="card-img-top img-responsive" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/363x272?text=Image not available';"; 
+            style="height:272px;" href="{% url 'activity_detail' activity.pk %}"></a>
         <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% else %}
-        <a href="{% url 'activity_detail' activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' activity.pk %}"> <img class="card-img-top img-responsive" 
+            src="http://via.placeholder.com/363x272?text=Image not available" alt="Not Found" style="height:272px;"
+            href="{% url 'activity_detail' activity.pk %}"></a>
         <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% endif %}
     <div class="top">
         <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
         <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
-        <a href="{% url 'activity_detail' activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+        <!-- <a href="{% url 'activity_detail' activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a> -->
     </div>
     <div class="card-body card-padding select" id=card_{{ activity.pk }} value="{{ activity.pk }}">
-    <p id="b" class="card-text bold-text">{{ activity.activity_type|upper }} - {{ activity.suburb|upper }}
+    {% if activity.activity_type != 'School holidays' and activity.activity_type != 'Culture' %}
+
+    {% if activity.activity_type == 'Sport' %}
+    <p id="b" class="card-text bold-text" style="color:#484848">
+    {% elif activity.activity_type == 'Learn' %}
+    <p id="b" class="card-text bold-text" style="color:#108AA8">
+    {% else %}
+    <p id="b" class="card-text bold-text" style="color:#DBC604">
+    {% endif %}
+    {{ activity.activity_type|upper }} - {{ activity.suburb|upper }}
+    
+    {% else %}
+    
+    {% if activity.activity_type == 'School holidays' %}
+    <p id="b" class="card-text bold-text" style="color:#585A3A">
+    HOLIDAYS - {{ activity.suburb|upper }}
+    {% else %}
+    <p id="b" class="card-text bold-text" style="color:#A52A03">
+    ART & CULTURE - {{ activity.suburb|upper }}
+    {% endif %}
+
+    {% endif %}
     <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" 
     value="{% url 'activity_detail' activity.id %}" type="button" 
     class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" 
@@ -357,19 +431,43 @@
 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12">
 <div class="card hover-card mb-4">
     {% if other_activity.activity_img %}
-        <a href="{% url 'activity_detail' other_activity.pk %}"><img class="card-img-top" src="{{ other_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' other_activity.pk %}"><img class="card-img-top" src="{{ other_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/363x272?text=Image not available';"; 
+            style="height:272px;" href="{% url 'activity_detail' other_activity.pk %}"></a>
         <a href="{% url 'activity_detail' other_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% else %}
-        <a href="{% url 'activity_detail' other_activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' other_activity.pk %}"> <img class="card-img-top" 
+            src="http://via.placeholder.com/363x272?text=Image not available" alt="Not Found" 
+            style="height:272px;" href="{% url 'activity_detail' other_activity.pk %}"></a>
         <a href="{% url 'activity_detail' other_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% endif %}
     <div class="top">
         <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
         <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
-        <a href="{% url 'activity_detail' other_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+        <!-- <a href="{% url 'activity_detail' other_activity.pk %}" class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a> -->
     </div>
     <div class="card-body card-padding select" id=card_{{ other_activity.pk }} value="{{ other_activity.pk }}">
-        <p id="b" class="card-text bold-text">{{ other_activity.activity_type|upper }} - {{ other_activity.suburb|upper }}
+        {% if other_activity.activity_type != 'School holidays' and other_activity.activity_type != 'Culture' %}
+
+        {% if other_activity.activity_type == 'Sport' %}
+        <p id="b" class="card-text bold-text" style="color:#484848">
+        {% elif other_activity.activity_type == 'Learn' %}
+        <p id="b" class="card-text bold-text" style="color:#108AA8">
+        {% else %}
+        <p id="b" class="card-text bold-text" style="color:#DBC604">
+        {% endif %}
+        {{ other_activity.activity_type|upper }} - {{ other_activity.suburb|upper }}
+        
+        {% else %}
+        
+        {% if other_activity.activity_type == 'School holidays' %}
+        <p id="b" class="card-text bold-text" style="color:#585A3A">
+        HOLIDAYS - {{ other_activity.suburb|upper }}
+        {% else %}
+        <p id="b" class="card-text bold-text" style="color:#A52A03">
+        ART & CULTURE - {{ other_activity.suburb|upper }}
+        {% endif %}
+
+        {% endif %}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ other_activity.id }}" 
         value="{% url 'activity_detail' other_activity.id %}" type="button" class="btn btn-transparent float-right" 
         data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;color:#484848;">
@@ -466,20 +564,43 @@
 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12">
 <div class="card hover-card select mb-4">
     {% if not_my_activity.activity_img %}
-        <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="card-img-top" src="{{ not_my_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';"; style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="card-img-top" src="{{ not_my_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/363x272?text=Image not available';"; 
+            style="height:272px;" href="{% url 'activity_detail' not_my_activity.pk %}"></a>
         <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% else %}
-        <a href="{% url 'activity_detail' not_my_activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;"></a>
+        <a href="{% url 'activity_detail' not_my_activity.pk %}"> <img class="card-img-top" src="http://via.placeholder.com/363x272?text=Image not available" alt="Not Found" 
+            style="height:272px;" href="{% url 'activity_detail' not_my_activity.pk %}"></a>
         <a href="{% url 'activity_detail' not_my_activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% endif %}
     <div class="top">
         <span class="far fa-heart fa-2x float-right tickbox mt-2 mr-2"></span>
         <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mt-2 mr-2"></span>
-        <a href="{% url 'activity_detail' not_my_activity.pk %}" 
-        class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a>
+        <!-- <a href="{% url 'activity_detail' not_my_activity.pk %}" 
+        class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a> -->
     </div>
     <div class="card-body card-padding select" id=card_{{ not_my_activity.pk }} value="{{ not_my_activity.pk }}">
-        <p id="b" class="card-text bold-text">{{ not_my_activity.activity_type|upper }} - {{ not_my_activity.suburb|upper }}
+        {% if not_my_activity.activity_type != 'School holidays' and not_my_activity.activity_type != 'Culture' %}
+
+        {% if not_my_activity.activity_type == 'Sport' %}
+        <p id="b" class="card-text bold-text" style="color:#484848">
+        {% elif not_my_activity.activity_type == 'Learn' %}
+        <p id="b" class="card-text bold-text" style="color:#108AA8">
+        {% else %}
+        <p id="b" class="card-text bold-text" style="color:#DBC604">
+        {% endif %}
+        {{ not_my_activity.activity_type|upper }} - {{ not_my_activity.suburb|upper }}
+        
+        {% else %}
+        
+        {% if not_my_activity.activity_type == 'School holidays' %}
+        <p id="b" class="card-text bold-text" style="color:#585A3A">
+        HOLIDAYS - {{ not_my_activity.suburb|upper }}
+        {% else %}
+        <p id="b" class="card-text bold-text" style="color:#A52A03">
+        ART & CULTURE - {{ not_my_activity.suburb|upper }}
+        {% endif %}
+
+        {% endif %}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ not_my_activity.id }}" 
         value="{% url 'activity_detail' not_my_activity.id %}" type="button" class="btn btn-transparent float-right" 
         data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" 
@@ -847,26 +968,22 @@ $('#main-share-logged-in').click(function() {
   var checkbox_arr = [];
   var activities_arr = [];
 
-  // Dynamically display checkboxes
-  $('.top').click( function() {
-    $(this).children(".tickbox").toggle();
-    $(this).children(".tickboxSelected").toggle();
+function openSharingForm(element) {
+    var checkbox = element.parent().siblings(".card-body.select");
+    var val = checkbox.attr('value');
 
-    if ( $(this).children(".tickbox").css('display') == 'none' ) {
-        $(this).css('background-color', 'rgba(192, 191, 191, 0.56)');
-    } else {
-        $(this).css('background-color', 'transparent');
-    }
-
-    //Change the background colour of card-body
-    $(this).siblings(".card-body.select").toggleClass('on');
-
-    var val = $(this).siblings(".card-body.select").attr('value');
-    
     var activity_url;
     var ori_url = (window.location.href).toString();
     var web_url = (ori_url.substr(0, ori_url.indexOf('?')));
     var ori_url_2 = (ori_url.substr(0, ori_url.indexOf('#')));
+
+    if (ori_url.indexOf('#') > -1) {
+        web_url = (ori_url.substr(0, ori_url.indexOf('#')));
+    } else {
+        web_url = ori_url;
+    }
+
+    checkbox.toggleClass('on');
 
     if (web_url != '') {
         activity_url = web_url + "activity/detail/";
@@ -878,7 +995,8 @@ $('#main-share-logged-in').click(function() {
         }
     }
 
-    if ($(this).siblings(".card-body.select").hasClass('on')) {
+    // if ($(this).siblings(".card-body.select").hasClass('on')) {
+    if (checkbox.hasClass('on')) {
         if (!checkbox_arr.includes(val)) {
             checkbox_arr.push(val);
             activities_arr.push(activity_url + val + "/");
@@ -940,10 +1058,116 @@ $('#main-share-logged-in').click(function() {
     $("#share-mailgun").click(function() {
         window.open(mailgun_url, 'newwindow', 'width=500,height=900');
     });
+}
 
-    // $("#share-twilio").attr("href", twilio_url);
-    // $("#share-mailgun").attr("href", mailgun_url);
+  // Dynamically display checkboxes
+  $(".tickbox").click(function() {
+    $(this).siblings(".tickboxSelected").toggle();
+    $(this).toggle();
+    openSharingForm($(this));
   });
+
+  $(".tickboxSelected").click(function() {
+    $(this).siblings(".tickbox").toggle();
+    $(this).toggle();
+    openSharingForm($(this));
+  });
+
+
+//   $('.top').click( function() {
+//     $(this).children(".tickbox").toggle();
+//     $(this).children(".tickboxSelected").toggle();
+
+//     if ( $(this).children(".tickbox").css('display') == 'none' ) {
+//         $(this).css('background-color', 'rgba(192, 191, 191, 0.56)');
+//     } else {
+//         $(this).css('background-color', 'transparent');
+//     }
+
+//     //Change the background colour of card-body
+//     $(this).siblings(".card-body.select").toggleClass('on');
+
+//     var val = $(this).siblings(".card-body.select").attr('value');
+    
+//     var activity_url;
+//     var ori_url = (window.location.href).toString();
+//     var web_url = (ori_url.substr(0, ori_url.indexOf('?')));
+//     var ori_url_2 = (ori_url.substr(0, ori_url.indexOf('#')));
+
+//     if (web_url != '') {
+//         activity_url = web_url + "activity/detail/";
+//     } else {
+//         if ( ori_url_2 != '' ){
+//             activity_url = ori_url_2 + "activity/detail/";
+//         } else {
+//             activity_url = ori_url + "activity/detail/";
+//         }
+//     }
+
+//     if ($(this).siblings(".card-body.select").hasClass('on')) {
+//         if (!checkbox_arr.includes(val)) {
+//             checkbox_arr.push(val);
+//             activities_arr.push(activity_url + val + "/");
+//         } else {
+//             if (checkbox_arr.includes(val)) {
+//             var index = checkbox_arr.indexOf(val);
+//             var index_activity = checkbox_arr.indexOf(activity_url + val + "/");
+//             checkbox_arr.splice(index, 1);
+//             activities_arr.splice(index_activity,1);
+//         }
+//         }
+//     } else {
+//         if (checkbox_arr.includes(val)) {
+//             var index = checkbox_arr.indexOf(val);
+//             var index_activity = checkbox_arr.indexOf(activity_url + val + "/");
+//             checkbox_arr.splice(index, 1);
+//             activities_arr.splice(index_activity,1);
+//         }
+//     }
+
+//     var href;
+//     var sms_url, email_url;
+//     var twilio_url, mailgun_url;
+//     var activity_url_final;
+
+//     // Codes for Mailgun/Twilio sharing
+//     if (checkbox_arr != []) {
+//         href = checkbox_arr.join('_');
+//     }
+
+//     // Codes for Mailgun/Twilio sharing
+//     if (href != '') {
+//         twilio_url = web_url + "sms_create/" + href + "/";
+//         mailgun_url = web_url + "email_create/" + href + "/";
+//     } else {
+//         twilio_url = "#";
+//         mailgun_url = "#";
+//     }
+
+//     activity_url_final = activities_arr.join('%0D%0A');
+
+//     if (activity_url_final != '') {
+//         email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A" + activity_url_final;
+//         sms_url = "sms:?&body=Check%20these%20out:%20" + activity_url_final;
+//     } else {
+//         email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A";
+//         sms_url = "sms:?&body=Check%20these%20out:%20";
+//     }
+    
+//     // Free share button
+//     $("#share-text").attr("href", sms_url);
+//     $("#share-email").attr("href", email_url);
+
+//     // Mailgun / Twilio button
+//     $("#share-twilio").click(function() {
+//         window.open(twilio_url, 'newwindow', 'width=500,height=900');
+//     });
+
+//     $("#share-mailgun").click(function() {
+//         window.open(mailgun_url, 'newwindow', 'width=500,height=900');
+//     });
+
+//   });
 
 
   $('.card-body.select').click( function() {
@@ -1017,7 +1241,7 @@ $('#main-share-logged-in').click(function() {
       checkbox.prop("checked", !checkbox.prop("checked"));
       
       //alert($(this).parent(".selected").attr("class"));
-  })
+  });
     
 //   $('.card-img-top.select').click( function() {
 //       //Change the background colour of card-body

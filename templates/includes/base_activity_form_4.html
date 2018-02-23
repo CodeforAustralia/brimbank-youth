@@ -28,7 +28,7 @@
         {% endfor %}
     {% endif %}
         
-    {% if field.label == "Listing Privacy" %}
+    <!-- {% if field.label == "Listing Privacy" %}
         <label class="col-form-label" ><h3>{{ field.label_tag }}</h3></label>
         <br />
         {% for radio in form.listing_privacy %}
@@ -36,7 +36,7 @@
                 {{ radio }}<br />
             </div>
         {% endfor %}
-    {% endif %}
+    {% endif %} -->
 
     {% if field.label == "Space" %}
         {% render_field field class=field|input_class %}

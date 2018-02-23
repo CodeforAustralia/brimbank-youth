@@ -53,6 +53,9 @@ button {
 .tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before, .tooltip.bs-tooltip-bottom .arrow::before 
 { border-bottom-color: #A9DFF8;} 
 
+.tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before, .tooltip.bs-tooltip-bottom .arrow::before 
+{ border-bottom-color: #A9DFF8;} 
+
 .side-title {
   font-size:28px;color:#666666;
 }
