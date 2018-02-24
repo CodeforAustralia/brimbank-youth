@@ -18,6 +18,13 @@
     padding:0;
 }
 
+label.col-form-label.bold-text label {
+    font-size: 18px;
+    font-weight: bold;
+    padding:0;
+    color: #484848;
+}
+
 .form-control {
     border-radius: 0;
     height: 55px;
@@ -39,4 +46,138 @@ button.close {
 
 .addeventatc_icon .atc_node {
     display:none;
+}
+
+.invalid-feedback {display: inline;}
+
+#id_start_date, #id_end_date, #id_activity_date  {
+    background-color: white;
+    cursor: pointer;
+}
+
+button {
+    cursor: pointer;
+}
+.showelement {
+    display:inline;
+}
+
+.step-info {
+    font-size: 12px;
+    font-weight: bold;
+    color: #999999;
+}
+.main-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 2.5rem;
+    color: #484848;
+}
+label {
+    font-size: 32px;
+    font-weight: 300;
+    color: #999999;
+}
+
+.activity-fields {
+    height: 50px;
+    color: #484848;
+    background-color: #f2f2f2;
+    margin-bottom: 2em;
+}
+
+.activity-fields::placeholder {
+    color: #999999;
+}
+
+.activity-schedule {
+    height: 37px;
+    color: #484848;
+}
+
+label.activity-schedule label {
+    font-size: 14px;
+}
+
+label.activity-location label {
+    font-size: 20px;
+}
+
+.myradio label {
+    font-size: 18px;
+}
+
+.btn-dark  {
+    height:100%;
+    line-height: 37px;
+    width: 100px;
+}
+
+
+.light-placeholder::placeholder, .activity-schedule::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #999999;
+    opacity: 1; /* Firefox */
+}
+
+.light-placeholder:-ms-input-placeholder, .activity-schedule:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #999999;
+}
+
+.light-placeholder::-ms-input-placeholder, .activity-schedule::-ms-input-placeholder { /* Microsoft Edge */
+    color: #999999;
+}
+
+#id_publish {
+    font-weight: 300;
+}
+
+.btn-neon-green {
+    background: #00CC00;
+    color: #FFFFFF;
+    height: 72px;
+    margin-top: 3em;
+}
+
+.btn-signature-grey {
+    background: #999999;
+    color: #FFFFFF;
+    height: 72px;
+    margin-top: 1em;
+    line-height: 50px;
+}
+
+.btn-signature-grey:hover {
+    background: #484848;
+    color: #FFFFFF;
+}
+
+.btn-neon-green:hover {
+    background:green;
+}
+label[for="flyer-clear_id"], label[for="activity_img-clear_id"] {
+    font-size:12px;
+}
+
+#flyer-clear_id, #activity_img-clear_id {
+    margin-left: 5px;
+}
+
+.btn-green {
+    background-color: #5DAE69;
+    color: #ffffff;
+  }
+.btn-green:hover {
+    background-color: rgb(56, 105, 63);
+    color: #ffffff;
+}
+
+.btn-blue {
+    background:#A9DFF8; color:#FFFFFF;
+}
+.btn-blue:hover {
+    background:rgb(26, 128, 175); color:#FFFFFF;
+}
+.more-padding {
+    padding-left: 2em;
+    padding-right: 2em;
 }

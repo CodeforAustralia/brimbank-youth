@@ -10,11 +10,27 @@
 {% endif %}
 
 {% for field in form %}
+    {% if field.label == "Describe what your organisation does in 300 words or less" %}
     <div class="form-group">
-        <label class="col-form-label bold-text">{{ field.label_tag }}</label>
+        <label class="col-form-label">{{ field.label_tag }}</label>
+        {% render_field field class=field|input_class style="height:90%;" %}
+        {% for error in field.errors %}
+            <div class="invalid-feedback">
+                {{ error }}
+            </div>
+        {% endfor %}
         
-        {% render_field field class=field|input_class %} <!-- the input_class is coming from form_tags.py-->
-        
+        {% if field.help_text %}
+            <small class="form-text text-muted">
+            {{ field.help_text|safe }} 
+            </small>
+        {% endif %}
+    </div>
+
+    {% else %}
+    <div class="form-group">
+        <label class="col-form-label">{{ field.label_tag }}</label>
+        {% render_field field class="form-control light-placeholder" %} <!-- the input_class is coming from form_tags.py-->
         {% for error in field.errors %}
             <div class="invalid-feedback">
                 {{ error }}
@@ -27,4 +43,5 @@
           </small>
         {% endif %}
     </div>
+    {% endif %}
 {% endfor %}

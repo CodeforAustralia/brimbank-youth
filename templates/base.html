@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/sticky-footer.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/loading.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}" type="text/css">
     <link rel="shortcut icon" href="{%  static 'img/favicon.ico' %}">
     <style>
     html {
@@ -141,10 +142,6 @@
     .signature-green {
       color: #5DAE69;
     }
-    .btn-green {
-      background: #5DAE69;
-      color: #ffffff;
-    }
     .font-nav {
       font-size: 14px;
     }
@@ -199,9 +196,9 @@
         </ul>
         {% if not user.is_authenticated %}
         <form class="form-inline ml-auto">
-          <a href="{% url 'login' %}" class="btn btn-outline-success">Log in</a>
+          <a href="{% url 'login' %}" class="btn btn-green more-padding">Login</a>
           <!-- <a href="{% url 'signup' %}" class="btn btn-success ml-2" >Sign up</a> -->
-          <a href="#" class="btn btn-success ml-2 js-signup">Sign up</a> <!-- Sign-up AJAX -->
+          <a href="#" class="btn btn-blue ml-2 js-signup more-padding">Sign up</a> <!-- Sign-up AJAX -->
         </form>
         {% else %}
         <ul class="navbar-nav mr-2 ml-auto">
@@ -249,7 +246,7 @@
     <!-- THE SIGN-UP MODAL -->
     <div class="modal fade" id="modal-signup" tabindex="-1" role="dialog" aria-labelledby="signUp" aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content"></div>
+      <div class="modal-content" style="width:90vh;"></div>
       <!-- <span id="show_progress" style="display:none;" value="True"></span> -->
     </div>
     </div>

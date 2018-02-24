@@ -2,40 +2,58 @@
 
 {% for field in form %}
 
-{% if field.label == "HOW OFTEN DOES THIS EVENT OCCUR" or field.label == "FROM" or field.label == "TO" or field.label == "Activity date" or field.label == "Activity day" or field.label == "OCCURS FROM" or field.label == "OCCURS UNTIL" %}
+{% if field.label == "HOW OFTEN DOES THIS EVENT OCCUR" %}
 
-    <div class="form-group">
-        
-    {% if field.label == "HOW OFTEN DOES THIS EVENT OCCUR" %}
-        <p class = "card-title">STEP 2 OF 4</p>
-        <h3 >When does it start and end ?</h3>
-    {% endif %}
-        
-        {% if field.label == "OCCURS FROM" %}
-        <label class="col-form-label" id="label_start_date">{{ field.label_tag }}</label>
-        {% elif field.label == "OCCURS UNTIL" %}
-        <label class="col-form-label" id="label_end_date">{{ field.label_tag }}</label>
-        {% elif field.label == "Activity day" %}
-        <label class="col-form-label" id="label_activity_day">{{ field.label_tag }}</label>
-        {% elif field.label == "Activity date" %}
-        <label class="col-form-label" id="label_activity_date">{{ field.label_tag }}</label>
-        {% else %}
-        <label class="col-form-label" >{{ field.label_tag }}</label>
-        {% endif %}
-        
-        
-        {% render_field field class=field|input_class %}
+    <p class="card-title step-info">STEP 2 OF 3</p>
+    <label>When does it start and end ?</label>
+    
+    <div class="card bg-light" style="padding:25px;">
+    
+    <h4 style="color:#999999; font-weight:300; font-size:28px;">Schedule dates</h4>
+    <div class="row">
+        <div class="col-9">
+        <label id="label_term" class="activity-schedule">{{ field.label_tag }}</label>
+        {% render_field field class="form-control activity-schedule" %}
         {% for error in field.errors %}
-            <div class="invalid-feedback">
-                {{ error }}
-            </div>
+            <div class="invalid-feedback">{{ error }}</div>
         {% endfor %}
-        
-        {% if field.help_text %}
-          <small class="form-text text-muted">
-            {{ field.help_text|safe }}
-          </small>
-        {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+            <label class="activity-schedule" id="label_start_time">{{ form.start_time.label_tag }}</label>
+            {% render_field form.start_time class="form-control activity-schedule" %}
+            {% for error in form.start_time.errors %} <div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-4">
+            <label class="activity-schedule" id="label_end_time">{{ form.end_time.label_tag }}</label>
+            {% render_field form.end_time class="form-control activity-schedule" %}
+            {% for error in form.end_time.errors %} <div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-4">
+            <label class="activity-schedule" id="label_activity_day">{{ form.activity_day.label_tag }}</label>
+            {% render_field form.activity_day class="form-control activity-schedule" %}
+            {% for error in form.activity_day.errors %} <div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+            <label class="activity-schedule" id="label_activity_date">{{ form.activity_date.label_tag }}</label>
+            {% render_field form.activity_date class="form-control activity-schedule" %}
+            {% for error in form.activity_date.errors %} <div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            <label class="activity-schedule" id="label_start_date">{{ form.start_date.label_tag }}</label>
+            {% render_field form.start_date class="form-control activity-schedule" %}
+            {% for error in form.start_date.errors %} <div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="col-4">
+            <label class="activity-schedule" id="label_end_date">{{ form.end_date.label_tag }}</label>
+            {% render_field form.end_date class="form-control activity-schedule" %}
+            {% for error in form.end_date.errors %} <div class="invalid-feedback">{{ error }}</div>{% endfor %}
+        </div>
+    </div>
+
     </div>
 
     {% endif %}

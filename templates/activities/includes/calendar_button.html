@@ -1,6 +1,6 @@
 {% load static %}
 
-<div title="Add to Calendar" class="addeventatc" style="border:none;">Add to Calendar
+<div title="Add to Calendar" class="addeventatc">Add to Calendar
     <span class="start">{{ activity.start_date|date:'d-m-Y' }} {{ activity.start_time|time:'g:i A' }}</span>
     {% if activity.term == 'Once' %}
     <span class="end">{{ activity.start_date|date:'d-m-Y' }} {{ activity.end_time|time:'g:i A' }}</span>

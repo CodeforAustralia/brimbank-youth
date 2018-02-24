@@ -3,17 +3,21 @@
 
 {% block title %}Your profile{% endblock %}
 
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css'%}" />
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid mt-4">
+<div class="container-fluid" style="margin-top:4rem;">
   <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card">
+      <div class="card no-border">
         <div class="card-body">
-          <h3 class="card-title">Enter your details</h3>
+          <h3 class="card-title" style="font-size:36px;font-weight:bold;margin-bottom:3rem;">Sign up</h3>
           <form method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
-            {% include 'includes/form.html' %}
-            <button type="submit" class="btn btn-primary btn-block">SIGN UP</button>
+            {% include 'includes/form_2.html' %}
+            <button type="submit" class="btn btn-green btn-lg btn-block" style="margin-top:1.5em;">SIGN UP</button>
           </form>
         </div>
       </div>

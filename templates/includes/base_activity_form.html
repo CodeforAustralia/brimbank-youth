@@ -13,13 +13,17 @@
     {% if field.label == "What is the name of the activity ?" or field.label == "What type of activity are you creating ?" or field.label == "Where is the location ?" %}
 
     {% if field.label == "What type of activity are you creating ?" %}
-        <p class="card-title" id="general_info">STEP 1 OF 4</p>
+        <p class="card-title step-info" id="general_info">STEP 1 OF 3</p>
     {% endif %}
 
     <div class="form-group" name="section_1" >
-        <label class="col-form-label"><h3>{{ field.label_tag }}</h3></label>
-        
-        {% render_field field class=field|input_class %} <!-- the input_class is coming from form_tags.py-->
+        <label class="col-form-label activity-form"><h3>{{ field.label_tag }}</h3></label>
+
+        {% if field.label == "What type of activity are you creating ?" %}
+        {% render_field field class="form-control" style="color:#999999; height:50px;margin-bottom: 2em;" %}
+        {% else %}
+        {% render_field field class="form-control activity-fields" %}
+        {% endif %}
         
         {% for error in field.errors %}
             <div class="invalid-feedback">
@@ -43,14 +47,14 @@
         <input class="form-control" name="postal_code" type="text" value="" placeholder="Postcode">
       </div>
     </div> -->
-    <div class="row address-details">
+    <div class="row address-details" style="margin-top:-1em;">
         <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
-          <label class="col-form-label">{{ form.suburb.label_tag }}</label>
-          {% render_field form.suburb class="form-control" %}
+          <label class="col-form-label activity-form activity-location">{{ form.suburb.label_tag }}</label>
+          {% render_field form.suburb class="form-control activity-fields" %}
         </div>
         <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
-          <label class="col-form-label">{{ form.postcode.label_tag }}</label>
-          {% render_field form.postcode class="form-control" %}
+          <label class="col-form-label activity-form activity-location">{{ form.postcode.label_tag }}</label>
+          {% render_field form.postcode class="form-control activity-fields" %}
         </div>
     </div>
       

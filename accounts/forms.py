@@ -9,8 +9,12 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.', widget=forms.TextInput(
            attrs={'type': 'email',
            'placeholder': _('E-mail address')}))
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'placeholder': 'Your password must contain at least 8 characters'}))
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'placeholder': 'Must contain at least 8 characters'}))
     password2 = forms.CharField(label='Password Confirmation', widget=forms.PasswordInput(attrs={'placeholder': 'Enter the same password'}))
+
+    def __init__(self,*args,**kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(SignUpForm,self).__init__(*args,**kwargs)
 
     class Meta:	
         model = User
@@ -20,6 +24,10 @@ class SignUpForm(UserCreationForm):
         }
         
 class ProfileForm(forms.ModelForm):
+    def __init__(self,*args,**kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(ProfileForm,self).__init__(*args,**kwargs)
+
     class Meta:
         model = Profile
         fields = ('organisation_name', 'address', 'web_address', 'staff_name', 'role', 'phone', 'description')
@@ -31,4 +39,9 @@ class ProfileForm(forms.ModelForm):
             'role': _('What is your role at this organisation?'),
             'phone': _('What is the best number to contact you on?'),
             'description': _('Describe what your organisation does in 300 words or less'),
+        }
+        widgets = {
+            'web_address': forms.TextInput(attrs={'placeholder': 'e.g. http://www.example.com'}),
+            'address': forms.TextInput(attrs={'placeholder': 'Enter your address'}),
+            'role': forms.TextInput(attrs={'placeholder': 'e.g. Youth Worker'}),
         }

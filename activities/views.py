@@ -153,7 +153,7 @@ def submit_activity(request, pk):
                             space = draft.space,
                             cost_choice = draft.cost_choice,
                             space_choice = draft.space_choice,
-                            listing_privacy = draft.listing_privacy,
+                            # listing_privacy = draft.listing_privacy,
                             created_by = draft.created_by,
                             suburb = draft.suburb,
                             postcode = draft.postcode,

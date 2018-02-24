@@ -2,34 +2,37 @@
 
 {% for field in form %}
 
-{% if field.label == "Create the number of spaces available" or field.label == "Space" or field.label == "Cost" or field.label == "Is there a cost ?" or field.label == "Living in Australia" or field.label == "Listing Privacy" or field.label == "From age" or field.label == "To age" or field.label == "Language(s) spoken" or field.label == "Gender" %}
+{% if field.label == "Create the number of spaces available" or field.label == "Space" or field.label == "Cost" or field.label == "Is there a cost ?" or field.label == "Language(s) spoken"%}
 
-{% if field.label != "From age" or field.label == "To age" %}
 <div class="form-group">
         
     {% if field.label == "Create the number of spaces available" %}
-        <p class = "card-title">STEP 4 OF 4</p>
-        <label class="col-form-label" ><h3>{{ field.label_tag }}</h3></label>
-        <br />
+        <p class = "card-title step-info">STEP 3 OF 3</p>
+        <label class="col-form-label activity-form" ><h3>{{ field.label_tag }}</h3></label>
+        <div class="row">
         {% for radio in form.space_choice %}
-            <div class="myradio">
-                {{ radio }}
-            </div>
+            <div class="myradio col-3">{{ radio }}</div>
         {% endfor %}
+        <div class="col-6">
+            {% render_field form.space class="form-control activity-schedule" style="margin-left:-3em;width:3em;background:#f2f2f2;margin-top:-5px;padding-right:0;" %}
+        </div>
+        </div>
     {% endif %}
         
     {% if field.label == "Is there a cost ?" %}
-        <label class="col-form-label" ><h3>{{ field.label_tag }}</h3></label>
-        <br />
+        <label class="col-form-label activity-form" ><h3>{{ field.label_tag }}</h3></label>
+        <div class="row">
         {% for radio in form.cost_choice %}
-            <div class="myradio">
-                {{ radio }}
-            </div>
+            <div class="myradio col-3">{{ radio }}</div>
         {% endfor %}
+        <div class="col-6">
+            {% render_field form.cost class="form-control activity-schedule" style="margin-left:-3em;width:3em;background:#f2f2f2;margin-top:-5px;padding-right:0;" %}
+        </div>
+        </div>
     {% endif %}
         
     <!-- {% if field.label == "Listing Privacy" %}
-        <label class="col-form-label" ><h3>{{ field.label_tag }}</h3></label>
+        <label class="col-form-label activity-form" ><h3>{{ field.label_tag }}</h3></label>
         <br />
         {% for radio in form.listing_privacy %}
             <div class="myradio" style="display:inline-block">
@@ -37,18 +40,10 @@
             </div>
         {% endfor %}
     {% endif %} -->
-
-    {% if field.label == "Space" %}
-        {% render_field field class=field|input_class %}
-    {% endif %}
-        
-    {% if field.label == "Cost" %}
-        {% render_field field class=field|input_class %}
-    {% endif %}
         
     {% if field.label != "Create the number of spaces available" and field.label != "Is there a cost ?" and field.label != "Space" and field.label != "Cost" and field.label != "Listing Privacy" and field.label != "From age" and field.label != "To age" %}
-        <label class="col-form-label" ><h3>{{ field.label_tag }}</h3></label>
-        {% render_field field class=field|input_class %}
+        <label class="col-form-label activity-form" ><h3>{{ field.label_tag }}</h3></label>
+        {% render_field field class="form-control activity-fields" %}
     {% endif %}
         
     {% for error in field.errors %}
@@ -64,29 +59,49 @@
     {% endif %}
         
 </div>
+{% endif %}
+{% endfor %}
 
-{% else %}
+
 <div class="row">
-    <div class="col-md-12">
-    <label class="col-form-label"><h3>Age</h3></label>
+    <div class="col-12 ">
+        <label>Who is eligible to participate ?</label>
     </div>
 </div>
 
-<div class="form-group row">
-    <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
-        {% render_field form.min_age class="form-control" %}
+<!-- Age -->
+<div class="row">
+    <div class="col-12">
+    <label class="col-form-label" style="font-size: 14px;font-weight:300;">Age</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-2 mb-3">
+        {% render_field form.min_age class="form-control activity-schedule" %}
         {% for error in form.min_age.errors %}
         <div class=" col-md-6 col-sm-12 col-xs-12 mb-3 invalid-feedback">{{ error }}</div>
         {% endfor %}
     </div>
-    <div class="col-md-6 col-sm-12 col-xs-12">
-        {% render_field form.max_age class="form-control" %}
+    <div class="col-1" style="margin-top:5px;"><span style="color:#999999;">&nbsp;to&nbsp;</span></div>
+    <div class="col-2 mb-3">
+        {% render_field form.max_age class="form-control activity-schedule" %}
         {% for error in form.max_age.errors %}
         <div class=" col-md-6 col-sm-12 col-xs-12 mb-3 invalid-feedback">{{ error }}</div>
         {% endfor %}
     </div>
 </div>
-{% endif %}
-{% endif %}
 
-{% endfor %}
+<!-- Gender & Living Duration -->
+<div class="row mb-4">
+    <div class="col-4">
+        <label class="activity-schedule" id="label_gender">{{ form.gender.label_tag }}</label>
+        {% render_field form.gender class="form-control activity-schedule" style="color:#999999;" %}
+        {% for error in form.gender.errors %} <div class="invalid-feedback">{{ error }}</div>{% endfor %}
+    </div>
+    <div class="col-6">
+        <label class="activity-schedule" id="label_living_duration">{{ form.living_duration.label_tag }}</label>
+        {% render_field form.living_duration class="form-control activity-schedule" style="color:#999999;" %}
+        {% for error in form.living_duration.errors %} <div class="invalid-feedback">{{ error }}</div>{% endfor %}
+    </div>
+</div>

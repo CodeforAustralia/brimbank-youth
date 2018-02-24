@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
 <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
 <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
 <style>
     .invalid-feedback {display: inline;}    
     #id_start_date, #id_end_date, #id_activity_date  {
@@ -42,15 +43,10 @@
 <div class = "container mt-4">
 <div class="row justify-content-center">
     <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card bg-light mb-3">
+      <div class="card no-border mb-3">
         <div class="card-body">
                 {% include 'includes/base_activity_form.html' %}
                 <br />
-                <!-- <div class="form-group row">
-                  <div class="col-sm-12">
-                    <a id="id_next" class="btn btn-primary btn-lg float-right" href="#schedule_info" >Next</a>
-                  </div>
-                </div> -->
           </div>
         </div>
     </div>
@@ -60,51 +56,40 @@
 <div class="container mt-4">
 <div class="row justify-content-center" id="schedule_info">
     <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card bg-light mb-3" >
+      <div class="card no-border mb-3" >
         <div class="card-body">
                 {% include 'includes/base_activity_form_2.html' %}
+                {% include 'includes/base_activity_form_3.html' %}
                 <br />
-                <!-- <div class="form-group row">
-                   <div class="col-sm-2 offset-sm-8 col-sm-9">
-                    <a id="id_prev" class="btn btn-primary btn-lg" href="#general_info">Previous</a>
-                    <a id="id_next2" class="btn btn-primary btn-lg" href="#other_info"> &nbsp; Next &nbsp; </a>
-                  </div> 
-                </div> -->
           </div>
         </div>
     </div>
 </div>
 </div>
 
-<div class="container mt-4">
+<!-- <div class="container mt-4">
 <div class="row justify-content-center" id="other_info">
     <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card bg-light mb-3">
+      <div class="card no-border mb-3">
         <div class="card-body">
                 {% include 'includes/base_activity_form_3.html' %}
                 <br />
-                <!-- <div class="form-group row">
-                  <div class="col-sm-2 offset-sm-8 col-sm-9">
-                    <a id="id_prev2" class="btn btn-primary btn-lg" href="#schedule_info">Previous</a>
-                    <a id="id_next3" class="btn btn-primary btn-lg" href="#eligibility_info"> &nbsp; Next &nbsp; </a>
-                  </div>
-                </div> -->
           </div>
         </div>
     </div>
 </div>
-</div>
+</div> -->
 
 <div class="container mt-4">
 <div class="row justify-content-center" id="eligibility_info">
     <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card bg-light mb-3">
+      <div class="card no-border mb-3">
         <div class="card-body">
             {% include 'includes/base_activity_form_4.html' %}
             <br />
             {% if not object.published %}
-            <button type="submit" class="btn btn-success btn-lg float-right ml-2" id="id_publish"> Preview </button>
-            <button type="submit" class="btn btn-secondary btn-lg float-right" id="id_publish"> &nbsp;&nbsp;Save&nbsp;&nbsp; </button>
+            <button type="submit" class="btn btn-neon-green btn-lg float-right ml-2" id="id_publish"> PREVIEW </button>
+            <!-- <button type="submit" class="btn btn-secondary btn-lg float-right" id="id_publish"> &nbsp;&nbsp;Save&nbsp;&nbsp; </button> -->
             {% else %}
             <button type="submit" class="btn btn-success btn-lg" id="id_publish" href="general_info"> Save </button>
             {% endif %}
@@ -147,11 +132,15 @@ $("#id_location").geocomplete(
 //$( document ).ready(function() {
 $( function() {
 
-$("#id_activity_img").filestyle({buttonBefore: true, text: " Upload", 
-btnClass: "btn-dark", htmlIcon: '<span class="fas fa-camera fa-lg"></span>', placeholder: "No file"});
+$("#id_activity_img").filestyle(
+    {buttonBefore: true, text: "", 
+    btnClass: "", htmlIcon: '<span class="fas fa-camera fa-2x"></span>', placeholder: "Images must not exceed 2MB"});
 
-$("#id_flyer").filestyle({buttonBefore: true, text: "&nbsp;Upload", 
-btnClass: "btn-dark", htmlIcon: '<span class="fas fa-file-pdf fa-lg"></span>', placeholder: "No file"});
+$("#id_flyer").filestyle(
+    {buttonBefore: true, text: "&nbsp;", 
+    btnClass: "", htmlIcon: '<span style="margin-left:5px;"><i class="fas fa-file-pdf fa-2x"></i></span>', 
+    placeholder: "Upload printable PDF"});
+
 var error_messages = document.getElementsByClassName("set_error");
 
 if (document.getElementById('id_space_choice_1').checked) {

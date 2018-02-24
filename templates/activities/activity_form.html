@@ -3,11 +3,8 @@
 {% load static %}
 
 {% block title %}
-    {% if not object.pk %}
-        Create activity
-    {% else %}
-        Update activity
-    {% endif %}
+    {% if not object.pk %} Create activity
+    {% else %} Update activity {% endif %}
 {% endblock title %}
 
 {% block stylesheet %}
@@ -17,23 +14,10 @@
 <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
 <link rel="stylesheet" href="{% static 'css/easy-autocomplete.css' %}">
 <link rel="stylesheet" href="{% static 'css/easy-autocomplete.themes.css' %}">
-<style>
-    .invalid-feedback {display: inline;}    
-    #id_start_date, #id_end_date, #id_activity_date  {
-      background-color: white;
-      cursor: pointer;
-    }
-    button {
-        cursor: pointer;
-    }
-    .showelement {
-        display:inline;
-    }
-</style>
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
 {% block content %}
-<!-- <div class = "container mt-4"> -->
 {% if not object.published %}
 <form method="post" enctype="multipart/form-data" action="{% url 'create_activity' %}" novalidate>
 {% else %}
@@ -42,85 +26,70 @@
 <!--Adding action attribute in form will prevent the addition of href url when submitting the form-->
     
 {% csrf_token %}
+
 <div class = "container mt-4">
-<div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card bg-light mb-3">
-        <div class="card-body">
-            {% include 'includes/base_activity_form.html' %}
-            <br />
-            <!-- <div class="form-group row">
-                <div class="col-sm-12">
-                <a id="id_next" class="btn btn-primary btn-lg float-right" href="#schedule_info" >Next</a>
-                </div>
-            </div> -->
-          </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+        <div class="card no-border mb-3">
+            <div class="card-body">
+                <h2 class="main-title">Create an activity</h2>
+                {% include 'includes/base_activity_form.html' %}
+                <br />
+            </div>
+            </div>
         </div>
     </div>
-</div>
 </div>
 
 <div class="container mt-4">
-<div class="row justify-content-center" id="schedule_info">
-    <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card bg-light mb-3" >
-        <div class="card-body">
-            {% include 'includes/base_activity_form_2.html' %}
-            <br />
-            <!-- <div class="form-group row">
-                <div class="col-sm-2 offset-sm-8 col-sm-9">
-                <a id="id_prev" class="btn btn-primary btn-lg" href="#general_info">Previous</a>
-                <a id="id_next2" class="btn btn-primary btn-lg" href="#other_info"> &nbsp; Next &nbsp; </a>
-                </div> 
-            </div> -->
-          </div>
+    <div class="row justify-content-center" id="schedule_info">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+        <div class="card no-border mb-3" >
+            <div class="card-body">
+                {% include 'includes/base_activity_form_2.html' %}
+                {% include 'includes/base_activity_form_3.html' %}
+                <br />
+            </div>
+            </div>
         </div>
     </div>
 </div>
-</div>
 
-<div class="container mt-4" >
+<!-- <div class="container mt-4" >
 {% if messages %}
 <div class="row justify-content-center" id="other_info">
 {% else %}
 <div class="row justify-content-center" id="other_info">
 {% endif %}
     <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card bg-light mb-3">
+      <div class="card no-border mb-3">
         <div class="card-body">
             {% include 'includes/base_activity_form_3.html' %}
             <br />
-            <!-- <div class="form-group row">
-                <div class="col-sm-2 offset-sm-8 col-sm-9">
-                <a id="id_prev2" class="btn btn-primary btn-lg" href="#schedule_info">Previous</a>
-                <a id="id_next3" class="btn btn-primary btn-lg" href="#eligibility_info"> &nbsp; Next &nbsp; </a>
-                </div>
-            </div> -->
           </div>
         </div>
     </div>
 </div>
-</div>
+</div> -->
 
 <div class="container mt-4">
-<div class="row justify-content-center" id="eligibility_info">
-    <div class="col-lg-8 col-md-10 col-sm-12">
-      <div class="card bg-light mb-3">
-        <div class="card-body">
-            {% include 'includes/base_activity_form_4.html' %}
-            {% if not object.published %}
-            <button type="submit" class="btn btn-success btn-lg float-right ml-2" id="id_publish"> Preview </button>
-            <button type="submit" class="btn btn-secondary btn-lg float-right" id="id_publish"> &nbsp;&nbsp;Save&nbsp;&nbsp;</button>
-            {% else %}
-            <button type="submit" class="btn btn-success btn-lg float-right" id="id_publish" href="general_info"> Save </button>
-            {% endif %}
-          </div>
+    <div class="row justify-content-center" id="eligibility_info">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+        <div class="card no-border mb-3">
+            <div class="card-body">
+                {% include 'includes/base_activity_form_4.html' %}
+                {% if not object.published %}
+                <button type="submit" class="btn btn-lg float-right btn-neon-green ml-2" id="id_publish"> PREVIEW </button>
+                <!-- <button type="submit" class="btn btn-secondary btn-lg float-right" id="id_publish"> &nbsp;&nbsp;Save&nbsp;&nbsp;</button> -->
+                {% else %}
+                <button type="submit" class="btn btn-success btn-lg float-right" id="id_publish" href="general_info"> Save </button>
+                {% endif %}
+            </div>
+            </div>
         </div>
     </div>
-</div>
-</div>
+    </div>
 </form>
-<!-- </div> -->
 {% endblock %}
 
 {% block javascript %}
@@ -129,28 +98,20 @@
 <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
 <script src="{% static 'js/jquery.timepicker.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-filestyle.min.js' %}"></script>
-
-
-<!-- To provide autocomplete in fields (http://easyautocomplete.com/) -->
-<!--<script src="{% static 'js/jquery.easy-autocomplete.js' %}"></script>-->
-
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuR6-6PfCU7wRsSRRR3DH_PseEAYvyp3k&libraries=places&region=au"></script>
 <script src="{% static 'js/jquery.geocomplete.js' %}"></script>
 <script>
-    
-//$( document ).ready(function() {
+
 $( function() {
 
-$("#id_activity_img").filestyle({buttonBefore: true, text: " Upload", 
-btnClass: "btn-dark", htmlIcon: '<span class="fas fa-camera fa-lg"></span>', placeholder: "No file"});
+$("#id_activity_img").filestyle(
+    {buttonBefore: true, text: "", 
+    btnClass: "", htmlIcon: '<span class="fas fa-camera fa-2x"></span>', placeholder: "Images must not exceed 2MB"});
 
-$("#id_flyer").filestyle({buttonBefore: true, text: "&nbsp;Upload", 
-btnClass: "btn-dark", htmlIcon: '<span class="fas fa-file-pdf fa-lg"></span>', placeholder: "No file"});
-
-// $( "#id_space" ).hide();
-// $( "#id_cost" ).hide();
-
-// $(':radio').addClass('custom-control-input');
+$("#id_flyer").filestyle(
+    {buttonBefore: true, text: "&nbsp;", 
+    btnClass: "", htmlIcon: '<span style="margin-left:5px;"><i class="fas fa-file-pdf fa-2x"></i></span>', 
+    placeholder: "Upload printable PDF"});
 
 if (document.getElementById('id_space_choice_1').checked) {
     $( "#id_space" ).show();
@@ -163,9 +124,25 @@ if (document.getElementById('id_cost_choice_1').checked) {
 } else {
     $( "#id_cost" ).hide();
 }
+
+$( "#id_space_choice_1" ).click(function() {
+    $( "#id_space" ).show();
+});
+
+$( "#id_space_choice_0" ).click(function() {
+    $( "#id_space" ).hide();
+});
     
-var e = document.getElementById("id_term");
-var term = e.options[e.selectedIndex].value;
+$( "#id_cost_choice_1" ).click(function() {
+    $( "#id_cost" ).show();
+});
+    
+$( "#id_cost_choice_0" ).click(function() {
+    $( "#id_cost" ).hide();
+});
+
+function toggleFields(term) {
+    console.log("called");
     if (term == "Daily"){
         $( "#id_start_date" ).show();
         $( "#id_end_date" ).show();
@@ -198,32 +175,54 @@ var term = e.options[e.selectedIndex].value;
         $( "#label_activity_day" ).show();
         $( "#id_activity_date" ).hide();
         $( "#label_activity_date" ).hide();
-    }
-
+}
+}
+    
+// var e = document.getElementById("id_term");
+// var term = e.options[e.selectedIndex].value;
+var term = $('#id_term').val();
+var term2 = $('#id_term :selected').text();
+toggleFields(term);
+$('#id_term').click(toggleFields(term2));
+$('#id_term').change(toggleFields(term2));
 });
 
+$('#id_term').change(function toggleFields() {
+    console.log("called again");
+    var term = $('#id_term').val();
+    if (term == "Daily"){
+        $( "#id_start_date" ).show();
+        $( "#id_end_date" ).show();
+        $( "#label_start_date" ).show();
+        $( "#label_end_date" ).show();
+        $( "#id_activity_date" ).hide();
+        $( "#label_activity_date" ).hide();
+        $( "#id_activity_day" ).hide();
+        $( "#label_activity_day" ).hide();
+    }
     
-$( "#id_space_choice_1" ).click(function() {
-    $( "#id_space" ).show();
-})
-
-$( "#id_space_choice_0" ).click(function() {
-    $( "#id_space" ).hide();
-})
+    if (term == "Once"){
+        $( "#id_start_date" ).hide();
+        $( "#id_end_date" ).hide();
+        $( "#label_start_date" ).hide();
+        $( "#label_end_date" ).hide();
+        $( "#id_activity_date" ).show();
+        $( "#label_activity_date" ).show();
+        $( "#id_activity_day" ).hide();
+        $( "#label_activity_day" ).hide();
+    }
     
-$( "#id_cost_choice_1" ).click(function() {
-    $( "#id_cost" ).show();
-})
-    
-$( "#id_cost_choice_0" ).click(function() {
-    $( "#id_cost" ).hide();
-})
-    
-//var options = {
-//  data: ["Sunshine", "St. Albans", "Deer Park", "Keilor", "Keilor Downs", ]
-//};
-//    
-//$('#id_location').easyAutocomplete(options);
+    if (term == "Weekly" || term == "Fortnightly" || term == "Monthly"){
+        $( "#id_start_date" ).show();
+        $( "#id_end_date" ).show();
+        $( "#label_start_date" ).show();
+        $( "#label_end_date" ).show();
+        $( "#id_activity_day" ).show();
+        $( "#label_activity_day" ).show();
+        $( "#id_activity_date" ).hide();
+        $( "#label_activity_date" ).hide();
+    }
+});
     
 var defaultDate = new Date();
 defaultDate.setYear(defaultDate.getFullYear() - 1);
@@ -293,23 +292,6 @@ $( "#id_next3" ).click(function() {
     $( "#eligibility_info" ).show();
     $( "#id_prev3" ).show();
 });
-
-
-//$( "#id_prev2" ).click(function() {
-//    var form_elems = document.getElementsByName("section_2");
-//    for (var i = 0; i < form_elems.length; i++) {
-//        $(form_elems[i]).show();
-//    }
-//    
-//    var form_elems = document.getElementsByName("section_3");
-//    for (var i = 0; i < form_elems.length; i++) {
-//        $(form_elems[i]).hide();
-//    }
-//    
-//    $( "#id_prev" ).show();
-//    $( "#id_next2" ).show();
-    
-//});
     
 $( "#id_term" ).click(function() {
     var e = document.getElementById("id_term");
@@ -363,7 +345,7 @@ $("#id_location").geocomplete(
         detailsAttribute: "data-geo"
     }
 );
-    
+
 </script>
 
 {% endblock %} 

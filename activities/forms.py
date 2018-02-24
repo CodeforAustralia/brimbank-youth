@@ -22,6 +22,8 @@ class ActivityForm(forms.ModelForm):
         super(ActivityForm, self).__init__(*args, **kwargs)
         self.fields['start_time'].required = True
         self.fields['location'].required = True
+        kwargs.setdefault('label_suffix', '')
+        super(ActivityForm,self).__init__(*args,**kwargs)        
 
     class Meta:
         model = Activity
@@ -44,6 +46,7 @@ class ActivityForm(forms.ModelForm):
             'cost': _('Cost'),
             'cost_choice': _('Is there a cost ?'),
             'living_duration': _('Living in Australia'),
+            'activity_day': _('OCCURS EVERY'),
             # 'listing_privacy': _('Listing Privacy'),
             'min_age': _('From age'),
             'max_age': _('To age'),
@@ -58,7 +61,7 @@ class ActivityForm(forms.ModelForm):
             # 'listing_privacy': forms.RadioSelect(choices=LISTING_PRIVACY),
             'min_age': forms.TextInput(attrs={'placeholder': 'Minimum age'}),
             'max_age': forms.TextInput(attrs={'placeholder': 'Maximum age'}),
-            'organiser': forms.TextInput(attrs={'placeholder': 'Contact person'}),
+            'organiser': forms.TextInput(attrs={'placeholder': 'Person of contact'}),
             'contact_number': forms.TextInput(attrs={'placeholder': 'Contact number'}),
             'suburb': forms.TextInput(attrs={'placeholder': 'Suburb', 'data-geo':'locality'}),
             'postcode': forms.TextInput(attrs={'placeholder': 'Postcode', 'data-geo':'postal_code'}),
@@ -139,6 +142,7 @@ class ActivityDraftForm(forms.ModelForm):
             'cost': _('Cost'),
             'cost_choice': _('Is there a cost ?'),
             'living_duration': _('Living in Australia'),
+            'activity_day': _('OCCURS EVERY'),
             # 'listing_privacy': _('Listing Privacy'),
             'min_age': _('From age'),
             'max_age': _('To age'),
@@ -151,8 +155,8 @@ class ActivityDraftForm(forms.ModelForm):
             'space_choice': forms.RadioSelect(choices=SPACE_OPTIONS),
             'cost_choice': forms.RadioSelect(choices=COST_OPTIONS),
             # 'listing_privacy': forms.RadioSelect(choices=LISTING_PRIVACY),
-            'min_age': forms.TextInput(attrs={'placeholder': 'Minimum age'}),
-            'max_age': forms.TextInput(attrs={'placeholder': 'Maximum age'}),
+            'min_age': forms.TextInput(attrs={'placeholder': '18'}),
+            'max_age': forms.TextInput(attrs={'placeholder': '25'}),
             'organiser': forms.TextInput(attrs={'placeholder': 'Contact person'}),
             'contact_number': forms.TextInput(attrs={'placeholder': 'Contact number'}),
             'suburb': forms.TextInput(attrs={'placeholder': 'Suburb', 'data-geo':'locality'}),
@@ -166,6 +170,10 @@ class ActivityDraftForm(forms.ModelForm):
                 'invalid': _("The entered date is invalid"),
             },
         }
+
+    def __init__(self,*args,**kwargs):
+        kwargs.setdefault('label_suffix', '')
+        super(ActivityDraftForm,self).__init__(*args,**kwargs)
     
     def clean(self):
         cleaned_data = super().clean()
@@ -186,18 +194,4 @@ class ActivityDraftForm(forms.ModelForm):
                 if activity_day != begin_date.format('dddd') and term != 'Daily':
                     msg = "Activity must occur at the same day as the start date."
                     self.add_error('start_date', msg)
-                    self.add_error('activity_day', msg)  
-
-#    def clean(self):
-#        cleaned_data = super().clean()
-#        start_date = cleaned_data.get("start_date")
-#        end_date = cleaned_data.get("end_date")
-#        term = cleaned_data.get("term")
-#        
-#        if term != 'Once':
-#            begin_date = arrow.get(start_date, 'Australia/Melbourne')
-#            finish_date = arrow.get(end_date, 'Australia/Melbourne')
-#            if finish_date < begin_date:
-#                msg = "Must put 'help' in subject when cc'ing yourself."
-#                self.add_error('start_date', msg)
-#                self.add_error('end_date', msg)
+                    self.add_error('activity_day', msg)

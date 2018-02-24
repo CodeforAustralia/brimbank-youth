@@ -1,8 +1,13 @@
 {% load widget_tweaks %}
+{% load static %}
+
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/forms.css'%}" />
+{% endblock %}
 
 <form method="post" action="{% url 'signup_ajax_form' %}" class="js-signup-submit" novalidate>
   {% csrf_token %}
-  <div class="modal-header">
+  <div class="modal-header no-border">
     <h4 class="modal-title">Sign up</h4>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
@@ -10,9 +15,14 @@
   </div>
   <div class="modal-body">
     {% include 'includes/form.html' %}
+  <div class="row">
+    <div class="col-12">
+    <button type="submit" class="btn btn-neon-green btn-block btn-lg" style="margin-top:1.5em;">Create an account</button>
+    </div>
+    <div class="col-12">
+    <a href="{% url 'login' %}" class="btn btn-signature-grey btn-block btn-lg" style="margin-bottom:2em;">
+      Already have an account? Log in</a>
+    </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    <button type="submit" class="btn btn-primary">Sign up</button>
-  </div>
+</div>
 </form>

@@ -13,7 +13,7 @@
 {% if field.label != 'Age' and field.label != 'Gender' %}
 
 <div class="form-group">
-    <label class="col-form-label">{{ field.label_tag }}</label>
+    <label class="col-form-label bold-text">{{ field.label_tag }}</label>
     
     {% render_field field class=field|input_class %} <!-- the input_class is coming from form_tags.py-->
     
@@ -34,7 +34,7 @@
 {% if field.label == 'Age' %}
 <div class="form-group row">
     <div class="col-6">
-        <label class="col-form-label">{{ form.age.label_tag }}</label>
+        <label class="col-form-label bold-text">{{ form.age.label_tag }}</label>
         {% render_field form.age class="form-control" %}
         {% for error in form.age.errors %}
         <div class="col-6 invalid-feedback">{{ error }}</div>
@@ -46,7 +46,7 @@
         {% endif %}
     </div>
     <div class="col-6">
-        <label class="col-form-label">{{ form.gender.label_tag }}</label>
+        <label class="col-form-label bold-text">{{ form.gender.label_tag }}</label>
         {% render_field form.gender class="form-control" style="height:55px;" %}
         {% for error in form.gender.errors %}
         <div class="col-6 invalid-feedback">{{ error }}</div>
