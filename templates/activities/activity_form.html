@@ -31,7 +31,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10 col-sm-12">
         <div class="card no-border mb-3">
-            <div class="card-body">
+            <div class="card-body" style="padding-bottom:0;margin-bottom:-5em;">
                 <h2 class="main-title">Create an activity</h2>
                 {% include 'includes/base_activity_form.html' %}
                 <br />
@@ -41,11 +41,11 @@
     </div>
 </div>
 
-<div class="container mt-4">
+<div class="container mt-4" style="margin-bottom:-2em;">
     <div class="row justify-content-center" id="schedule_info">
         <div class="col-lg-8 col-md-10 col-sm-12">
         <div class="card no-border mb-3" >
-            <div class="card-body">
+            <div class="card-body" style="padding-bottom:0;margin-bottom:-1em;">
                 {% include 'includes/base_activity_form_2.html' %}
                 {% include 'includes/base_activity_form_3.html' %}
                 <br />
@@ -72,11 +72,11 @@
 </div>
 </div> -->
 
-<div class="container mt-4">
+<div class="container">
     <div class="row justify-content-center" id="eligibility_info">
         <div class="col-lg-8 col-md-10 col-sm-12">
         <div class="card no-border mb-3">
-            <div class="card-body">
+            <div class="card-body" style="padding-bottom:0;">
                 {% include 'includes/base_activity_form_4.html' %}
                 {% if not object.published %}
                 <button type="submit" class="btn btn-lg float-right btn-neon-green ml-2" id="id_publish"> PREVIEW </button>

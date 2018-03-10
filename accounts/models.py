@@ -9,6 +9,9 @@ GENDER = (
     ('M', 'Male'),
 )
 
+def image_directory_path(instance, filename):
+    return '{0}/image/{1}'.format(instance.name, filename)
+
 # Create your models here.
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -24,6 +27,7 @@ class Profile(models.Model):
     email_limit = models.PositiveSmallIntegerField(default=30)
     recharged = models.BooleanField(default=True)
     last_recharged = models.DateField(auto_now_add=True, null=True)
+    # organisation_logo = models.ImageField(upload_to=image_directory_path, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
@@ -33,3 +37,15 @@ def update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
+
+class ModifyValue(models.Model): 
+    sms_limit = models.PositiveSmallIntegerField(default=30)
+    email_limit = models.PositiveSmallIntegerField(default=30)
+    admin_email = models.EmailField(blank=True)
+
+class AdminEmail(models.Model): 
+    role = models.CharField(max_length=100, default='admin')
+    email = models.EmailField(blank=True, default='devys@brimbank.vic.gov.au')
+
+    def __str__(self):
+        return self.email

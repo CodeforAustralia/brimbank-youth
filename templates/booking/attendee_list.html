@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ activity.name }} {% endblock title %}
+
+{% block stylesheet %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/contacts/contacts.css'%}" />
+<style>
+    .breadcrumb {
+        background-color: transparent; padding:0;
+    }
+    .breadcrumb, .breadcrumb-item {
+        font-size: 20px; font-weight:300;
+    }
+
+    .breadcrumb-item {
+        color: #999999;
+    }
+    .breadcrumb {
+        color: #A9DFF8;
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="container mt-4">
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'activity_detail' activity.pk %}">{{ activity.name }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Attendee list</li>
+    </ol>
+</nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <table class="table" id="contact-table">
+        {% include 'booking/includes/partial_attendee_list_mobile.html' %}
+    </table>
+</div>
+{% endblock %}
+
+{% block javascript %}
+{% endblock %}

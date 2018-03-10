@@ -9,11 +9,11 @@
   </div>
 {% endif %}
 
-{% for field in form %}
+{% for field in form.visible_fields %}
     <div class="form-group">
         <label class="col-form-label bold-text">{{ field.label_tag }}</label>
         
-        {% render_field field class=field|input_class %} <!-- the input_class is coming from form_tags.py-->
+        {% render_field field class="form-control signup-fields" %} <!-- the input_class is coming from form_tags.py-->
         
         {% for error in field.errors %}
             <div class="invalid-feedback">

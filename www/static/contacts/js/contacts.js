@@ -107,6 +107,7 @@ var saveGroupForm = function () {
       if (data.form_is_valid) {
         $("#group").html(data.html_group_list);
         $("#modal-group").modal("hide");
+        $('[data-toggle="tooltip"]').tooltip();
       }
       else {
         $("#modal-group .modal-content").html(data.html_form);
@@ -126,6 +127,7 @@ var copyGroup = function () {
     },
     success: function (data) {
       $("#group").html(data.html_group_list);
+      $('.info-tooltip').tooltip();
     }
   });
 };

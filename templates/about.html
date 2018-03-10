@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %} About YouShare {% endblock title %}
+
+{% block stylesheet %}
+<style>
+    h2 {
+        margin-bottom:1.5em;color:#484848;font-size:36px;text-align:center;font-weight:800;
+    }
+    h3{
+        margin-bottom:1.5em;color:#60AE69;font-size:28px;text-align:center;font-weight:400;
+    }
+    .add-style {
+        color:#484848; font-size: 18px;
+    }
+    div.jumbotron {
+        background-image: url("/static/img/cover_search.png");
+        background-position: left top;
+        background-size: cover;
+        background-repeat: no-repeat;
+        color: white;
+        /* text-shadow: black 0.3em 0.3em 0.3em; */
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron" style="height:349px;">
+    <!-- <div class="img"></div> -->
+    <div class="container text-center" >
+    <div style="padding-top:1.5em;color:#FFFFFF;font-size:48px;font-weight:800;">
+        About <span style="color:#60AE69;">YouShare</span>
+    </div>
+    </div>
+</div>
+
+
+<div class="container" style="margin-top:7.5em;">
+    <h3>
+        YouShare allows youth workers and organisations that support youth to share activities and events that are free or low cost. It allows young people and youth workers to register and share those events.  YouShare is designed to assist newly arrived young Australians.
+    </h3>
+</div>
+
+<div class="container" style="margin-top:6em;">
+    <h2>
+        What can you do on <span style="color:#60AE69;">YouShare</span> ?
+    </h2>
+</div>
+
+<div class="container mt-1" style="padding-bottom: 3em;">
+    <p class="text-center add-style">Youth workers can publish events and activities on an integrated platform. This enables them to see events that are offered by other organisations. As a result, they will have more options that they can share with young people.  
+    </p>
+    <p class="text-center add-style">This platform enables youth workers to share multiple events to multiple contacts instanly via text message, through their device. This will save time compared to sending individual texts through mobile phone.</p>
+    <p class="text-center add-style">Youth workers can sit with young people and browse activities, that can help them make connections and establish themselves in the community.  
+    </p>
+    <p class="text-center add-style">Young people can also browse and directly register themselves into an event and share that event via social media 
+    </p>
+    <p class="text-center add-style">Youth workers and young people do not need to register to access the site and can search the site using a variety of filters and key words. 
+    </p>
+    <p class="text-center add-style">YouShare will open with events from five key organisations servicing the west particularly in Brimbank and Maribyrnong but will expand to include surrounding LGA’s.
+    </p>   
+</div>
+{% endblock %}

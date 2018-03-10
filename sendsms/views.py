@@ -132,15 +132,20 @@ class EmailCreateView(AjaxableResponseMixin, CreateView):
         pk_list = pk_list.split('_')
         activities = Activity.objects.filter(pk__in=pk_list)
         current_site = get_current_site(self.request)
-        msg_html = render_to_string('sendsms/email.html',
+        sender_email = self.request.user.email
+        staff_name = self.request.user.profile.staff_name
+        # msg_html = render_to_string('sendsms/email.html',
+        msg_html = render_to_string('sendsms/email_template.html',
                    {'activities': activities,
                    'domain':current_site.domain,
+                   'sender': sender_email,
+                   'staff_name': staff_name,
                    })
 
         if self.object.sender:
             sender = self.object.sender
         else:
-            sender = 'noreply@youthposter.com'
+            sender = 'noreply@youshare.net.au'
 
         if self.object.recipient_group is not None:
             for group in self.object.recipient_group.all():
@@ -157,7 +162,7 @@ class EmailCreateView(AjaxableResponseMixin, CreateView):
         if self.object.recipients != '':
             send_email(self.request, 
                    self.object.subject, 
-                   self.object.message,
+                   '',
                    sender,
                    self.object.recipients.split(','),
                    msg_html)
@@ -186,7 +191,7 @@ class EmailCreateView(AjaxableResponseMixin, CreateView):
             else:
                 activity_url = str(activity_url_temp)
         initial['activity_list'] = activity_url
-        initial['subject'] = 'Activities of the month!!'
+        initial['subject'] = 'Some activities you might be interested in'
         profile = Profile.objects.get(user=self.request.user)
         return initial
 
@@ -223,7 +228,6 @@ def send_sms(body, number):
     print ('SMS sent')
     
 def send_email(request, subject, email_content, sender, recipients, msg_html):
-#    send_mail(subject, email_content, 'noreply@bottlenose.co', ['devy@codeforaustralia.org'])
     send_mail(subject, email_content, sender, recipients, html_message=msg_html)
     return render(request, 'home.html')
 

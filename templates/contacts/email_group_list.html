@@ -6,6 +6,46 @@
 
 {% block stylesheet %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/contacts/contacts.css'%}" />
+<style>
+  label.col-form-label label {
+        color:#484848;font-size:18px;font-weight:bold;
+    }
+  .modal-header {
+        padding-top:0;
+    }
+    .modal-title {
+        color:#484848;
+    }
+    .btn-neon-green {
+        background: #00CC00;
+        color: #FFFFFF;
+        height: 72px;
+        margin-top: 3em;
+    }
+    .btn-neon-green:hover {
+        background:green;
+    }
+
+    @media (max-width: 480px) {
+        #copy-btn, #delete-btn {
+            display: none;
+        }
+    }
+    .tooltip-inner
+    { background-color: #A9DFF8;}
+
+    .tooltip.bs-tooltip-bottom .tooltip-inner {
+    background:#A9DFF8 !important;
+}
+
+    .tooltip .arrow:before {
+    border-bottom-color:#A9DFF8 !important;
+    border-top-color:#A9DFF8 !important;
+    }
+
+</style>
+
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css'%}" /> -->
 {% endblock %}
 
 {% block content %}
@@ -52,4 +92,9 @@
 
 {% block javascript %}
   <script src="{% static 'contacts/js/contacts.js' %}"></script>
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    })
+  </script>)
 {% endblock %}

@@ -5,6 +5,11 @@
 
 {% block stylesheet %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css'%}" />
+<style>
+  textarea.form-control {
+    height: 30% !important;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -17,7 +22,7 @@
           <form method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
             {% include 'includes/form_2.html' %}
-            <button type="submit" class="btn btn-green btn-lg btn-block" style="margin-top:1.5em;">SIGN UP</button>
+            <button type="submit" class="btn btn-green float-right" style="margin-top:1.5em;height:60px;width:180px;font-size:20px;">Sign Up</button>
           </form>
         </div>
       </div>

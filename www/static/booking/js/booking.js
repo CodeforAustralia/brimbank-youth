@@ -46,33 +46,31 @@ var saveForm = function () {
 };
 
 var saveYouthForm = function () {
-    var form = $(this);
-    $.ajax({
-      url: form.attr("action"),
-      data: form.serialize(),
-      type: form.attr("method"),
-      dataType: 'json',
-      success: function (data) {
-        if (data.form_is_valid) {
-            // $(".js-booking-youth-form")[0].reset();
-            // $(".confirm-register").text("Registered !");
-            // $(".confirm-register").attr("disabled", "disabled");
-            $("#modal-register").modal("hide");
-        }
-        else {
-          // $(".js-booking-youth-form")[0].reset();
-          $("#modal-register .modal-content").html(data.html_form);
-        }
+  var form = $(this);
+  $.ajax({
+    url: form.attr("action"),
+    data: form.serialize(),
+    type: form.attr("method"),
+    dataType: 'json',
+    success: function (data) {
+      if (data.form_is_valid) {
+          $("#modal-register").modal("hide");
       }
-    });
-    return false;
+      else {
+        $("#modal-register .modal-content").html(data.html_form);
+        console.log(data);
+      }
+    }
+  });
+  return false;
 };
 
 // Youth registers to an activity
 $(document).on('click', '.register', loadForm);
+$(".register").click(loadForm);
 $("#modal-register").on("submit", ".js-booking-youth-form", saveYouthForm);
 
 // Youth worker registers client to an activity
 $(document).on('click', '.js-register-client', loadForm);
-// $(".js-register-client").click(loadForm);
+$(".js-register-client").click(loadForm);
 $("#modal-register").on("submit", ".js-booking-form", saveForm);

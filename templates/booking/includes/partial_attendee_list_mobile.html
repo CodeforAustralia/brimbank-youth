@@ -1,0 +1,15 @@
+<thead>
+    <tr>
+        <th>Name</th>
+        <th>Mobile</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for attendee in attendees %}
+        <tr>
+        <td>{{ attendee.first_name }}&nbsp;{{ attendee.surname }}</td>
+        <td>{{ attendee.mobile_number }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</thead>

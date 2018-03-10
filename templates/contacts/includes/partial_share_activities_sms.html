@@ -1,7 +1,7 @@
 <form method="post" action="{% url 'post_shared_activities_sms' member.id %}" class="share-activities-sms-form" novalidate>
     {% csrf_token %}
-    <div class="modal-header">
-        <h4 class="modal-title">Share Activities</h4>
+    <div class="modal-header" style="padding-top:0;padding-bottom:0;border-bottom:none;">
+        <h4 class="modal-title" style="color:#484848;">Share Activity</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
@@ -11,7 +11,7 @@
     </div>
     <div class="modal-footer">
         <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
-        <button type="submit" class="share-btn-contacts-sms btn btn-block btn-success btn-lg">Send&nbsp;&nbsp;
+        <button type="submit" class="share-btn-contacts-sms btn btn-block btn-neon-green btn-lg" style="margin-top:-1em;height:60px;">Send&nbsp;&nbsp;
         <i class="fas fa-sync fa-spin loading" style="display:none;"></i></button>
     </div>
 </form>

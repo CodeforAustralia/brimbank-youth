@@ -21,7 +21,7 @@
 {% endif %}
 
 {% if field.label == "Add an event image" or field.label == "Upload a printable event flyer" %}
-    <div class="form-group">
+    <div class="form-group" >
     <label class="col-form-label">{{ field.label_tag }}</label><br/>
     {% render_field field class="form-control activity-fields" %}
     {% for error in field.errors %}
@@ -46,7 +46,7 @@
     </div>
 </div>
     
-<div class="row">
+<div class="row" style="margin-bottom:-1.5em;">
     <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
         {% render_field form.organiser class="form-control activity-fields" %}
         {% for error in form.organiser.errors %}

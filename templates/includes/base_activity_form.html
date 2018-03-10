@@ -12,9 +12,9 @@
 
     {% if field.label == "What is the name of the activity ?" or field.label == "What type of activity are you creating ?" or field.label == "Where is the location ?" %}
 
-    {% if field.label == "What type of activity are you creating ?" %}
+    <!-- {% if field.label == "What type of activity are you creating ?" %}
         <p class="card-title step-info" id="general_info">STEP 1 OF 3</p>
-    {% endif %}
+    {% endif %} -->
 
     <div class="form-group" name="section_1" >
         <label class="col-form-label activity-form"><h3>{{ field.label_tag }}</h3></label>
@@ -47,7 +47,7 @@
         <input class="form-control" name="postal_code" type="text" value="" placeholder="Postcode">
       </div>
     </div> -->
-    <div class="row address-details" style="margin-top:-1em;">
+    <div class="row address-details">
         <div class="col-md-6 col-sm-12 col-xs-12 mb-3">
           <label class="col-form-label activity-form activity-location">{{ form.suburb.label_tag }}</label>
           {% render_field form.suburb class="form-control activity-fields" %}

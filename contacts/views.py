@@ -219,13 +219,17 @@ def post_shared_activities_contacts(request, pk):
             activities = form.cleaned_data.get('activity_list')
             current_site = get_current_site(request)
             subject = 'Check these out'
-            message = form.cleaned_data.get('message')
+            # message = form.cleaned_data.get('message')
             sender = form.cleaned_data.get('sender')
-            msg_html = render_to_string('sendsms/email.html',
+            staff_name = request.user.profile.staff_name
+            # msg_html = render_to_string('sendsms/email.html',
+            msg_html = render_to_string('sendsms/email_template.html',
                     {'activities': activities,
                     'domain':current_site.domain,
+                    'staff_name': staff_name,
+                    'sender': sender
                     })
-            send_email(request,subject,message,sender,
+            send_email(request,subject,'',sender,
                 [member.email],
                 msg_html)
             data['form_is_valid'] = True

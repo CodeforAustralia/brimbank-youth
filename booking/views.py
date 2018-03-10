@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 
 from activities.models import Activity
+from contacts.models import EmailGroup, EmailMember
 from sendsms.views import send_email
 from .models import Registration
 from .forms import RegistrationForm
@@ -70,6 +71,35 @@ class RegistrationDetailView(DetailView):
         context['domain'] = domain
         return context
 
+def add_main_group(request, activity, registration):
+    # Add attendee into the Main Group
+    activity_creator = activity.created_by
+    groups = EmailGroup.objects.filter(staff=activity_creator).filter(name='Main')
+    if groups.count() >= 1:
+        for group in groups:
+            member = EmailMember.objects.create(group=group)
+            member.first_name = registration.first_name
+            member.last_name = registration.surname
+            member.email = registration.email
+            member.email = registration.email
+            member.mobile = registration.mobile_number
+            member.gender = registration.gender
+            member.age = registration.age
+            member.language = registration.language
+            member.save()
+    else:
+        group = EmailGroup.objects.create(name='Main', staff=activity_creator)
+        member = EmailMember.objects.create(group=group)
+        member.first_name = registration.first_name
+        member.last_name = registration.surname
+        member.email = registration.email
+        member.email = registration.email
+        member.mobile = registration.mobile_number
+        member.gender = registration.gender
+        member.age = registration.age
+        member.language = registration.language
+        member.save()
+
 @login_required
 def save_form(request, form, template_name, activity_pk, full):
     data = dict()
@@ -80,8 +110,10 @@ def save_form(request, form, template_name, activity_pk, full):
             registration = form.save(commit=False)
             registration.activity = activity
             registration.save()
-            registration = Registration.objects.get(pk=registration.pk)
-            registration_pk = registration.pk
+
+            # Add attendee into the Main Group
+            add_main_group(request, activity, registration)
+
             if activity.space_choice == 'Limited':
                 activity.space -= 1
                 activity.save()
@@ -93,7 +125,6 @@ def save_form(request, form, template_name, activity_pk, full):
                 available = False
             else:
                 available = True
-            print("still available? ", available)
             data['attendee_list'] = render_to_string('booking/includes/partial_attendee_list.html', {
                 'attendees': attendees,
                 'activity': activity,
@@ -107,15 +138,6 @@ def save_form(request, form, template_name, activity_pk, full):
             data['available_space'] = activity.space
             data['available'] = available
             data['reminder_sent'] = activity.reminder_sent
-
-            # Send confirmation email
-            # current_site = get_current_site(request)
-            # domain = current_site.domain
-            # msg_html = render_to_string('booking/confirmation_email.html',
-            # {'activity': activity,
-            # 'domain': domain,
-            # })
-            # send_email(request, str('Confirmation to '+activity.name), '', 'noreply@youthposter.com', [registration.email], msg_html)
         else:
             data['form_is_valid'] = False
     context = {
@@ -136,28 +158,21 @@ def save_form_youth(request, form, template_name, activity_pk, full):
             registration = form.save(commit=False)
             registration.activity = activity
             registration.save()
-            registration = Registration.objects.get(pk=registration.pk)
-            registration_pk = registration.pk
+
+            # Add attendee into the Main Group
+            add_main_group(request, activity, registration)
+
+            # Decrease the activity space by 1
             if activity.space_choice == 'Limited':
                 activity.space -= 1
                 activity.save()
-            
-            attendees = Registration.objects.filter(activity=activity)
-            attendees_no = attendees.count()
-            available = True
-            if activity.space <= 0 and activity.space_choice == 'Limited':
-                available = False
-            else:
-                available = True
         else:
             data['form_is_valid'] = False
-            data['hide_error_msg'] = False
     context = {
         'form': form,
         'activity': activity,
     }
     data['html_form'] = render_to_string(template_name, context, request=request)
-    data['fully_booked'] = full
     return JsonResponse(data)
 
 def register_youth(request, pk):
@@ -175,24 +190,6 @@ def register_youth(request, pk):
         else:
             form = RegistrationForm(**pk)
     return save_form_youth(request, form, 'booking/includes/partial_registration_youth_form.html', activity_pk, full)
-
-@login_required
-def register_client(request, pk):
-    activity_pk = pk
-    print(activity_pk)
-    pk = {'activity_pk': activity_pk}
-    full = False
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST, **pk)
-    else:
-        activity = Activity.objects.get(pk=activity_pk)
-        if activity.space_choice == 'Limited' and activity.space <= 0:
-            messages.info(request, 'Sorry, this activity is fully booked.')
-            form = RegistrationForm(**pk)
-            full = True
-        else:
-            form = RegistrationForm(**pk)
-    return save_form(request, form, 'booking/includes/partial_registration_form.html', activity_pk, full)
 
 @login_required
 def print_attendee_list(request, pk):
@@ -214,3 +211,34 @@ def print_attendee_list(request, pk):
     else:
         messages.add_message(request, messages.ERROR, 'Attendee list can only be displayed by the organiser', extra_tags='danger')
         return redirect('activity_detail', activity.pk)
+
+@login_required
+def attendee_list(request, pk):
+    activity = Activity.objects.get(pk=pk)
+    if activity.created_by == request.user:
+        attendees = Registration.objects.filter(activity=activity)
+        return render(request, 'booking/attendee_list.html', {
+            'activity': activity,
+            'attendees': attendees,
+        })
+    else:
+        messages.add_message(request, messages.ERROR, 'Attendee list can only be displayed by the organiser', extra_tags='danger')
+        return redirect('activity_detail', activity.pk)
+
+@login_required
+def register_client(request, pk):
+    activity_pk = pk
+    print(activity_pk)
+    pk = {'activity_pk': activity_pk}
+    full = False
+    if request.method == 'POST':
+        form = RegistrationForm(request.POST, **pk)
+    else:
+        activity = Activity.objects.get(pk=activity_pk)
+        if activity.space_choice == 'Limited' and activity.space <= 0:
+            messages.info(request, 'Sorry, this activity is fully booked.')
+            form = RegistrationForm(**pk)
+            full = True
+        else:
+            form = RegistrationForm(**pk)
+    return save_form(request, form, 'booking/includes/partial_registration_form.html', activity_pk, full)

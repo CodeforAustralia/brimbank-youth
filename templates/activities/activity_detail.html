@@ -36,20 +36,21 @@
 
 {% if org_activities %}
 <!-- More activities from the same organisation -->
-<div class="container-fluid mt-4">
+<!-- <div class="container-fluid mt-4"> -->
   <div class="container">
-  <h3 style="margin-bottom:2%;">More activities and events from this organiser</h3>
-  <div class="swiper-container">
-      <div class="swiper-wrapper">
-      {% include 'activities/includes/other_activities.html' %}
-      </div>
+  <h2 style="font-size: 36px; font-weight: bold;color:#484848;">More activities and events from this organiser</h2>
+  <!-- <div class="swiper-container"> -->
+      <!-- <div class="swiper-wrapper"> -->
+    <div class="row justify-content-start" style="margin-top:40px;">
+    {% include 'activities/includes/other_activities.html' %}
+    </div>
+      <!-- </div> -->
       <!-- Navigation buttons -->
-      <div class="swiper-button-prev swiper-button-black"></div>
-      <div class="swiper-button-next swiper-button-black"></div>
-  </div>
-  </div>
+      <!-- <div class="swiper-button-prev swiper-button-black"></div> -->
+      <!-- <div class="swiper-button-next swiper-button-black"></div> -->
+  <!-- </div> -->
+  <!-- </div> -->
 </div>
-{% include 'activities/includes/modal_other_activities.html' %}
 {% endif %}
 
 <!-- Google Maps -->
@@ -63,34 +64,35 @@
 
 {% if recommended_activities %}
 <!-- Other events and activities you might like -->
-<div class="container-fluid mt-4 mb-0" id="id_others">
+<!-- <div class="container-fluid mt-4 mb-0" id="id_others"> -->
 <div class="container mt-4">
-<h3 style="margin-top:2%;margin-bottom:2%;">Other activities and events you might like</h3>
-<div class="swiper-container">
-    <div class="swiper-wrapper">
+<h2 style="font-size: 36px; font-weight:bold;color:#484848;">Other activities and events you might like</h2>
+<!-- <div class="swiper-container"> -->
+    <!-- <div class="swiper-wrapper"> -->
+<div class="row justify-content-start" style="margin-top:40px;">
   {% include 'activities/includes/recommended_activities.html' %}
-  </div>
+</div>
+  <!-- </div> -->
   <!-- Navigation buttons -->
-  <div class="swiper-button-prev swiper-button-black"></div>
-  <div class="swiper-button-next swiper-button-black"></div>
+  <!-- <div class="swiper-button-prev swiper-button-black"></div> -->
+  <!-- <div class="swiper-button-next swiper-button-black"></div> -->
+<!-- </div> -->
+
 </div>
-</div>
-</div>
-{% include 'activities/includes/modal_recommended_activities.html' %}
 {% endif %}
 
 <!-- THE MODAL FOR SHARING ACTIVITY URL -->
 <div class="modal fade" id="modal-share-url">
   <div class="modal-dialog">
     <div class="modal-content" style="padding-top:1rem;">
-      <div class="modal-header" style="padding-top:0;padding-left:2em;border:none;">
-        <h4 class="modal-title" style="font-weight:400;">Share this activity</h4>
+      <div class="modal-header" style="padding-top:0;padding-left:2em;">
+        <h4 class="modal-title" style="font-weight:600;font-size:28px;">Share this activity</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-        style="margin-right:-5rem;margin-top:-1rem;">
+        style="margin-right:-3rem;margin-top:-1rem;">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" style="margin-top:1em;">
         <!-- <div class="addthis_inline_share_toolbox"></div> -->
         <div class="sharethis-inline-share-buttons"></div>
         <a target="_self" class="btn btn-circle-2 ml-2" 
@@ -165,7 +167,7 @@ $("#share-mailgun").click(function() {
     window.open($(this).attr("data-url"), 'newwindow', 'width=500,height=900');
 });
 
-$('.info-tooltip').tooltip();
+// $('.info-tooltip').tooltip();
 
 var swiper = new Swiper('.swiper-container', {
   slidesPerView: 3,
@@ -228,42 +230,6 @@ var swiper = new Swiper('.swiper-container', {
   });
 
 });
-
-var loadForm = function () {
-  var btn = $(this);
-  $.ajax({
-    url: btn.attr("data-url"),
-    type: 'get',
-    dataType: 'json',
-    beforeSend: function () {
-      $("#modal-register").modal("show");
-    },
-    success: function (data) {
-      $("#modal-register .modal-content").html(data.html_form);
-      if (data.fully_booked) {
-        $("#modal-register").modal("hide");
-        location.reload();
-      }
-    }
-  });
-};
-
-$(document).on('click', '.js-register-client', loadForm);
-
-  // Show the map
-  // setTimeout(function initMap() {
-  //   var geocoder = new google.maps.Geocoder();
-  //   var map = new google.maps.Map(document.getElementById('map'));
-    
-  //   Populate addresses from GMaps on address input
-    // var address = $('#address').text();
-    // geocodeAddress(geocoder, map);
-
-  //   Populate GMaps URL on the address link
-  //   var map_url = "https://www.google.com/maps/search/?api=1&query=";
-  //   var full_url = map_url + address;
-  //   $("#address2").attr("href", full_url);
-  // }, 1000);
 
 //   Populate addresses from GMaps on address input
 var address = $('#address').text();
@@ -408,9 +374,12 @@ function sendReminder(clicked_id) {
 function getURL(id, value) {
     var text_input_arr = id.split("sharebutton_");
     var activity_id = text_input_arr[1];
-
     var modal_id = "#modal_" + activity_id;
     var input_id = "#input_" + activity_id;
+
+    console.log("activity_id: ", text_input_arr);
+    console.log("modal_id: ", modal_id);
+    console.log("input_id: ", input_id);
 
     $(input_id).html("");
     $(modal_id).modal("show");

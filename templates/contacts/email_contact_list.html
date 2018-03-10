@@ -17,7 +17,72 @@
         cursor: pointer;
         width: 0;
     }
+    label.col-form-label label {
+        color:#484848;font-size:18px;font-weight:bold;
+    }
+    select option {
+        color: #CCCCCC;
+        font-weight:300;
+    }
+
+    #mobile-btns {
+        display: none;
+    }
+
+    @media (max-width: 480px) {
+        #email-header, #gender-header, #age-header, #language-header, #desktop-btns {
+            display: none;
+        }
+        #email-content, #gender-content, #age-content, #language-content {
+            display: none;
+        }
+        #mobile-btns {
+            display: block;
+        }
+    }
+    .breadcrumb {
+        background-color: transparent; padding:0;
+    }
+    .breadcrumb, .breadcrumb-item {
+        font-size: 20px; font-weight:300;
+    }
+
+    .breadcrumb-item {
+        color: #999999;
+    }
+    .breadcrumb {
+        color: #A9DFF8;
+    }
+    select.form-control {
+        height:55px !important;
+    }
+    .modal-header {
+        padding-top:0;
+    }
+    .modal-title {
+        color:#484848;
+    }
+    .btn-neon-green {
+        background: #00CC00;
+        color: #FFFFFF;
+        height: 72px;
+        margin-top: 3em;
+    }
+    .btn-neon-green:hover {
+        background:green;
+    }
 </style>
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="container mt-4" >
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'email_group_list' %}">{{ group_name }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Youth Clients ({{ group_name }})</li>
+    </ol>
+</nav>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -33,28 +98,28 @@
     </div>
     
     <div class="row">
-        <div class="col-6">
+        <!-- <div class="col-6">
         <i class="fas fa-search"></i>
         <input type="text" name="name" placeholder="Search" style="padding-left:35px;" 
-        maxlength="150" class="form-control" id="id_name"/></div>
-        <div class="col-6 float-right">
+        maxlength="150" class="form-control" id="id_name"/></div> -->
+        <div class="col-12 float-right">
             <a class="btn btn-green btn-lg js-create-email-member mt-4 float-right" href="#" data-url="{% url 'member_create' group_pk %}" 
-            role="button" aria-haspopup="true" aria-expanded="false">Add Contact</a></div>
+            role="button" aria-haspopup="true" aria-expanded="false" style="font-weight:300;font-size:18px;">Add Contact</a></div>
     </div>
     
 </div>
 
 <div class="container" style="width:100%;margin-top:2%;overflow-x:auto;">
-    <div class="mt-4">
+    <div class="mt-2">
         <table class="table" id="contact-table" style="width:100%;">
         <thead>
         <tr>
             <th style="text-align:left;">Name</th>
             <th style="text-align:right;">Mobile</th>
-            <th style="text-align:right;">Email</th>
-            <th style="text-align:right;">M or F</th>
-            <th style="text-align:right;">Age</th>
-            <th style="text-align:right;">Languages</th>
+            <th style="text-align:right;" id="email-header">Email</th>
+            <th style="text-align:right;" id="gender-header">M or F</th>
+            <th style="text-align:right;" id="age-header">Age</th>
+            <th style="text-align:right;" id="language-header">Languages</th>
             <th width="300px;">ACTIONS</th>
         </tr>
         </thead>

@@ -4,29 +4,43 @@
     <tr>
     <td>{{ member.first_name }}&nbsp;{{ member.last_name }}</td>
     <td style="text-align:right;">{{ member.mobile }}</td>
-    <td style="text-align:right;">{{ member.email }}</td>
-    <td style="text-align:right;">{{ member.gender }}</td>
-    <td style="text-align:right;">{{ member.age }}</td>
-    <td style="text-align:right;">{{ member.language }}</td>
-    <td>
+    <td style="text-align:right;" id="email-content">{{ member.email }}</td>
+    <td style="text-align:right;" id="gender-content">{{ member.gender }}</td>
+    <td style="text-align:right;" id="age-content">{{ member.age }}</td>
+    <td style="text-align:right;" id="language-content">{{ member.language }}</td>
+    <td id="desktop-btns">
         <div class="row ml-2 mr-1">
-        <div class="col-6 col-sm-3">
-        <a class="share-activities-btn-contacts-sms"
-            data-url="{% url 'share_activities_contacts_sms' member.id %}"
-            href="#" role="button" aria-haspopup="true" aria-expanded="false">
-        <img src="{% static 'img/icons/text.svg' %}" style="width:36px;margin-bottom:-5px;"></a></div>
-        <div class="col-6 col-sm-3"><a class="share-activities-btn-contacts" 
-        data-url="{% url 'share_activities_contacts' member.id %}" href="#" role="button" 
-        aria-haspopup="true" aria-expanded="false">
-        <img src="{% static 'img/icons/email.svg' %}" style="width:36px;"></a></div>
-        <div class="col-6 col-sm-3"><a class="js-update-email-member"
-        data-url="{% url 'email_member_update' member.id %}" style="cursor:pointer;">
-        <img src="{% static 'img/icons/edit.svg' %}" style="width:36px;"></a></div>
-        <div class="col-6 col-sm-3"><a href="#" class="js-delete-email-member" data-url="{% url 'email_member_delete' member.id %}">
-        <img src="{% static 'img/icons/delete.svg' %}" style="width:36px;"></a></div>
+            <div class="col-6 col-sm-3">
+            <a class="share-activities-btn-contacts-sms"
+                data-url="{% url 'share_activities_contacts_sms' member.id %}"
+                href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'img/icons/text.svg' %}" style="width:36px;margin-bottom:-12px;"></a></div>
+            <div class="col-6 col-sm-3"><a class="share-activities-btn-contacts" 
+            data-url="{% url 'share_activities_contacts' member.id %}" href="#" role="button" 
+            aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'img/icons/email.svg' %}" style="width:36px;"></a></div>
+            <div class="col-6 col-sm-3"><a class="js-update-email-member"
+            data-url="{% url 'email_member_update' member.id %}" style="cursor:pointer;">
+            <img src="{% static 'img/icons/edit.svg' %}" style="width:36px;"></a></div>
+            <div class="col-6 col-sm-3"><a href="#" class="js-delete-email-member" data-url="{% url 'email_member_delete' member.id %}">
+            <img src="{% static 'img/icons/delete.svg' %}" style="width:36px;"></a></div>
         </div>
     </td>
+    <td id="mobile-btns">
+        <div class="row ml-2 mr-1" id="mobile-btns">
+            <!-- <div class="col-12"> -->
+            <a class="share-activities-btn-contacts-sms"
+                data-url="{% url 'share_activities_contacts_sms' member.id %}"
+                href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'img/icons/text.svg' %}" style="width:36px;"></a>
+            <!-- <a class="share-activities-btn-contacts" 
+            data-url="{% url 'share_activities_contacts' member.id %}" href="#" role="button" 
+            aria-haspopup="true" aria-expanded="false">
+            <img src="{% static 'img/icons/email.svg' %}" style="width:36px;"></a> -->
+        <!-- </div> -->
+        </div>
     </tr>
+    </td>
 {% empty %}
     <tr>
     <td colspan="7" class="text-center">No member yet</td>

@@ -1,112 +1,242 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Activities of the month</title>
-  </head>
-  <body>
-    <!-- <style> -->
-    <table class="body" data-made-with-foundation="">
-      <tr>
-        <td class="float-center" align="center" valign="top">
-          <center data-parsed="">
-            <table class="spacer float-center">
-              <tbody>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ activity.name }}</title>
+  <!-- Designed by https://github.com/kaytcat -->
+  <!-- Header image designed by Freepik.com -->
+
+  <style type="text/css">
+  /* Take care of image borders and formatting */
+
+  img { max-width: 600px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic;}
+  a img { border: none; }
+  table { border-collapse: collapse !important; }
+  #outlook a { padding:0; }
+  .ReadMsgBody { width: 100%; }
+  .ExternalClass {width:100%;}
+  .backgroundTable {margin:0 auto; padding:0; width:100% !important;}
+  table td {border-collapse: collapse;}
+  .ExternalClass * {line-height: 115%;}
+
+  /* General styling */
+
+  td {
+    font-family: 'Lato', Arial, sans-serif;
+    color: #6f6f6f;
+  }
+
+  body {
+    -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:none;
+    width: 100%;
+    height: 100%;
+    color: #6f6f6f;
+    font-weight: 400;
+    font-size: 18px;
+  }
+
+
+  h1 {
+    margin: 10px 0;
+  }
+
+  a {
+    color: #3f3f3f;
+    text-decoration: none;
+  }
+
+  .force-full-width {
+    width: 100% !important;
+  }
+
+
+  .body-padding {
+    padding: 0 75px;
+  }
+
+
+
+  </style>
+
+  <style type="text/css" media="screen">
+      @media screen {
+        /* @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,900); */
+        @import url(https://fonts.googleapis.com/css?family=Lato:400,600,900);
+        /* Thanks Outlook 2013! */
+        * {
+            font-family: 'Lato', 'Source Sans Pro', 'Helvetica Neue', 'Arial', 'sans-serif' !important;
+        }
+        .w280 {
+          width: 280px !important;
+        }
+
+      }
+  </style>
+
+  <style type="text/css" media="only screen and (max-width: 480px)">
+    /* Mobile styles */
+    @media only screen and (max-width: 480px) {
+
+      table[class*="w320"] {
+        width: 320px !important;
+      }
+
+      td[class*="w320"] {
+        width: 280px !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+      }
+
+      img[class*="w320"] {
+        width: 250px !important;
+        height: 67px !important;
+      }
+
+      td[class*="mobile-spacing"] {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+      }
+
+      *[class*="mobile-hide"] {
+        display: none !important;
+      }
+
+      *[class*="mobile-br"] {
+        font-size: 12px !important;
+      }
+
+      td[class*="mobile-w20"] {
+        width: 20px !important;
+      }
+
+      img[class*="mobile-w20"] {
+        width: 20px !important;
+      }
+
+      td[class*="mobile-center"] {
+        text-align: center !important;
+      }
+
+      table[class*="w100p"] {
+        width: 100% !important;
+      }
+
+      td[class*="activate-now"] {
+        padding-right: 0 !important;
+        padding-top: 20px !important;
+      }
+
+    }
+  </style>
+</head>
+<body  offset="0" class="body" style="padding:0; margin:0; display:block; background:#ffffff; -webkit-text-size-adjust:none" bgcolor="#eeebeb">
+<table align="center" cellpadding="0" cellspacing="0" width="100%" height="100%">
+  <tr>
+    <td align="center" valign="top" style="background-color:#ffffff" width="100%">
+
+    <center>
+
+      <table cellspacing="0" cellpadding="0" width="600" class="w320">
+        <tr>
+          <td align="center" valign="top">
+          <table style="margin:20px auto 20px 0;" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+              <td style="text-align: center;">
+                <a href="http://youshare.net.au"><span style="color:#5DAE69;font-weight:600;font-size:44px;">YouShare</span></a><br />
+              </td>
+            </tr>
+          </table>
+          
+          <table cellspacing="0" cellpadding="0" width="100%" style="background-color:#A9DFF8;">
+            <tr>
+              <td style="background-color:#A9DFF8;"><br/>
+                {% for activity in activities %}
+                <table cellspacing="0" cellpadding="0" width="100%">
+                    <tr>
+                        <!-- <td style="text-align: center;">
+                          <a href="http://youshare.net.au">
+                            <img src="http://via.placeholder.com/600x200" style="max-width:80%; display:block;">
+                          </a>
+                        </td> -->
+                        <td style="text-align: center;">
+                          {% if activity.activity_img %}
+                          <img src="{{ activity.activity_img.url }}"
+                          style="max-width:100%; display:block;margin-left:70px;margin-right:70px;width:460px;height:370px;">
+                          {% else %}
+                          <img src="http://via.placeholder.com/460x370" 
+                          style="max-width:100%; display:block;margin-left:70px;margin-right:70px;">
+                          {% endif %}
+                        </td>
+                    </tr>
+                </table>
+
+                <table cellspacing="0" cellpadding="0" width="100%">
+                  <tr>
+                    <td style="font-size:30px; font-weight:300; color: #484848; text-align:center;" class="mobile-spacing">
+                    <div class="mobile-br">&nbsp;</div>
+                       {{ staff_name }} has invited you to <br>{{ activity.name }}
+                    <br>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="font-size:14px; text-align:center; padding: 10px 50px 0 50px; color:#484848;" class="w320 mobile-spacing">
+                      {% if activity.term == 'Once' %}
+                      {{ activity.activity_date|date:'D, d M' }} {{ activity.start_time|time:'g:iA'|lower }} - {{ activity.end_time|time:'g:iA'|lower }}
+                      in {{ activity.suburb }}
+                      {% elif activity.term == 'Daily' %}
+                      Every day starting on {{ activity.start_date|date:'D, d M' }} from {{ activity.start_time|time:'g:iA'|lower }} - {{ activity.end_time|time:'g:iA'|lower }}
+                      in {{ activity.suburb }}
+                      {% else %}
+                      Every {{ activity.activity_day }} starting on {{ activity.start_date|date:'D, d M' }} from {{ activity.start_time|time:'g:iA'|lower }} - {{ activity.end_time|time:'g:iA'|lower }}
+                      in {{ activity.suburb }}
+                      {% endif %}
+                    </td>
+                  </tr>
+                </table>
+
+            <table style="margin:0 auto;" cellspacing="0" cellpadding="10" width="100%">
                 <tr>
-                  <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
-                </tr>
-              </tbody>
-            </table>
-            <table align="center" class="container float-center">
-              <tbody>
-                <tr>
-                  <td>
-                    <table class="row">
-                        <tbody>
-                            <tr>
-                            <th class="small-12 large-12 columns first last">
-                                <table>
-                                <tr>
-                                    <th>
-                                    <center data-parsed=""> <img src="http://placehold.it/548x200" align="center" class="float-center"> </center>
-                                    </th>
-                                    <th class="expander"></th>
-                                </tr>
-                                </table>
-                            </th>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="row">
-                        <tbody>
-                            <tr>
-                                <th class="small-12 large-12 columns first last">
-                                <table>
-                                    <tr>
-                                    <th>
-                                        <h2>Activities you might be interested in</h2>
-                                    </th>
-                                    </tr>
-                                </table>
-                                </th>
-                            </tr>
-                        </tbody>
-                    </table>
-                    {% for activity in activities %}
-                    <table class="row">
-                    <tbody>
-                        <tr>
-                        <th class="small-12 large-12 columns first last">
-                            <table>
-                            <tr>
-                                <th>
-                                <h4><a href="http://{{ domain }}/activity/detail/{{activity.pk}}">{{activity.name}}</a></h4>
-                                <center data-parsed=""><img class="small-float-center" src="http://placehold.it/548X100" width="100%" alt=""></center>
-                                <br />
-                                {% if activity.description %}
-                                <p>{{ activity.description }}</p>
-                                {% else %}
-                                <p>Description of the activity</p>
-                                {% endif %}
-                                </th>
-                            </tr>
-                            </table>
-                        </th>
-                        </tr>
-                    </tbody>
-                    </table>
-                    {% endfor %}
-                    <table class="row">
-                    <tbody>
-                        <tr>
-                        <th class="small-12 large-12 columns first last">
-                            <table>
-                            <tr>
-                                <th>
-                                <p>You received this email because you're signed up to receive updates from us. <a href="#">Click here to unsubscribe.</a></p>
-                                </th>
-                            </tr>
-                            </table>
-                        </th>
-                        </tr>
-                    </tbody>
-                    </table>
+                  <td style="text-align:center; margin:0 auto;">
+                  <br>
+                    <div>
+                    <a href="http://{{ domain }}{% url 'activity_detail' activity.id %}" 
+                    style="border-radius:0.5em;background-color:#5DAE69;color:#F2F2F2;display:inline-block;font-family:'Lato', 'Source Sans Pro', Helvetica, Arial, sans-serif;font-size:18px;font-weight:300;line-height:45px;text-align:center;text-decoration:none;width:180px;-webkit-text-size-adjust:none;">Register Now !</a>
+                    </div>
+                    <br>
                   </td>
                 </tr>
-              </tbody>
-            </table>
-            <table class="spacer float-center">
-                <tbody>
-                    <tr>
-                    <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
-                    </tr>
-                </tbody>
-            </table>
-          </center>
-        </td>
-      </tr>
-    </table>
-  </body>
+              </table>
+              {% endfor %}
 
+              <table cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                    <td style="background-color:#A9DFF8;">
+                    <table cellspacing="0" cellpadding="0" class="force-full-width">
+                    <tr>
+                        <td style="color:#484848; font-size: 14px; text-align:center; padding-bottom:4px;">
+                            <a href="mailto:{{ sender }}?subject=Unsubscribe%20request%20&body=I'd like to unsubscribe from YouShare.">Unsubscribe</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:12px;">
+                        &nbsp;
+                        </td>
+                    </tr>
+                    </table>
+                    </td>
+                </tr>
+            </table>
+              </td>
+            </tr>
+          </table>
+          </td>
+        </tr>
+      </table>
+    </center>
+    </td>
+  </tr>
+</table>
+</body>
 </html>

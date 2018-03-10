@@ -1,7 +1,7 @@
 <form method="post" action="{% url 'email_group_update' form.instance.pk %}" class="js-email-group-update-form" novalidate>
     {% csrf_token %}
     <div class="modal-header" style="border:none;padding-bottom:0;">
-        <h4 class="modal-title">Update group</h4>
+        <h4 class="modal-title" style="font-size:32px;">Update group</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
         </button>
@@ -10,6 +10,6 @@
         {% include 'contacts/includes/partial_contact_form.html' %}
     </div>
     <div class="modal-footer" style="border:none;padding-top:0;">
-        <button type="submit" class="btn btn-lg btn-block btn-success">Update</button>
+        <button type="submit" class="btn btn-lg btn-block btn-neon-green" style="margin-top:0;">Update</button>
     </div>
 </form>

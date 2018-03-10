@@ -37,6 +37,22 @@
       -webkit-box-align: center;
       align-items: center;
     }
+    .item-footer {
+      background-color:#FFFFFF;
+      color:#484848;margin-left:0;margin-right:0;height:3em;line-height:4em;margin-top:0;
+      font-size:16px;
+    }
+    a.footer-link:hover {
+      text-decoration: none;
+    }
+    
+    .alert-success {
+      background-color: #A9DFF8; color: #484848;
+    }
+
+    textarea.form-control {
+        height: 10em;
+    }
 
     button {
       cursor: pointer;
@@ -147,15 +163,36 @@
     }
     .vr {width:1px;height:40px;background-color:#CCCCCC;margin-left:10px;}
 
+    body.iosBugFixCaret.modal-open { position: fixed; width: 100%; }
+
+    .tooltip-inner
+    { background-color: #A9DFF8;}
+
+    .tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before, .tooltip.bs-tooltip-bottom .arrow::before 
+    { border-bottom-color: #A9DFF8;} 
+
+    .change-alignment {
+        text-align: center;
+    }
+
+    @media (max-width: 480px) {
+        .change-alignment {
+            text-align: left;
+        }
+    }
+
   </style>
 	{% block stylesheet %}{% endblock %}  <!-- ADD CUSTOMISED STYLESHEET for PARTICULAR PAGES -->
   </head>
   <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-light">
-      <a class="navbar-brand ml-3" href="{% url 'home' %}" style="color: #5DAE69;">
-          <!-- <img src="{% static 'img/angel.png' %}" width="60" height="60" alt="Test"> -->
-          YouShare
-      </a>
+      <a class="navbar-brand ml-3" href="{% url 'home' %}" style="color: #5DAE69;margin-top:-1px;">
+        <div class="row">YouShare
+        <span class="info-tooltip" style="font-size:16px;font-weight:bold;color:#A9DFF8;margin-top:1em;" data-toggle="tooltip" data-placement="bottom" title="Works best on desktop and Android">&nbsp;&nbsp;Beta
+        </span></div>
+    </a>
+    </div>
+      
       {% if activities or activity %}
       {% if user.is_authenticated and activities %}
       <a href="#" id="main-share-logged-in" class="mr-auto ml-2">
@@ -187,6 +224,7 @@
           <img src="{% static 'img/icons/envelope.svg' %}" style="width:40px;"></a>
       {% endif %}   
       {% endif %}
+
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -209,10 +247,10 @@
               <span class="ml-3 font-nav">{{ user.username|upper }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <img src="{% static 'img/icons/down-arrow.svg' %}" width="15" alt="Test" style="margin-bottom:3px;"></span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="border-radius:0;">
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="border-top:none;border-radius:0;">
               <!-- <a class="dropdown-item" href="{% url 'view_activity_drafts' %}">Your Activities</a> -->
               <a class="dropdown-item" href="{% url 'email_group_list' %}">Contacts</a>
-              <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
+              <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
             </div>
           </li>
           <div class="vr">&nbsp;</div>
@@ -236,6 +274,9 @@
         {% endfor %}
       {% endif %}
     </div>
+
+    {% block breadcrumb %}
+    {% endblock %}
     
     <!-- <div class="container-fluid"> -->
       {% block content %}
@@ -246,7 +287,7 @@
     <!-- THE SIGN-UP MODAL -->
     <div class="modal fade" id="modal-signup" tabindex="-1" role="dialog" aria-labelledby="signUp" aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content" style="width:90vh;"></div>
+      <div class="modal-content"></div>
       <!-- <span id="show_progress" style="display:none;" value="True"></span> -->
     </div>
     </div>
@@ -275,9 +316,31 @@
 
     {% endblock body %}
 
-  <footer class="footer">
-    <div class="container-fluid">
-        <p class="text-muted mb-0">&copy; Brimbank City Council 2018</p>
+  
+  <footer class="footer" style="background: transparent;">
+    <div class="container-fluid" style="background-color:#60AE69;color:#FFFFFF;margin-top:8em;">
+      <div class="row" style="border-top:solid 1px #484848;
+      background-color:#FFFFFF;padding-top:25px;height:160px;">
+      <div class="col-sm-4 col-12 mb-3 item-footer">
+        <a class="footer-link" href="{% url 'about_page' %}">
+          <p class="item-footer change-alignment">
+            <img src="{% static 'img/icons/info.svg' %}" width="46" height="46" alt="About">&nbsp;&nbsp;About YouShare
+          </p>
+        </a>
+      </div>
+      <div class="col-sm-4 col-12"><a class="footer-link" href="#"><p class="item-footer change-alignment">
+          <img src="{% static 'img/icons/contact.svg' %}" width="46" height="46" alt="About">&nbsp;&nbsp;Contact us</p></a></div>
+      <div class="col-sm-4 col-12" style="margin-bottom:0">
+        <a class="footer-link" href="{% url 'privacy_page' %}"><p class="item-footer change-alignment">
+            <img src="{% static 'img/icons/privacy.svg' %}" width="46" height="46" alt="About">&nbsp;&nbsp;Disclaimer & Privacy</p></a></div>
+      <div class="col-12" style="background:#60AE69;margin-top:25px;height:58px;border-top:solid 1px #484848;">
+        <p class="text-center" style="font-size:20px;line-height:60px;height:50px;margin-bottom:0;">
+        Brimbank City Council 2018</p></div></div>
+    </div>
+      <!-- <div class="row">
+        <div class="col-12">
+        <p class="text-center" style="font-size:20px;height:58px;line-height:73px;">
+        Brimbank City Council 2018</p></div></div> -->
     </div>
   </footer>
     
@@ -294,6 +357,37 @@
 
   <!--    Font Awesome -->
   <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
+
+  <!-- Hotjar Tracking Code for www.youshare.net.au -->
+  <script>
+      (function(h,o,t,j,a,r){
+          h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+          h._hjSettings={hjid:799597,hjsv:6};
+          a=o.getElementsByTagName('head')[0];
+          r=o.createElement('script');r.async=1;
+          r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+          a.appendChild(r);
+      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  </script>
+<script>
+$( function() {
+  // Detect ios 11_x_x affected  
+  // NEED TO BE UPDATED if new versions are affected
+  var ua = navigator.userAgent,
+  iOS = /iPad|iPhone|iPod/.test(ua),
+  iOS11 = /OS 11_0|OS 11_1|OS 11_2/.test(ua);
+
+  // ios 11 bug caret position
+  if ( iOS && iOS11 ) {
+
+      // Add CSS class to body
+      $("body").addClass("iosBugFixCaret");
+  }
+
+  $('.info-tooltip').tooltip();
+
+});
+</script>
       
   {% block javascript %}
   {% endblock %}

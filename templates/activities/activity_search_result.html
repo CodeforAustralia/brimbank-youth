@@ -60,15 +60,15 @@
     .jumbotron {
         position: relative;
         background-color: transparent !important;
-        height: 640px;
+        height: 556px;
         padding-top: 160px;
-        padding-bottom: 40px;
+        padding-bottom: 0;
     }
     .jumbotron .img {
         position: absolute;
         left:0; top:0;
         background-size: cover;
-        min-height: 640px;
+        min-height: 556px;
         width: 100%;
         /* filter: alpha(opacity=80); IE 8 and 9
         -moz-opacity:0.8; Older than Firefox 0.9
@@ -97,6 +97,15 @@
         background: #A9DFF8;
         border: none;
     }
+
+    #swipe-info {
+        display:none;
+    }
+    @media (max-width: 480px) {
+        #swipe-info, #search-container-mobile {
+            display: block;
+        }
+    }
     </style>
 
 {% endblock %}
@@ -110,7 +119,7 @@
 {% endif %}
 
 {% include 'activities/includes/search_box.html' %}
-
+<span style="color:transparent;">Search Result</span>
 <!-- Floating sharing button starts -->
 <div class="float-sm">
     <div class="fl-fl float-sms">
@@ -126,13 +135,13 @@
 <!-- Floating sharing button ends -->
 
 {% if category != '' %}
-<div class="container" style="margin-bottom:2%;">
+<div class="container" id="search-result">
 <p class="lead">{{ activities_count }} result{{ activities|pluralize }} found for <strong>{{category}}</strong></p>
 </div>
 {% endif %}
 
 {% if name_key != '' %}
-<div class="container" style="margin-bottom:2%;">
+<div class="container" id="search-result">
 <p class="lead">{{ activities_count }} result{{ activities|pluralize }} found for <strong>{{name_key}}</strong></p>
 </div>
 {% endif %}
@@ -141,30 +150,32 @@
 {% if user.is_authenticated %}
 <div class="container">
 <h2 class='signature-grey'>Your activities & events</h2>
+<span style="display:none;" id="staff-name">{{ user.email }}</span>
 {% else %}
 <div class="container">
 <h2 class='signature-grey'>Activities & events</h2>
 {% endif %}
-<div class="row justify-content-center" style="margin-top:40px;">
+<div class="row justify-content-start" style="margin-top:40px;">
 {% if latest_activity and user.is_authenticated %}
 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12" id="latest_activity" style="display:none;">
     <div class="latest_activity_{{ latest_activity.id }}" id="latest_activity_val" style="display:none;"> </div>
     <div class="card hover-card select" style="box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2), 0 10px 20px 0 rgba(0, 0, 0, 0.19);">
     {% if latest_activity.activity_img %}
-        <img class="card-img-top select" src="{{ latest_activity.activity_img.url }}" alt="Not Found" 
+    <a href="{% url 'activity_detail' latest_activity.pk %}"><img class="card-img-top select" src="{{ latest_activity.activity_img.url }}" alt="Not Found" 
         onerror="this.onerror=null;this.src='http://via.placeholder.com/363x272?text=Image not available';" 
-        style="height:272px;" href="{% url 'activity_detail' latest_activity.pk %}" >
-        <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
+        style="height:272px;"></a>
+    <a href="{% url 'activity_detail' latest_activity.pk %}">
+        <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% else %}
+    <a href="{% url 'activity_detail' latest_activity.pk %}">
         <img class="card-img-top select" src="http://via.placeholder.com/363x272?text=Image not available" 
-        alt="Not Found" style="height:272px;" href="{% url 'activity_detail' latest_activity.pk %}" >
-        <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
+        alt="Not Found" style="height:272px;" href="{% url 'activity_detail' latest_activity.pk %}" ></a>
+    <a href="{% url 'activity_detail' latest_activity.pk %}">
+        <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% endif %}
     <div class="top">
         <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
         <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
-        <!-- <a href="{% url 'activity_detail' latest_activity.pk %}" 
-        class="btn btn-dark btn-lg vertical-button">VIEW ACTIVITY</a> -->
     </div>
     <div class="card-body card-padding select" id=card_{{ latest_activity.pk }} value="{{ latest_activity.pk }}">
         {% if latest_activity.activity_type != 'School holidays' %}
@@ -191,7 +202,6 @@
         <img src="{% static 'img/icons/share.svg' %}" height="30"> Share
         </button></p>
         <h3 id="a" class="card-title">{{ latest_activity.name }}</h3>
-        <!-- <p class="card-text small"><a href=# name="address">{{ latest_activity.location }}</a></p> -->
 
         <!--    Activities that only occur once -->
         {% if latest_activity.term == 'Once' %}
@@ -220,26 +230,20 @@
     {% if user.is_authenticated %}
     <div class="card hover-card select">
     {% if activity.activity_img %}
-        <img class="card-img-top select img-responsive" src="{{ activity.activity_img.url }}" alt="Not Found" 
-        onerror="this.onerror=null;this.src='http://via.placeholder.com/363x272?text=Image not available';" 
-        style="height:272px;" href="{% url 'activity_detail' activity.pk %}">
-        <!-- style="object-fit:cover;margin:auto;height:272px;display:inline;" -->
-        <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
+    <a href="{% url 'activity_detail' activity.pk %}"><img class="card-img-top img-responsive" src="{{ activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/363x272?text=Image not available';"; 
+        style="height:272px;" href="{% url 'activity_detail' activity.pk %}"></a>
+    <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg" src="{% static 'img/checked.png' %}" style="display:none"></a>
     {% else %}
-        <img class="card-img-top select img-responsive" src="http://via.placeholder.com/363x272?text=Image not available" 
-        alt="Not Found" style="height:272px;" href="{% url 'activity_detail' activity.pk %}">
-        <img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none">
-    {% endif %}
-
     <a href="{% url 'activity_detail' activity.pk %}">
-    <div class="link-top"></div></a>
+        <img class="card-img-top select img-responsive" src="http://via.placeholder.com/363x272?text=Image not available" 
+        alt="Not Found" style="height:272px;" href="{% url 'activity_detail' activity.pk %}"></a>
+    <a href="{% url 'activity_detail' activity.pk %}"><img class="selectedImg select" src="{% static 'img/checked.png' %}" style="display:none"></a>
+    {% endif %}
     
     <div class="top">
         <span class="far fa-heart fa-2x float-right tickbox mr-2 mt-2"></span>
         <span style="display:none;" class="fas fa-heart fa-2x float-right tickboxSelected mr-2 mt-2"></span>
     </div>
-    <a href="{% url 'activity_detail' activity.pk %}">
-    <div class="link"></div></a>
     <div class="card-body card-padding select" id=card_{{ activity.pk }} value="{{ activity.pk }}">
         {% if activity.activity_type != 'School holidays' and activity.activity_type != 'Culture' %}
 
@@ -261,14 +265,15 @@
         <p id="b" class="card-text bold-text" style="color:#A52A03">
         ART & CULTURE - {{ activity.suburb|upper }}
         {% endif %}
-
+    
         {% endif %}
         <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ activity.id }}" 
         value="{% url 'activity_detail' activity.id %}" type="button" 
-        class="btn btn-transparent float-right" data-url="#" data-toggle="button" 
-        aria-pressed="false" autocomplete="off" style="margin-top:-5px; padding-right:0;color:#484848;">
+        class="btn btn-transparent float-right" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off" 
+        style="margin-top:-5px; padding-right:0;color:#484848;">
         <img src="{% static 'img/icons/share.svg' %}" height="33">&nbsp;&nbsp; Share
         </button></p>
+
         <h3 id="a" class="card-title">{{ activity.name }}</h3>
 
         <!--    Activities that only occur once -->
@@ -374,9 +379,9 @@
 <div class="modal fade" id="modal_{{ activity.id }}">
     <div class="modal-dialog">
     <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-title">Share this activity</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal-header" style="padding-top:0;padding-left:2em;">
+            <h4 class="modal-title" style="font-weight:600;font-size:28px;">Share this activity</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-right:-3rem;margin-top:-1rem;">
             <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -385,11 +390,11 @@
             <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' activity.pk %}" 
             data-title="{{ activity.name }}" data-description="Test" data-message="test message"></div>
             <a target="_self" class="btn btn-circle-2 ml-2" 
-            href="sms:?&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' activity.pk %}"
+            href="sms:?&body=Hi,%20I%20thought%20%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.Give%20me%20a%20call%20or%20register%20through%20these%20links%0D%0Ahttp://{{ domain }}{% url 'activity_detail' activity.pk %}"
             style="background:#ffc600;width:49px;height:49px;border-radius:100%;color:white;padding:0;">
             <img src="{% static 'img/icons/sms.png' %}" style="width:28px;margin-top:0px;margin-right:-2px;margin-bottom:1px;"></a>
             <a target="_self" class="btn btn-circle-2 ml-2" 
-            href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' activity.pk %}"
+            href="mailto:?subject=Some%20activities%20you%20might%20be%20interested%20in&body=Hi,%0D%0A%0D%0AI%20thought%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.%0D%0A%0D%0Ahttp://{{ domain }}{% url 'activity_detail' activity.pk %}%0D%0A%0D%0AJust%20click%20on%20the%20link%20if%20you'd%20like%20to%20know%20more%20details%20about%20it%20or%20you%20can%20give%20me%20a%20call%20on%20[ENTER%20YOUR%20CONTACT%20NUMBER%20].%0D%0A%0D%0AYou%20can%20also%20register%20your%20interest%20if%20you%20wanna%20come.%0D%0A%0D%0AHope%20to%20see%20you%20there!"
             style="background:grey;width:49px;height:49px;border-radius:100%;color:white;">
             <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-bottom:1px;"></a>
         </div>
@@ -408,7 +413,7 @@
 
 </div>
 
-{% include 'includes/pagination_2.html' %}
+<!-- {% include 'includes/pagination_2.html' %} -->
 
 {% else %}
 <!-- <div class="container">
@@ -426,10 +431,10 @@
 {% if other_activities %}
 <div class="container" style="padding-top:3%">
 <h2 class="signature-grey mb-3">Other activities and events</h2>
-<div class="row justify-content-center" style="margin-top:4%;">
+<div class="row justify-content-start" style="margin-top:4%;">
 {% for other_activity in other_activities %}
 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12">
-<div class="card hover-card mb-4">
+<div class="card hover-card mb-4" style="width:363px;">
     {% if other_activity.activity_img %}
         <a href="{% url 'activity_detail' other_activity.pk %}"><img class="card-img-top" src="{{ other_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/363x272?text=Image not available';"; 
             style="height:272px;" href="{% url 'activity_detail' other_activity.pk %}"></a>
@@ -505,35 +510,20 @@
 <div class="modal fade" id="modal_{{ other_activity.id }}">
     <div class="modal-dialog">
     <div class="modal-content">
-        <div class="modal-header">
-        <h4 class="modal-title">Share this activity</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal-header" style="padding-top:0;padding-left:2em;">
+        <h4 class="modal-title" style="font-weight:600;font-size:28px;">Share this activity</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-right:-3rem;margin-top:-1rem;">
         <span aria-hidden="true">&times;</span>
         </button>
         </div>
-            <!-- <div id="div_desktop" class="row mt-2" style="align-content:center;">
-                <div id="share2_{{ other_activity.id }}" class="offset-md-3 mr-2"></div>
-                <div id="share3_{{ other_activity.id }}" class="float-left mr-2"></div>
-                <div class="jssocials send_dialog float-left mr-2">
-                    <div class="jssocials-shares">
-                    <div class="jssocials-share jssocials-share-messenger2">
-                        <button type="button" onclick="sendDialog(this.id)" target="_self" id="send_dialog_{% url 'activity_detail' other_activity.pk %}" class="btn btn-primary send_dialog2" style="width:50px; height:40px;"><i class="fab fa-facebook-messenger fa-lg"></i></button>
-                    </div>
-                    </div>
-                </div>
-                <div id="share4_{{ other_activity.id }}" class="mr-2 share4 float-left"></div>
-                <div id="share5_{{ other_activity.id }}" class="mr-2 share5 float-left"></div>
-                <div id="share_{{ other_activity.id }}" class="mr-2 share float-left"></div>
-            </div> -->
         <div class="row justify-content-center mt-3">
-            <!-- <div class="addthis_inline_share_toolbox"></div> -->
             <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' other_activity.id %}" 
             data-title="{{ other_activity.name }}" data-description="Test" data-message="test message"></div>
             <a target="_self" class="btn btn-circle-2 ml-2" 
-            href="sms:?&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' other_activity.pk %}"
+            href="sms:?&body=Hi,%20I%20thought%20%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.Give%20me%20a%20call%20or%20register%20through%20these%20links%0D%0Ahttp://{{ domain }}{% url 'activity_detail' other_activity.pk %}"
             style="background:#ffc600;width:49px;height:49px;border-radius:100%;color:white;padding:0;">
             <img src="{% static 'img/icons/sms.png' %}" style="width:28px;margin-top:0px;margin-right:-2px;margin-bottom:1px;"></a>
-            <a target="_self" class="btn btn-circle-2 ml-2" href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' other_activity.pk %}"
+            <a target="_self" class="btn btn-circle-2 ml-2" href="mailto:?subject=Some%20activities%20you%20might%20be%20interested%20in&body=Hi,%0D%0A%0D%0AI%20thought%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.%0D%0A%0D%0Ahttp://{{ domain }}{% url 'activity_detail' other_activity.pk %}%0D%0A%0D%0AJust%20click%20on%20the%20link%20if%20you'd%20like%20to%20know%20more%20details%20about%20it%20or%20you%20can%20give%20me%20a%20call%20on%20[ENTER%20YOUR%20CONTACT%20NUMBER%20].%0D%0A%0D%0AYou%20can%20also%20register%20your%20interest%20if%20you%20wanna%20come.%0D%0A%0D%0AHope%20to%20see%20you%20there!"
             style="background:grey;width:49px;height:49px;border-radius:100%;color:white;">
             <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-bottom:1px;"></a>
         </div>
@@ -559,7 +549,7 @@
 {% if not_my_activities %}
 <div class="container" style="padding-top:3%">
 <h2 class="signature-grey mb-3">Other activities and events</h2>
-<div class="row justify-content-center" style="margin-top:4%;">
+<div class="row justify-content-start" style="margin-top:4%;">
 {% for not_my_activity in not_my_activities %}
 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12">
 <div class="card hover-card select mb-4">
@@ -631,32 +621,15 @@
         <!-- <span style="color:green;" class="far fa-circle fa-3x float-right tickbox"></span> -->
         <!-- <span style="display:none;color:green;" class="far fa-check-circle fa-3x float-right tickboxSelected"></span> -->
     </div>
-    <!-- <div class="card-footer"> -->
-        <!-- {% if not_my_activity.bookmarked %}
-        {% for bookmark_user in not_my_activity.bookmarked_users.all %}
-        {% if bookmark_user.username == user.username %}
-        <button onclick="markActivity(this.id)" id={{ not_my_activity.id }} type="button" class="btn js-bookmark-article active" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-            <i class="far fa-bookmark"></i>
-        </button>
-        {% endif %}
-        {% endfor %}
-        {% endif %}
-        <button onclick="markActivity(this.id)" id={{ not_my_activity.id }} type="button" class="btn js-bookmark-article remove" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-            <i class="far fa-bookmark"></i>
-        </button> -->
-        <!-- <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ not_my_activity.id }}" value="{% url 'activity_detail' not_my_activity.id %}" type="button" class="btn btn-primary mr-2" data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-            <i class="fas fa-share"></i>
-        </button>
-    </div> -->
 </div>
 </div>
 <!-- THE MODAL FOR SHARING URL -->
 <div class="modal fade" id="modal_{{ not_my_activity.id }}">
     <div class="modal-dialog">
     <div class="modal-content">
-        <div class="modal-header">
-        <h4 class="modal-title">Share this activity</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal-header" style="padding-top:0;padding-left:2em;">
+        <h4 class="modal-title" style="font-weight:600;font-size:28px;">Share this activity</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"         style="margin-right:-3rem;margin-top:-1rem;">
         <span aria-hidden="true">&times;</span>
         </button>
         </div>
@@ -664,10 +637,10 @@
             <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' not_my_activity.id %}" 
             data-title="{{ not_my_activity.name }}" data-description="Test" data-message="test message" data-subject="test"></div>
             <a target="_self" class="btn btn-circle-2 ml-2" 
-            href="sms:?&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}"
+            href="sms:?&body=Hi,%20I%20thought%20%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.Give%20me%20a%20call%20or%20register%20through%20these%20links%0D%0Ahttp://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}"
             style="background:#ffc600;width:49px;height:49px;border-radius:100%;color:white;padding:0;">
             <img src="{% static 'img/icons/sms.png' %}" style="width:28px;margin-top:0px;margin-right:-2px;margin-bottom:1px;"></a>
-            <a class="btn btn-circle-2 ml-2" href="mailto:?subject=Check%20this%20out!&body=Check this out:%0D%0Ahttp://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}"
+            <a class="btn btn-circle-2 ml-2" href="mailto:?subject=Some%20activities%20you%20might%20be%20interested%20in&body=Hi,%0D%0A%0D%0AI%20thought%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.%0D%0A%0D%0Ahttp://{{ domain }}{% url 'activity_detail' not_my_activity.pk %}%0D%0A%0D%0AJust%20click%20on%20the%20link%20if%20you'd%20like%20to%20know%20more%20details%20about%20it%20or%20you%20can%20give%20me%20a%20call%20on%20[ENTER%20YOUR%20CONTACT%20NUMBER%20].%0D%0A%0D%0AYou%20can%20also%20register%20your%20interest%20if%20you%20wanna%20come.%0D%0A%0D%0AHope%20to%20see%20you%20there!"
             style="background:grey;width:49px;height:49px;border-radius:100%;color:white;">
             <img src="{% static 'img/icons/envelope.png' %}" style="width:23px;margin-bottom:1px;"></a>
         </div>
@@ -780,46 +753,6 @@ function getURL(id, value) {
     $(modal_id).modal("show");
 
     $(".st-btn").show();
-
-    // var share = "#share_" + activity_id;
-    // var share2 = "#share2_" + activity_id;
-    // var share3 = "#share3_" + activity_id;
-    // var share4 = "#share4_" + activity_id;
-    // var share5 = "#share5_" + activity_id;
-
-    // var url_val = value.substring(1);
-    // var url_final = window.location.href + url_val;
-
-    // $(share).jsSocials({
-    //   shares: ["messenger"],
-    //   showLabel: false,
-    //   shareIn: "popup",
-    //   url: url_final,
-    // });
-    // $(share2).jsSocials({
-    //     shares: ["facebook"],
-    //     showLabel: false,
-    //     shareIn: "popup",
-    //     url: url_final,
-    // });
-    // $(share3).jsSocials({
-    //     shares: ["email"],
-    //     showLabel: false,
-    //     shareIn: "popup",
-    //     url: url_final,
-    // });
-    // $(share4).jsSocials({
-    //     shares: ["whatsapp"],
-    //     showLabel: false,
-    //     shareIn: "popup",
-    //     url: url_final,
-    // });
-    // $(share5).jsSocials({
-    //     shares: ["sms"],
-    //     showLabel: false,
-    //     shareIn: "popup",
-    //     url: url_final,
-    // });
 }
 
 function copyURL(id) {
@@ -839,6 +772,26 @@ function copyURL(id) {
 }
 
 var shareBtns = document.getElementsByClassName("st-btn");
+
+// Scrolling after search
+var url = (window.location.href).toString();
+
+if (url.indexOf('search') > -1) {
+    var elmnt = document.getElementById("search-result");
+    elmnt.scrollIntoView(true);
+    window.scrollBy(0, -80);
+}
+
+if (url.indexOf('category') > -1) {
+    var elmnt = document.getElementById("search-result");
+    elmnt.scrollIntoView(true);
+    window.scrollBy(0, -100);
+}
+
+// $("#id_search").click(function () {
+//     var elmnt = document.getElementById("category-list");
+//     elmnt.scrollIntoView();
+// });
 
 // shareBtns.forEach(function(element) {
     // element.style.display = inline-block;
@@ -969,6 +922,13 @@ $('#main-share-logged-in').click(function() {
   var activities_arr = [];
 
 function openSharingForm(element) {
+
+    // Show sharing buttons
+    $('#share-twilio').show();
+    $('#share-mailgun').show();
+    $('#share-text').show();
+    $('#share-email').show();
+
     var checkbox = element.parent().siblings(".card-body.select");
     var val = checkbox.attr('value');
 
@@ -1038,12 +998,14 @@ function openSharingForm(element) {
 
     activity_url_final = activities_arr.join('%0D%0A');
 
+    var staffName = $("#staff-name").text();
+
     if (activity_url_final != '') {
-        email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A" + activity_url_final;
-        sms_url = "sms:?&body=Check%20these%20out:%20" + activity_url_final;
+        email_url = "mailto:?subject=Some%20activities%20you%20might%20be%20interested%20in&body=Hi,%0D%0A%0D%0AI%20thought%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.%0D%0A%0D%0AJust%20click%20on%20the%20link%20if%20you'd%20like%20to%20know%20more%20details%20about%20it%20or%20you%20can%20give%20me%20a%20call%20on%20[ENTER%20YOUR%20CONTACT%20NUMBER%20].%0D%0A%0D%0AYou%20can%20also%20register%20your%20interest%20if%20you%20wanna%20come.%0D%0A%0D%0AHope%20to%20see%20you%20there!%0D%0A%0D%0A" + activity_url_final;
+        sms_url = "sms:?&body=Hi,%20I%20thought%20%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.Give%20me%20a%20call%20or%20register%20through%20these%20links%0D%0A" + activity_url_final;
     } else {
-        email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A";
-        sms_url = "sms:?&body=Check%20these%20out:%20";
+        email_url = "mailto:?subject=Some%20activities%20you%20might%20be%20interested%20in&body=Hi,%0D%0A%0D%0AI%20thought%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.%0D%0A%0D%0AJust%20click%20on%20the%20link%20if%20you'd%20like%20to%20know%20more%20details%20about%20it%20or%20you%20can%20give%20me%20a%20call%20on%20[ENTER%20YOUR%20CONTACT%20NUMBER%20].%0D%0A%0D%0AYou%20can%20also%20register%20your%20interest%20if%20you%20wanna%20come.%0D%0A%0D%0AHope%20to%20see%20you%20there!%0D%0A%0D%0A";
+        sms_url = "sms:?&body=Hi,%20I%20thought%20%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.Give%20me%20a%20call%20or%20register%20through%20these%20links%0D%0A";
     }
     
     // Free share button
@@ -1171,6 +1133,7 @@ function openSharingForm(element) {
 
 
   $('.card-body.select').click( function() {
+
       //Change the background colour of card-body
       $(this).toggleClass('on');
       var val = $(this).attr('value');
@@ -1215,12 +1178,10 @@ function openSharingForm(element) {
     var activity_url_final = activities_arr.join('%0D%0A');
 
     if (activity_url_final != '') {
-        email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A" + activity_url_final;
+        email_url = "mailto:?subject=Some%20activities%20you%20might%20be%20interested%20in&body=Hi,%0D%0A%0D%0AI%20thought%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.%0D%0A%0D%0AJust%20click%20on%20the%20link%20if%20you'd%20like%20to%20know%20more%20details%20about%20it%20or%20you%20can%20give%20me%20a%20call%20on%20[ENTER%20YOUR%20CONTACT%20NUMBER%20].%0D%0A%0D%0AYou%20can%20also%20register%20your%20interest%20if%20you%20wanna%20come.%0D%0A%0D%0AHope%20to%20see%20you%20there!%0D%0A%0D%0A" + activity_url_final;
     } else {
-        email_url = "mailto:?subject=Check%20these%20out&body=Check these out:%0D%0A";
+        email_url = "mailto:?subject=Some%20activities%20you%20might%20be%20interested%20in&body=Hi,%0D%0A%0D%0AI%20thought%20this%20might%20be%20something%20that%20you'd%20be%20interested%20in.%0D%0A%0D%0AJust%20click%20on%20the%20link%20if%20you'd%20like%20to%20know%20more%20details%20about%20it%20or%20you%20can%20give%20me%20a%20call%20on%20[ENTER%20YOUR%20CONTACT%20NUMBER%20].%0D%0A%0D%0AYou%20can%20also%20register%20your%20interest%20if%20you%20wanna%20come.%0D%0A%0D%0AHope%20to%20see%20you%20there!%0D%0A%0D%0A";
     }
-    //   $("#share-text").attr("href", sms_url);
-    //   $("#share-email").attr("href", email_url);
 
       //change opacity of card-img-top
       $(this).siblings(".card-img-top.select").toggleClass('on');
@@ -1270,7 +1231,18 @@ function openSharingForm(element) {
         id_form.setAttribute("target", "_blank");
     })
 
+if( $('#swipe-info').css('display')=='block') {
+    var isMobile = true;
+    
+    if (isMobile == true) {
+        $("#search-container").hide();
+        $("#search-container").css("margin-top", "-7em");
+        $("#search-container").show();
+    }
+}
+
+
 });
 </script>
 
-{% endblock %} 
+{% endblock %}

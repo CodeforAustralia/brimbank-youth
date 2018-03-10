@@ -18,39 +18,22 @@
 <div id="create_activity_URL" style="display:none;" href="{% url 'create_activity' %}"></div>
 
 {% if org_activities %}
-<!-- More activities from the same organisation -->
-<div class="container-fluid mt-4">
   <div class="container">
-  <h3 style="margin-bottom:2%;">More activities and events from this organiser</h3>
-  <div class="swiper-container">
-      <div class="swiper-wrapper">
-      {% include 'activities/includes/other_activities.html' %}
-      </div>
-      <!-- Navigation buttons -->
-      <div class="swiper-button-prev swiper-button-black"></div>
-      <div class="swiper-button-next swiper-button-black"></div>
-  </div>
-  </div>
+  <h2 style="font-size: 36px; font-weight: bold;color:#484848;">More activities and events from this organiser</h2>
+    <div class="row justify-content-start" style="margin-top:40px;">
+    {% include 'activities/includes/other_activities.html' %}
+    </div>
 </div>
-{% include 'activities/includes/modal_other_activities.html' %}
 {% endif %}
 
 {% if recommended_activities %}
-<!-- Other events and activities you might like -->
-<div class="container-fluid mt-4 mb-0" id="id_others">
 <div class="container mt-4">
-<h3 style="margin-top:2%;margin-bottom:2%;">Other activities and events you might like</h3>
-<div class="swiper-container">
-    <div class="swiper-wrapper">
+<h2 style="font-size: 36px; font-weight:bold;color:#484848;">Other activities and events you might like</h2>
+<div class="row justify-content-start" style="margin-top:40px;">
   {% include 'activities/includes/recommended_activities.html' %}
-  </div>
-  <!-- Navigation buttons -->
-  <div class="swiper-button-prev swiper-button-black"></div>
-  <div class="swiper-button-next swiper-button-black"></div>
 </div>
+
 </div>
-</div>
-{% include 'activities/includes/modal_recommended_activities.html' %}
 {% endif %}
 
 {% endif %}

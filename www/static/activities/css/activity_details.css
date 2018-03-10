@@ -97,3 +97,37 @@ th, td {
 .btn-blue:hover {
   background:rgb(26, 128, 175); color:#FFFFFF;
 }
+
+#share-mobile-btn, #add-attendee-mobile-btn {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  #share-desktop-btn, #add-attendee-btn, #flyer-btn, #attendee-list-btn {
+    display: none;
+  }
+  #share-mobile-btn, #add-attendee-mobile-btn {
+    display: block;
+  }
+}
+
+.activity-type {
+  font-weight: 800;
+  margin-top: 0; margin-bottom: -3px;
+  font-size: 16px;
+}
+
+.no-padding {
+  padding-top: 2px;
+}
+
+.activity-name {
+  font-size: 20px; font-weight: 800; margin-bottom: 0;
+}
+
+.activity-schedule {
+  font-size: 16px; font-weight: 300; margin-bottom: -10px; padding-bottom: 0;
+}
+.booking-count {
+  font-size: 16px; font-weight: 800; margin-bottom: 2px;
+}

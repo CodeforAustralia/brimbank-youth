@@ -22,7 +22,7 @@ class SendEmail(models.Model):
     recipient_group = models.ManyToManyField(EmailGroup, related_name='sent_emails', blank=True)
     sender = models.EmailField(blank=True)
     subject = models.CharField(max_length=50, blank=True)
-    message = models.TextField(max_length=500, blank=True)
+    # message = models.TextField(max_length=500, blank=True)
     activity_list = models.CharField(max_length=500, blank=True)
     sent_time = models.DateTimeField(default = now)
     

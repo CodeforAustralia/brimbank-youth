@@ -64,12 +64,22 @@
         <div class="row justify-content-center mt-4">
 
         {% if activity.created_by == user %}
-        <div class="col-sm-2 col-6 justify-content-center mb-4">
-            <span class="d-inline-block info-tooltip" tabindex="0" 
-            data-toggle="tooltip" data-placement="bottom" title="Attendees">
+        <div class="col-6 justify-content-center mb-4" id="add-attendee-mobile-btn">
+            <a href="{% url 'attendee_list' activity.pk %}" class="btn" style="color:#484848;">
+            <img src="{% static 'img/icons/people.svg' %}" height="45">&nbsp;&nbsp;Attending</a>
+        </div>
+        <div class="col-6 justify-content-center mb-4" id="share-mobile-btn">
+            <a href="#" class="btn js-share-url info-tooltip" title="Share" style="color:#484848;">
+            <img src="{% static 'img/icons/share.svg' %}" height="45">&nbsp;&nbsp;Share</a>
+        </div>
+        {% endif %}
+
+        {% if activity.created_by == user %}
+        <div class="col-2 justify-content-center mb-4" id="add-attendee-btn">
+            <span class="d-inline-block" tabindex="0" >
             <a href="#collapseExample" data-toggle="collapse" role="button" aria-expanded="false" 
-            aria-controls="collapseExample" class="btn" style="color:#484848;margin-left:25px;">
-            <img src="{% static 'img/icons/people.svg' %}" height="45">&nbsp;&nbsp;
+            aria-controls="collapseExample" class="btn" style="color:#484848;">
+            <img src="{% static 'img/icons/people.svg' %}" height="45">&nbsp;&nbsp;&nbsp;Attending&nbsp;
             <img src="{% static 'img/icons/down-arrow.svg' %}" height="25"></a>
             </span>
             <div class="collapse" id="collapseExample" style="z-index:1;position:absolute; 
@@ -87,31 +97,27 @@
         {% endif %}
 
         {% if activity.created_by == user %}
-        <div class="col-6 col-sm-2 mb-4">
+        <div class="col-2 mb-4" id="share-desktop-btn">
         {% else %}
         <div class="col-4 mb-4">
         {% endif %}
         <div class="row justify-content-center">
-        <a href="#" class="btn js-share-url info-tooltip"
-        data-toggle="tooltip" data-placement="bottom" title="Share">
-            <img src="{% static 'img/icons/share.svg' %}" height="45"></a>
-        <a href="#" class="btn js-share-url" style="color:#484848;margin-top:10px;"></a>
+        <a href="#" class="btn js-share-url" style="color:#484848;">
+        <img src="{% static 'img/icons/share.svg' %}" height="45">&nbsp;&nbsp;Share</a>
         </div>
         </div>
         
         {% if activity.created_by == user %}
-        <div class="col-6 col-sm-2 mb-4">
+        <div class="col-2 mb-4" id="attendee-list-btn">
             <div class="row justify-content-center">
             {% if attendees_no > 0 %}
             <a href="{% url 'print_attendee_list' activity.pk %}" 
-            class="btn info-tooltip" style="color:#484848;" 
-            data-toggle="tooltip" data-placement="bottom" title="Print Attendees">
-            <img src="{% static 'img/icons/checklist.svg' %}" height="45"></a>
+            class="btn" style="color:#484848;" title="Print Attendees">
+            <img src="{% static 'img/icons/checklist.svg' %}" height="45">Print Attendees</a>
             {% else %}
-            <span class="d-inline-block info-tooltip" tabindex="0" 
-            data-toggle="tooltip" data-placement="bottom" title="No Attendee Yet">
+            <span class="d-inline-block" tabindex="0">
             <a href="#" class="btn disabled" style="color:#484848;">
-            <img src="{% static 'img/icons/checklist.svg' %}" height="45"></a>
+            <img src="{% static 'img/icons/checklist.svg' %}" height="45">No Attendee Yet</a>
             </span>
             {% endif %}
             </div>
@@ -119,22 +125,20 @@
         {% endif %}
 
         {% if activity.created_by == user %}
-        <div class="col-6 col-sm-2 mb-4">
+        <div class="col-2 mb-4" id="flyer-btn">
         {% else %}
-        <div class="col-4 mb-4">
+        <div class="col-4 mb-4" id="flyer-btn">
         {% endif %}
             <div class="row justify-content-center">
             {% if activity.flyer %}
-            <a href="{{ activity.flyer.url }}" class="btn info-tooltip" style="color:#484848;"
-            data-toggle="tooltip" data-placement="bottom" title="Print Flyer">
-                <img src="{% static 'img/icons/agreement.svg' %}" height="45">
+            <a href="{{ activity.flyer.url }}" class="btn" style="color:#484848;">
+            <img src="{% static 'img/icons/agreement.svg' %}" height="45">Print Flyer
             </a>
             {% endif %}
             {% if not activity.flyer %}
-            <span class="d-inline-block info-tooltip" tabindex="0" 
-            data-toggle="tooltip" data-placement="bottom" title="No Flyer is Available">
-            <a href="#" class="btn disabled" style="color:#484848;">
-                <img src="{% static 'img/icons/agreement.svg' %}" height="45">
+            <span class="d-inline-block" tabindex="0" title="No Flyer is Available">
+            <a href="#" class="btn disabled" style="color:#484848 !important;">
+                <img src="{% static 'img/icons/agreement.svg' %}" height="45">No Flyer
             </a>
             </span>
             {% endif %}
@@ -142,29 +146,31 @@
         </div>
 
         <div class="col-12 col-sm-4">
-            {% if user.is_authenticated %}
-            <button class="btn btn-lg btn-block disabled">Register</button>
-            {% else %}
             {% if available %}
+            {% if user.is_authenticated %}
+            <a href="#" class="btn btn-success btn-lg btn-block register mt-2" 
+            data-url="{% url 'register_client' activity.pk %}"
+            style="vertical-align:middle;display: inline-block;">Register</a>
+            {% else %}
             <a href="#" class="btn btn-success btn-lg btn-block register mt-2" 
             data-url="{% url 'register_youth' activity.pk %}"
             style="vertical-align:middle;display: inline-block;">Register</a>
+            {% endif %}
             {% else %}
             <button class="btn btn-lg btn-block disabled">Fully booked</button>
-            {% endif %}
             {% endif %}
             </div>
         </div>
     </div>
     </div>
     
-    <div class="container" style="padding-bottom:80px;margin-top:4%;">
+    <div class="container" style="padding-bottom:40px;margin-top:4%;">
         <div class = "row">
         <div class="col-md-8">
         <h6 class="bold-text">Description</h6>
         <span class="light-text">{{ activity.description }}</span>
         <br />
-        <h6 class="bold-text" style="margin-top:12%;">Eligibility</h6>
+        <h6 class="bold-text" style="margin-top:12%;">Additional information</h6>
         {% if activity.min_age and activity.max_age %}
         <span class="light-text">{{ activity.min_age }} to {{ activity.max_age }} years of age</span><br />
         {% endif %}
@@ -177,7 +183,7 @@
         <span class="light-text">Minimum: {{ activity.min_age }} years old </span><br />
         {% endif %}
     
-        {% if activity.background %} <span class="light-text">{{ activity.background }}</span><br />{% endif %}
+        {% if activity.background != 'Any' %} <span class="light-text">{{ activity.background }}</span><br />{% endif %}
         
         <span class="light-text">
         {% if activity.gender == 'F' %}Only females<br />{% endif %}
@@ -187,7 +193,7 @@
         <span class="light-text">Living in Australia for {{ activity.living_duration|lower }} than 5 years </span>      
         {% endif %}
     
-        <h6 class="bold-text" style="margin-top:12%;">Space & Cost</h6>
+        <!-- <h6 class="bold-text" style="margin-top:12%;">Space & Cost</h6> -->
         <!--      Number of available spaces-->
         {% if activity.space_choice == 'Limited' %}
         <span class="light-text">Available space: <span id="available_space">{{ activity.space }}</span><br /></span>
@@ -195,9 +201,10 @@
 
 
         <div style="margin-top:12%;">
-        <p class="light-text mt-4">
-            <img src="http://via.placeholder.com/60x50?text=" alt="Not Found" height="50px" width="60px">
-            &nbsp;&nbsp;&nbsp;&nbsp;{{ activity.created_by.profile.organisation_name }}</p>
+        <p class="mt-4" style="font-weight: 600;">
+            <!-- <img src="http://via.placeholder.com/60x50?text=" alt="Not Found" height="50px" width="60px">
+            &nbsp;&nbsp;&nbsp;&nbsp; -->
+        {{ activity.created_by.profile.organisation_name }}</p>
         {% if activity.created_by.profile.description %}
         <p class="light-text">{{ activity.created_by.profile.description }}</p>
         {% else %}
@@ -205,7 +212,7 @@
         {% endif %}
         </div>
     
-        <p class="card-text">
+        <p class="mb-3">
         {% if user.is_authenticated %}
         {% if activity.created_by == user %}
         {% if activity.published %}

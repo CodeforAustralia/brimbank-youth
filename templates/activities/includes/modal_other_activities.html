@@ -4,13 +4,13 @@
 <!-- THE MODAL FOR SHARING ACTIVITY URL -->
 <div class="modal fade" id="modal_{{ org_activity.id }}">
   <div class="modal-dialog">
-  <div class="modal-content">
-    <div class="modal-header">
-        <h4 class="modal-title">Share this activity</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <div class="modal-content" style="padding-top:1rem;">
+      <div class="modal-header" style="padding-top:0;padding-left:2em;">
+        <h4 class="modal-title" style="font-weight:600;font-size:28px;">Share this activity</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-right:-3rem;margin-top:-1rem;">
         <span aria-hidden="true">&times;</span>
         </button>
-    </div>
+      </div>
     <div class="row justify-content-center mt-3">
         <div class="sharethis-inline-share-buttons" data-url="http://{{ domain }}{% url 'activity_detail' org_activity.pk %}" 
         data-title="{{ org_activity.name }}" data-description="Test" data-message="test message"></div>

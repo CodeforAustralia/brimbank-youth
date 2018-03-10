@@ -89,8 +89,8 @@ class ActivityDraftDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['org_activities'] = Activity.objects.filter(created_by=self.object.created_by).exclude(id=self.object.pk).order_by('name')
-        recommended_activities_full = Activity.objects.filter(activity_type=self.object.activity_type).exclude(id=self.object.pk).order_by('name')
+        context['org_activities'] = Activity.objects.filter(created_by=self.object.created_by).exclude(id=self.object.pk).order_by('name')[:9]
+        recommended_activities_full = Activity.objects.filter(activity_type=self.object.activity_type).exclude(id=self.object.pk).order_by('name')[:9]
         if recommended_activities_full.count() > 1:
             recommended_activities = recommended_activities_full[1:]
         else:
@@ -139,6 +139,7 @@ def submit_activity(request, pk):
                             description = draft.description,
                             activity_date = draft.activity_date,
                             start_date = draft.start_date,
+                            end_date = draft.end_date,
                             activity_day = draft.activity_day,
                             start_time = draft.start_time,
                             end_time = draft.end_time,
@@ -173,8 +174,8 @@ class ActivityDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['org_activities'] = Activity.objects.filter(created_by=self.object.created_by).exclude(id=self.object.pk).order_by('name')
-        recommended_activities_full = Activity.objects.filter(activity_type=self.object.activity_type).exclude(id=self.object.pk).order_by('name')
+        context['org_activities'] = Activity.objects.filter(created_by=self.object.created_by).exclude(id=self.object.pk).order_by('name')[:9]
+        recommended_activities_full = Activity.objects.filter(activity_type=self.object.activity_type).exclude(id=self.object.pk).order_by('name')[:9]
         if recommended_activities_full.count() > 1:
             recommended_activities = recommended_activities_full[1:]
         else:
@@ -193,7 +194,6 @@ class ActivityDetailView(DetailView):
                 available = False
             else:
                 available = True
-        # print("available? ", available)
         context['available'] = available
         context['attendees_no'] = attendees_no
         return context
@@ -295,7 +295,7 @@ def search_others(request, location_key, postcode, name_key, category):
         Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key)).exclude(
         Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
     
-    other_activities = other_activities.filter(start_date__gte=datetime.date.today())
+    other_activities = other_activities.filter(end_date__gte=datetime.date.today())
     other_activities = other_activities.order_by('end_date')
     return other_activities
 
@@ -318,7 +318,7 @@ def search_my_activities(request, location_key, postcode, name_key, category, mi
             Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
             Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
 
-        activities = activities.filter(start_date__gte=datetime.date.today()) # filter activities that occur today or later than today
+        activities = activities.filter(end_date__gte=datetime.date.today()) # filter activities that occur today or later than today
         activities = activities.order_by('end_date')
     else:
         if postcode == '':
@@ -337,8 +337,8 @@ def search_my_activities(request, location_key, postcode, name_key, category, mi
 
                 Q(name__istartswith=name_key) | Q(name__iendswith=name_key) | Q(name__icontains=name_key),
                 Q(activity_type__istartswith=category) | Q(activity_type__iendswith=category) | Q(activity_type__icontains=category))
-        activities = activities.filter(start_date__gte=datetime.date.today())
-        activities = activities.order_by('end_date')[0:6]
+        activities = activities.filter(end_date__gte=datetime.date.today())
+        activities = activities.order_by('end_date')
     return activities
 
 def search_logic_bookmarks(request, location_key, name_key):
@@ -361,44 +361,34 @@ def search_events(request):
     activities = search_logic(request, '', '', '', '')
 
     # Recharge sms_limit & email_limit on the 1st day of each month
-    if not request.user.is_anonymous():
-        today = arrow.now('Australia/Melbourne')
-
-        # remove later
-        # users = User.objects.all()
-        # for user in users:
-        #     profile = Profile.objects.filter(user=user)[:0]
-        #     if profile:
-        #         profile.last_recharged = today
-        #         profile.save()
-        # end of remove later
-
-        profile = Profile.objects.get(user=request.user)
-        if today.format('D') == '1':
-            if not profile.recharged: # On every 1st of the month, will be recharged on login
-                profile.sms_limit = 30
-                profile.email_limit = 30
-                profile.recharged = True # so won't be recharged more than once on the 1st
-                profile.last_recharged = today
-                profile.save()
-        else: # current date is not 1
-            last_recharged_month = arrow.get(profile.last_recharged).format('M')
-            last_recharged_year = arrow.get(profile.last_recharged).format('YYYY')
-            if last_recharged_year == today.format('YYYY') and int(last_recharged_month) < int(today.format('M')): # haven't been recharged this month
-                profile.sms_limit = 30
-                profile.email_limit = 30
-                profile.recharged = True
-                profile.last_recharged = today
-                profile.save()
-            if int(last_recharged_year) < int(today.format('YYYY')): # the last recharge date was last year
-                profile.sms_limit = 30
-                profile.email_limit = 30
-                profile.recharged = True
-                profile.last_recharged = today
-                profile.save()
-            else:
-                profile.recharged = False
-                profile.save()
+    # if not request.user.is_anonymous():
+    #     today = arrow.now('Australia/Melbourne')
+    #     profile = Profile.objects.get(user=request.user)
+    #     if today.format('D') == '1':
+    #         if not profile.recharged: 
+    #             profile.sms_limit = 30
+    #             profile.email_limit = 30
+    #             profile.recharged = True 
+    #             profile.last_recharged = today
+    #             profile.save()
+    #     else:
+    #         last_recharged_month = arrow.get(profile.last_recharged).format('M')
+    #         last_recharged_year = arrow.get(profile.last_recharged).format('YYYY')
+    #         if last_recharged_year == today.format('YYYY') and int(last_recharged_month) < int(today.format('M')): # haven't been recharged this month
+    #             profile.sms_limit = 30
+    #             profile.email_limit = 30
+    #             profile.recharged = True
+    #             profile.last_recharged = today
+    #             profile.save()
+    #         if int(last_recharged_year) < int(today.format('YYYY')):
+    #             profile.sms_limit = 30
+    #             profile.email_limit = 30
+    #             profile.recharged = True
+    #             profile.last_recharged = today
+    #             profile.save()
+    #         else:
+    #             profile.recharged = False
+    #             profile.save()
 
     other_activities = None
     not_my_activities = None
@@ -461,7 +451,7 @@ def search_events(request):
             messages.add_message(request, messages.ERROR, 'Please select at least one activity.', extra_tags='danger')
         
         activities_count = activities.count()
-        activities = show_page_numbers(request, activities)
+        # activities = show_page_numbers(request, activities)
 
         url = "&name=" + name_key + "&location=" + location_key + "&category=" + category + "&search=search"
 

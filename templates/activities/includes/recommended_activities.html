@@ -1,40 +1,70 @@
 {% load static %}
 
 {% for recommended_activity in recommended_activities %}
-<div class="swiper-slide">
-  <div class="card hover-card mr-4 ml-4">
+<!-- <div class="swiper-slide"> -->
+<div class="col-sm-4 col-12">
+  <div class="card hover-card">
     <a href="{% url 'activity_detail' recommended_activity.pk %}">
     {% if recommended_activity.activity_img %}
-    <img class="card-img-top" src="{{ recommended_activity.activity_img.url }}" alt="Not Found" onerror="this.onerror=null;this.src='http://via.placeholder.com/350x300?text=Image not available';" style="object-fit:cover;height:300px;display:inline;">
+    <img class="card-img-top" src="{{ recommended_activity.activity_img.url }}" alt="Not Found" 
+    onerror="this.onerror=null;this.src='http://via.placeholder.com/363x272?text=Image not available';" 
+    style="height:272px;">
     {% else %}
-    <img class="card-img-top" src="http://via.placeholder.com/350x300?text=Image not available" alt="Not Found" style="object-fit: cover;display:inline;margin:auto;height:300px;">
+    <img class="card-img-top" src="http://via.placeholder.com/363x272?text=Image not available" 
+    alt="Not Found" style="height:272px;">
     {% endif %}
     </a>
-    <div class="card-body">
-      <p class="card-text bold-text">{{ recommended_activity.activity_type|upper }} - {{ recommended_activity.suburb|upper }}
-        <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ recommended_activity.id }}" value="{% url 'activity_detail' recommended_activity.id %}" type="button" 
-        class="btn btn-transparent float-right" style="margin-top:-5px;"
-        data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
-        <span class="row">
-        <img src="{% static 'img/icons/share.svg' %}" height="25">&nbsp;Share </span>
+    <div class="card-body no-padding">
+      {% if recommended_activity.activity_type != 'School holidays' and recommended_activity.activity_type != 'Culture' %}
+
+      {% if recommended_activity.activity_type == 'Sport' %}
+      <p class="card-text activity-type" style="color:#484848">
+      {% elif recommended_activity.activity_type == 'Learn' %}
+      <p class="card-text activity-type" style="color:#108AA8">
+      {% else %}
+      <p class="card-text activity-type" style="color:#DBC604">
+      {% endif %}
+      {{ recommended_activity.activity_type|upper }} - {{ recommended_activity.suburb|upper }}
+      
+      {% else %}
+      
+      {% if recommended_activity.activity_type == 'School holidays' %}
+      <p class="card-text activity-type" style="color:#585A3A">
+      HOLIDAYS - {{ recommended_activity.suburb|upper }}
+      {% else %}
+      <p class="card-text activity-type" style="color:#A52A03">
+      ART & CULTURE - {{ recommended_activity.suburb|upper }}
+      {% endif %}
+  
+      {% endif %}
+      <button onclick="getURL(this.id, this.value)" id="sharebutton_{{ recommended_activity.id }}" value="{% url 'activity_detail' recommended_activity.id %}" type="button" 
+      class="btn btn-transparent float-right" style="margin-top:-5px;"
+      data-url="#" data-toggle="button" aria-pressed="false" autocomplete="off">
+      <span class="row" style="font-weight:800;">
+      <img src="{% static 'img/icons/share.svg' %}" height="33"><span style="margin-top:4px;color:#484848;">&nbsp;&nbsp;Share </span></span>
       </button></p>
-      <p class="card-text">{{ recommended_activity.name }}</p>
+      <p class="card-text activity-name">{{ recommended_activity.name }}</p>
       <!--    Activities that only occur once -->
       {% if recommended_activity.term == 'Once' %}
       {% if recommended_activity.activity_date %}
-      <p class="card-text">{{ recommended_activity.activity_date|date:'D, d M'|upper }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
+      <p class="card-text activity-schedule">{{ recommended_activity.activity_date|date:'D, d M' }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
       {% endif %}
       {% endif %}
 
       <!--      Daily, weekly, fortnightly, monthly activities-->
       {% if recommended_activity.term != 'Once' %}
       {% if recommended_activity.term != 'Daily' %}
-      <p class="card-text">EVERY {{ recommended_activity.activity_day|upper }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
+      <p class="card-text activity-schedule">Every {{ recommended_activity.activity_day }} - {{ recommended_activity.start_time|time:'g:i A' }}</p>
       {% else %}
-      <p class="card-text">EVERY DAY - {{ recommended_activity.start_time|time:'g:i A' }}</p>
+      <p class="card-text activity-schedule">Every day - {{ recommended_activity.start_time|time:'g:i A' }}</p>
       {% endif %}
       {% endif %}
     </div>
   </div>
- </div>
+  </div>
+ <!-- </div> -->
+
+<!-- Modal for sharing URL -->
+{% include 'activities/includes/modal_recommended_activities.html' %}
+
   {% endfor %}

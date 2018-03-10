@@ -8,7 +8,7 @@
 }
 
 .modal-content {
-    width: 85vh;
+    /* width: 85vh; */
     padding-top: 1.5rem;
 }
 
@@ -32,11 +32,11 @@ label.col-form-label.bold-text label {
 }
 
 .modal-header, .modal-body {
-    padding-left: 5rem; padding-right: 5rem; padding-top: 2rem;
+    padding-left: 3.5rem; padding-right: 3.5rem; padding-top: 2rem;
 }
 
 .modal-footer {
-    border:none; padding-left: 5rem; padding-right: 5rem; padding-top: 1rem; padding-bottom: 5rem;
+    border:none; padding-left: 3.5rem; padding-right: 3.5rem; padding-top: 1rem; padding-bottom: 5rem;
 }
 
 button.close {
@@ -83,12 +83,29 @@ label {
     height: 50px;
     color: #484848;
     background-color: #f2f2f2;
-    margin-bottom: 2em;
+    /* margin-bottom: 2em; */
+}
+
+.signup-fields::placeholder {
+    color: #999999; font-size: 14px; margin-top: -30px;
+}
+
+.signup-fields::-moz-placeholder {
+    color: #999999; font-size: 14px;
+}
+
+.signup-fields::-webkit-input-placeholder {
+    color: #999999; font-size: 14px;
+}
+
+.signup-fields:-ms-input-placeholder {
+    color: #999999; font-size: 14px;
 }
 
 .activity-fields::placeholder {
     color: #999999;
 }
+
 
 .activity-schedule {
     height: 37px;
@@ -134,16 +151,16 @@ label.activity-location label {
 .btn-neon-green {
     background: #00CC00;
     color: #FFFFFF;
-    height: 72px;
+    height: 59px;
     margin-top: 3em;
 }
 
 .btn-signature-grey {
     background: #999999;
     color: #FFFFFF;
-    height: 72px;
+    height: 50px;
     margin-top: 1em;
-    line-height: 50px;
+    line-height: 29px;
 }
 
 .btn-signature-grey:hover {
@@ -180,4 +197,7 @@ label[for="flyer-clear_id"], label[for="activity_img-clear_id"] {
 .more-padding {
     padding-left: 2em;
     padding-right: 2em;
+}
+#id_organiser, #id_contact_number {
+    margin-bottom: 0 !important;
 }

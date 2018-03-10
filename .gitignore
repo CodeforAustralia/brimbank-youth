@@ -6,8 +6,8 @@ venv/
 staticfiles
 
 # SQLite database files
-
 *.sqlite3
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

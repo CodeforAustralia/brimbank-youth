@@ -2,72 +2,36 @@
 
 <div class="jumbotron">
     <div class="img"></div>
-    <div class="container text-center search-box">
+    <div class="container text-center search-box" id="search-container">
     <div id="search-box" style="padding-top:27px;padding-bottom:13px;">
         <!-- <h1 class="display-4">Youth Poster</h1> -->
-      <h1>Share activities and events with youth</h1>
+      <h1>Connecting youth through activities and events</h1>
       <form method="get" id="id_form" class="justify-content-center mt-4" novalidate>
           <div class="form-row justify-content-center">
           <div class="form-group col-sm-4 col-12 mr-3 text-center">
               <label class="sr-only" for="id_name">Activity name</label>
-              <input type="text" name="name" placeholder="Search anything" maxlength="150" 
+              <input type="text" name="name" placeholder="Swimming, African Dance, Soccer..." maxlength="150" style="height:39px;text-align:center;"
               class="form-control mr-2 ml-2" id="id_name" title="Enter the activity name" />
           </div>
           <div class="col-sm-4 col-12 ml-3 mr-3 mb-2 text-center">
               <label class="sr-only" for="id_location">Location</label>
-              <input type="text" name="location" placeholder="Sunshine or 3040    " maxlength="150" 
-              class="form-control mr-4 mb-2" id="id_location" title="Enter an adress" />
+              <input type="text" name="location" placeholder="Sunshine or 3020    " maxlength="150" style="height:39px;text-align:center;"
+              class="form-control mr-4 mb-2" id="id_location" title="Enter the location" />
           </div>
           <div class="col-sm-1 col-12" style="margin-top:-2px;">
-              <button type="submit" id="id_search" class="btn btn-green btn-lg mr-sm-4" 
+              <button type="submit" id="id_search" class="btn btn-green btn-lg mr-sm-4" style="height:41px;line-height:20px;font-size:14px;" 
               name="search" value="search">Search</button>
           </div>
           </div>
     </div>
     </div>
 </div>
-<!-- <div class="container-fluid">
-    <div class="row justify-content-center mt-4" >
-        <div class="col-md-2 col-2 justify-content-center" style="display:flex;">
-        <button type="submit" name="category" value="sport" class="btn mr-4 mb-2 transparent-background" style="text-align:center;">
-            <span><img src="{% static 'img/activities/sport.svg' %}" class="mt-2" height="60px;"></span>
-            <p class="lead mt-3">SPORT</p>
-        </button>
-        </div>
-        <div class="col-md-2 col-2 justify-content-center" style="display:flex;">
-        <button type="submit" name="category" value="learn" class="btn mr-4 mb-2 transparent-background">
-            <span><img src="{% static 'img/activities/pan.svg' %}" class="mt-2" height="60px;"></span>
-            <p class="lead mt-3">LEARN</p>
-        </button>
-        </div>
-        <div class="col-md-2 col-2 justify-content-center" style="display:flex;">
-        <button type="submit" name="category" value="school holidays" class="btn mr-4 mb-2 transparent-background">
-            <img src="{% static 'img/activities/tent.svg' %}" class="mt-2" height="60px;"><br />
-            <p class="lead mt-3">SCHOOL<br />HOLIDAYS</p>
-        </button>
-        </div>
-        <div class="col-md-2 col-2 justify-content-center" style="display:flex;">
-        <button type="submit" name="category" value="culture" class="btn mr-4 mb-2 transparent-background">
-            <img src="{% static 'img/activities/culture.svg' %}" class="mt-2" height="60px;"><br />
-            <p class="lead mt-3">ART &<br />CULTURE</p>
-        </button>
-        </div>
-        <div class="col-md-2 col-2 justify-content-center" style="display:flex;">
-        <button type="submit" name="category" value="career" class="btn mr-4 mb-2 transparent-background">
-            <img src="{% static 'img/activities/diploma.svg' %}" class="mt-2" height="60px;"><br />
-            <p class="lead mt-3">CAREER</p>
-        </button>
-        </div>
-        <div class="col-md-2 col-2 justify-content-center" style="display:flex;">
-        <button type="submit" name="category" value="" class="btn mr-4 mb-2 transparent-background">
-            <img src="{% static 'img/activities/more.svg' %}" class="mt-2" height="60px;"><br />
-            <p class="lead mt-3">ALL<br />CATEGORIES</p>
-        </button>
-        </div>
-    </div>
-</div> -->
+
 <!-- Swiper -->
-<div class="container swiper-container" style="margin-bottom:3%;margin-top:5%;">
+<div class="container swiper-container">
+    <div id="swipe-info" class="text-center" style="font-size:14px;color:#999999;">
+    <img src="{% static 'img/icons/left-arrow.svg' %}" height="18px;">&nbsp;&nbsp;Swipe&nbsp;&nbsp;
+    <img src="{% static 'img/icons/right-arrow.svg' %}" height="18px;"></div>
     <div class="swiper-wrapper">
         <div class="swiper-slide">
             <button type="submit" name="category" value="sport" class="btn mr-4 mb-2 transparent-background" style="text-align:center;">
