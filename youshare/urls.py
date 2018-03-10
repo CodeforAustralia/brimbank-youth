@@ -137,8 +137,8 @@ urlpatterns = [
     url(r'^about-us/$', accounts_views.about_page, name='about_page'),
 
     # Bulk uploads
-    url(r'^bulk-upload/contacts/$', accounts_views.bulk_upload_contacts, name='bulk_upload_contacts'),
-    url(r'^bulk-upload/activities/$', accounts_views.bulk_upload_activities, name='bulk_upload_activities'),
+    # url(r'^bulk-upload/contacts/$', accounts_views.bulk_upload_contacts, name='bulk_upload_contacts'),
+    # url(r'^bulk-upload/activities/$', accounts_views.bulk_upload_activities, name='bulk_upload_activities'),
 ]   
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
